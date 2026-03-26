@@ -1,18 +1,30 @@
 {
   "name": "inquiry",
   "kind": "plugin",
-  "version": "0.1.0",
-  "description": "Investigation family - research, hypothesis generation, data analysis, formalization",
+  "version": "1.0.0",
+  "description": "Investigation family - research, hypothesis generation, data analysis, formalization, mathematics",
   "author": {
     "name": "Ashton Brown",
     "url": "https://github.com/ahmiershadowman-commits"
   },
   "license": "MIT",
   "category": "family",
-  "keywords": ["inquiry", "research", "hypothesis", "analysis", "formalization"],
+  "keywords": ["inquiry", "research", "hypothesis", "data-analysis", "formalization"],
   "files": [
+    "entry.skill.yaml",
     "family_route_map.yaml",
-    "selector.route.yaml"
+    "selector.route.yaml",
+    "run.py",
+    "executors.py"
+  ],
+  "commands": [
+    "../../commands/inquiry.md"
+  ],
+  "agents": [
+    "../../agents/inquiry.md"
+  ],
+  "skills": [
+    "../../skills/inquiry.py"
   ],
   "pipelines": [
     "research",

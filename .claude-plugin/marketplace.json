@@ -6,75 +6,83 @@
   },
   "metadata": {
     "description": "A metacognitive co-developer marketplace - modular AI plugins for ground-truth establishment, hypothesis generation, creative synthesis, and self-guided context engineering on Windows",
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "plugins": [
     {
+      "name": "forensics",
+      "source": "./entrypoints/Forensics",
+      "description": "Ground-truth establishment - project mapping, defragmentation, documentation audit, anomaly disambiguation",
+      "version": "1.0.0",
+      "category": "family",
+      "commands": ["forensics"],
+      "agents": ["forensics"],
+      "pipelines": ["project_mapping", "defragmentation", "documentation_audit", "anomaly_disambiguation"]
+    },
+    {
+      "name": "forge",
+      "source": "./entrypoints/Forge",
+      "description": "Build/change work - development planning, coding, testing, refactoring",
+      "version": "1.0.0",
+      "category": "family",
+      "commands": ["forge"],
+      "agents": ["forge"],
+      "pipelines": ["development", "coding", "testing", "refactor"]
+    },
+    {
+      "name": "inquiry",
+      "source": "./entrypoints/Inquiry",
+      "description": "Investigation and research - hypothesis generation, data analysis, formalization, mathematics",
+      "version": "1.0.0",
+      "category": "family",
+      "commands": ["inquiry"],
+      "agents": ["inquiry"],
+      "pipelines": ["research", "hypothesis_generation", "data_analysis", "formalization", "mathematics"]
+    },
+    {
+      "name": "conduit",
+      "source": "./entrypoints/Conduit",
+      "description": "Documentation and synthesis - technical docs, scholarly writing, handoff materials",
+      "version": "1.0.0",
+      "category": "family",
+      "commands": ["conduit"],
+      "agents": ["conduit"],
+      "pipelines": ["documentation", "scholarly_writing", "professional_writing", "handoff_synthesis"]
+    },
+    {
       "name": "trace",
       "source": "./shared/Trace",
-      "description": "Metacognitive controller - applies smallest sufficient intervention for routing and supervision",
-      "version": "0.1.0",
+      "description": "Metacognitive controller - routing supervision and smallest-sufficient intervention",
+      "version": "1.0.0",
       "category": "shared-authority"
     },
     {
       "name": "lever",
       "source": "./shared/Lever",
-      "description": "Evaluator and escalation authority - owns commitments, pivots, and reopen rules",
-      "version": "0.1.0",
+      "description": "Evaluator and escalation authority - commitments, pivots, reopen rules",
+      "version": "1.0.0",
       "category": "shared-authority"
     },
     {
       "name": "residue",
       "source": "./shared/Residue",
-      "description": "Suspicious-surface lens library - investigative interventions for anomalous signals",
-      "version": "0.1.0",
+      "description": "Suspicious-surface lens library - investigative interventions for anomalies",
+      "version": "1.0.0",
       "category": "shared-authority"
     },
     {
       "name": "primitives",
       "source": "./shared/primitives",
       "description": "Smallest reusable interventions - metacognitive and reasoning primitives",
-      "version": "0.1.0",
+      "version": "1.0.0",
       "category": "shared-components"
     },
     {
       "name": "operators",
       "source": "./shared/operators",
       "description": "Reusable operator classes - bounded local transformations and evaluations",
-      "version": "0.1.0",
+      "version": "1.0.0",
       "category": "shared-components"
-    },
-    {
-      "name": "forensics",
-      "source": "./entrypoints/Forensics",
-      "description": "Ground-truth establishment family - project mapping, defragmentation, anomaly disambiguation",
-      "version": "0.1.0",
-      "category": "family",
-      "pipelines": ["project_mapping", "defragmentation", "documentation_audit", "anomaly_disambiguation"]
-    },
-    {
-      "name": "forge",
-      "source": "./entrypoints/Forge",
-      "description": "Build/change family - development, coding, testing, and refactor pipelines",
-      "version": "0.1.0",
-      "category": "family",
-      "pipelines": ["development", "coding", "testing", "refactor"]
-    },
-    {
-      "name": "inquiry",
-      "source": "./entrypoints/Inquiry",
-      "description": "Investigation family - research, hypothesis generation, data analysis, formalization",
-      "version": "0.1.0",
-      "category": "family",
-      "pipelines": ["research", "hypothesis_generation", "data_analysis", "formalization", "mathematics"]
-    },
-    {
-      "name": "conduit",
-      "source": "./entrypoints/Conduit",
-      "description": "Documentation and synthesis family - documentation, scholarly writing, handoff synthesis",
-      "version": "0.1.0",
-      "category": "family",
-      "pipelines": ["documentation", "scholarly_writing", "professional_writing", "handoff_synthesis"]
     }
   ]
 }
