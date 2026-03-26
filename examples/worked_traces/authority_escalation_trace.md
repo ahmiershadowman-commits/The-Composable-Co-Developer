@@ -1,168 +1,150 @@
-# Authority Escalation Trace
+# Authority Escalation Trace - Worked Example
 
-## Purpose
+Demonstrates the full Trace → Residue → Lever escalation chain.
 
-This worked trace demonstrates the full authority escalation chain: Trace → Residue → Lever → Commitment.
+## Scenario
 
-## Trace Overview
+Conflicting requirements create tension that requires evaluator adjudication.
 
-**Route**: Trace (routine) → Residue (anomaly detected) → Lever (evaluator) → Commitment
+## Execution Flow
 
-**Scenario**: Contradiction detected between two architectural claims requires adjudication.
-
----
-
-## Step 1: Trace Evaluation (Routine)
-
-**Entry condition**: Normal pipeline execution, trust established
-
-**State**:
-```yaml
-current_pipeline: Forge/development
-trust_assessment:
-  trust_level: high
-  canonical_sources_identified: true
+```
+User Request → Trace → Residue (lens) → Lever (evaluator) → Commitment Decision
 ```
 
-**Trace evaluates**:
-- Trust assessment: high
-- State: stable
-- No immediate issues
+## Step-by-Step
 
-**Initial route decision**: Continue to Forge/coding
+### Step 1: Initial Request
 
----
-
-## Step 2: Residue Detection (Anomaly)
-
-**Trigger**: Trace detects suspicious surface during evaluation
-
-**Anomaly signal**: tension_detected
-
-**Residue consulted**:
 ```yaml
-lens: tension
-state:
-  claim_a: "System must be real-time"
-  claim_b: "Batch processing is acceptable"
+user_prompt: "Should we use PostgreSQL or MySQL for the new service?"
 ```
 
-**Residue applies lens**:
-- Detects conflicting constraints
-- Identifies stakeholder divergence
-- Notes trade-off not acknowledged
+### Step 2: Trace Evaluation
 
-**Residue interpretation**:
 ```yaml
-tension_type: competing_constraints
-severity: high
-stakeholders:
-  - ops_team (real-time)
-  - data_team (batch)
+trace_decision:
+  action: "continue"
+  target: "family:Inquiry"
+  reason: "Decision requires research"
+  intervention_band: 2
+  
+detected_patterns:
+  - motif: "watershed"  # High-stakes decision
+  - motif: "tension"    # Conflicting opinions
 ```
 
-**Trace incorporates interpretation**:
-- Recognizes contradiction requires adjudication
-- Smallest sufficient intervention insufficient
-- Escalation to Lever required
+### Step 3: Residue Consultation
 
----
-
-## Step 3: Lever Escalation
-
-**Entry condition**: Trace escalated, evaluator needed
-
-**Lever receives**:
 ```yaml
-escalation_reason: contradiction_requires_adjudication
-context:
-  claim_a: "System must be real-time"
-  claim_b: "Batch processing is acceptable"
-  tension_analysis: {...}
+residue_lens: "tension"
+interpretation: "Active disagreement between team members"
+recommendation: "Requires explicit adjudication"
+
+residue_output:
+  tension_type: "technical_choice"
+  stakeholders: ["backend_team", "devops"]
+  options: ["PostgreSQL", "MySQL"]
 ```
 
-**Lever selects evaluator**:
+### Step 4: Trace Determines Evaluator Needed
+
 ```yaml
-evaluator: contradiction_evaluator
-rationale: "Real vs apparent contradiction must be determined"
+trace_decision:
+  action: "authority_call"
+  target: "authority:Lever"
+  reason: "Tension requires evaluator adjudication"
+  intervention_band: 4
+  
+escalation_reason: "Discriminator required between options"
 ```
 
-**Evaluator executes**:
+### Step 5: Lever Escalation
+
 ```yaml
-contradiction_analysis:
-  type: apparent
-  explanation: "Claims operate at different abstraction levels"
-  resolution_path: "Clarify scope of real-time requirement"
+lever_action: "escalate"
+evaluator: "discriminator_evaluator"
+
+evaluator_input:
+  options:
+    - name: "PostgreSQL"
+      pros: ["JSON support", "Advanced features"]
+      cons: ["Learning curve"]
+    - name: "MySQL"
+      pros: ["Team familiarity", "Simpler"]
+      cons: ["Limited JSON"]
+
+evaluator_output:
+  discriminators:
+    - "JSON requirement is key differentiator"
+    - "Team familiarity reduces initial velocity risk"
+  recommendation: "PostgreSQL if JSON needed, MySQL otherwise"
 ```
 
-**Lever makes commitment decision**:
+### Step 6: Lever Commitment Decision
+
 ```yaml
-decision: reopen
-rationale: "Contradiction is apparent, not real"
-next_action: "Reframe with clarified scope"
+lever_decision:
+  type: "commit_with_conditions"
+  commitment: "PostgreSQL"
+  conditions:
+    - "JSON data requirements confirmed"
+    - "Team training scheduled"
+  
+reopen_rule:
+  trigger: "JSON requirements change"
+  action: "Re-evaluate with new constraints"
 ```
 
----
+### Step 7: Route to Implementation
 
-## Step 4: Route Decision (Post-Adjudication)
-
-**Lever produces route**:
 ```yaml
-target: pipeline:Forge/development
-reason: "reframe_needed_before_continuation"
-confidence: high
+trace_decision:
+  action: "cross_family_reroute"
+  target: "family:Forge"
+  reason: "Decision made - ready to implement"
+  intervention_band: 8
 ```
 
-**State updated**:
-- Route history recorded
-- Evaluator result documented
-- Commitment decision preserved
+## Route History
 
----
+```yaml
+route_history:
+  - action: "continue"
+    from: null
+    to: "Inquiry"
+    reason: "Research requested"
+    
+  - action: "authority_call"
+    from: "Inquiry"
+    to: "Lever"
+    reason: "Evaluator adjudication needed"
+    
+  - action: "cross_family_reroute"
+    from: "Lever"
+    to: "Forge"
+    reason: "Decision made - implement"
+```
 
 ## Authority Interaction Summary
 
-| Authority | Action | Output |
-|-----------|--------|--------|
-| Trace | Routine evaluation | Initial route decision |
-| Trace | Detects anomaly | Consult Residue |
-| Residue | Apply tension lens | Interpretation |
-| Trace | Incorporate interpretation | Escalate to Lever |
-| Lever | Select evaluator | contradiction_evaluator |
-| Evaluator | Analyze contradiction | Apparent, not real |
-| Lever | Make decision | Reopen, reframe needed |
+```
+Trace (initial eval)
+  ↓
+Residue (tension lens)
+  ↓
+Trace (escalate to Lever)
+  ↓
+Lever (discriminator_evaluator)
+  ↓
+Lever (commitment decision)
+  ↓
+Trace (route to Forge)
+```
 
----
+## Assertions
 
-## Key Learnings
-
-1. **Trace first**: Routine evaluation always starts with Trace
-2. **Residue for anomalies**: Suspicious surface → Residue lens
-3. **Lever for adjudication**: Contradictions require evaluator
-4. **Proper escalation order**: Trace → Residue → Lever (not skipped)
-
----
-
-## Forbidden Patterns Avoided
-
-- ❌ Lever before Trace (skipping smallest-sufficient)
-- ❌ Residue as pipeline family (Residue is authority, not family)
-- ❌ Residue making commitment decision (that's Lever's role)
-
----
-
-## Validation Checklist
-
-- [x] Trace evaluated first (always)
-- [x] Residue consulted for anomaly interpretation
-- [x] Lever escalated only after Trace determined insufficiency
-- [x] Evaluator selected appropriately (contradiction_evaluator)
-- [x] Commitment decision made by Lever, not Residue
-
----
-
-## Trace File
-
-Location: `examples/worked_traces/authority_escalation_trace.md`
-
-Test: `tests/worked_examples/test_authority_escalation_trace.py`
+1. **Trace first**: Trace evaluated before any authority consultation
+2. **Residue for interpretation**: Residue interpreted the tension pattern
+3. **Lever for adjudication**: Only Lever can make commitment decisions
+4. **Correct order**: Trace → Residue → Lever → Commitment (not skipped)

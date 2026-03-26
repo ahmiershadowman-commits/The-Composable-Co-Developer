@@ -4,6 +4,24 @@
 
 Operators are cognitive transformations that apply structured work patterns to bounded input state and return structured outputs. They are stronger than primitives but don't replace full pipeline methodology.
 
+## Operator Inventory
+
+| Operator | Class | Band | When to Use |
+|----------|-------|------|-------------|
+| `clarify` | local_transformation | 2 | Make unclear concepts precise |
+| `distill` | local_transformation | 2 | Extract essential elements |
+| `compare` | bounded_evaluation | 4 | Identify similarities/differences |
+| `extract` | local_reading | 2 | Pull out specific information |
+| `reframe` | local_transformation | 2 | Shift perspective |
+| `triangulate` | bounded_evaluation | 4 | Cross-reference multiple sources |
+
+## Adding New Operators
+
+1. Create `shared/operators/<name>.yaml`
+2. Add to this registry
+3. Document in README
+4. Test in worked traces
+
 ## Design Rules
 
 1. **Add robustness more than complexity**: Operators must provide clear value
