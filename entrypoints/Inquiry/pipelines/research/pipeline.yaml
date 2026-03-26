@@ -1,0 +1,109 @@
+id: research
+family: Inquiry
+kind: end_to_end_pipeline
+frame_alias: Seek
+status: core
+purpose: >
+  Acquire, compare, synthesize, critique, and verify evidence in order to ground
+  an open question, support a claim, or prepare downstream explanatory or communicative work.
+
+entry_conditions:
+  - a_question_or_claim_requires_external_or_internal_evidence_workup
+  - ground_truth_is_sufficiently_stable_or_forensics_has_bounded_the_surface
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - frame_question
+  - retrieve_sources_or_state
+  - compare_and_classify
+  - synthesize_findings
+  - critique_support_and_gaps
+  - verify_or_retrieve_more
+  - finalize_or_reroute
+
+phase_contracts:
+  frame_question:
+    goal: Bound the live question and what evidence would count as progress.
+    outputs:
+      - question_frame
+  retrieve_sources_or_state:
+    goal: Gather candidate sources, observations, or state slices relevant to the question.
+    outputs:
+      - source_ledger
+  compare_and_classify:
+    goal: Compare sources and classify agreements, conflicts, gaps, and trust relevance.
+    outputs:
+      - comparison_map
+  synthesize_findings:
+    goal: Produce a grounded synthesis that does not erase contradiction or residue.
+    outputs:
+      - synthesis_note
+  critique_support_and_gaps:
+    goal: Identify weak support, unresolved tensions, and missing discriminators.
+    outputs:
+      - support_and_gap_map
+  verify_or_retrieve_more:
+    goal: Determine whether evidence is sufficient or more workup is required.
+    outputs:
+      - evidence_state_note
+  finalize_or_reroute:
+    goal: Exit with a justified route or bounded commitment.
+    outputs:
+      - route_or_commit_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - unfinished-proof
+    - odd-one-out
+  primitives:
+    - open
+    - separate
+    - weave
+    - shift
+  operators:
+    - clarify
+    - distill
+  evaluators:
+    - support_evaluator
+    - contradiction_evaluator
+    - frame_evaluator
+
+pivot_conditions:
+  explanation_open_with_signal_present:
+    action: sibling_shift
+    target: pipeline:Inquiry/hypothesis_generation
+  ambiguity_data_shaped:
+    action: sibling_shift
+    target: pipeline:Inquiry/data_analysis
+  concepts_or_relations_need_binding:
+    action: sibling_shift
+    target: pipeline:Inquiry/formalization
+  source_truth_suspect:
+    action: reroute
+    target: family:Forensics
+  grounded_material_ready_for_rendering:
+    action: reroute
+    target: family:Conduit
+
+exit_conditions:
+  - source_ledger_present
+  - synthesis_note_present
+  - support_and_gap_map_present
+  - route_or_commit_recommendation_present
+
+artifacts:
+  primary:
+    - source_ledger.yaml
+    - synthesis_note.md
+    - support_and_gap_map.yaml
+    - route_or_commit_recommendation.yaml
+  supporting:
+    - comparison_map.yaml
+    - evidence_state_note.yaml
+    - unresolveds.yaml

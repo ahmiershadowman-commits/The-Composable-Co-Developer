@@ -1,0 +1,24 @@
+{
+  "name": "forensics",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Ground-truth establishment family - project mapping, defragmentation, anomaly disambiguation",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "family",
+  "keywords": ["forensics", "ground-truth", "mapping", "defragmentation", "anomaly"],
+  "files": [
+    "entry.skill.yaml",
+    "family_route_map.yaml",
+    "selector.route.yaml"
+  ],
+  "pipelines": [
+    "project_mapping",
+    "defragmentation",
+    "documentation_audit",
+    "anomaly_disambiguation"
+  ]
+}

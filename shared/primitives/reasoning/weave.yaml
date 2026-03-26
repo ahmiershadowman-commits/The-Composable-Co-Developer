@@ -1,0 +1,13 @@
+id: weave
+family: reasoning
+kind: primitive
+status: core
+purpose: Integrate multiple live strands into a coherent structure without flattening residue.
+use_when:
+  - branches_need_synthesis
+  - handoff_or_summary_required
+  - explanation_fragments_exist_but_remain_unintegrated
+expected_effects:
+  - structured_synthesis
+  - preserved_residue
+smallest_sufficient_scope: local_to_pipeline

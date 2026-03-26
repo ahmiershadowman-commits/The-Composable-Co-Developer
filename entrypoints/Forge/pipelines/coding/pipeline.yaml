@@ -1,0 +1,109 @@
+id: coding
+family: Forge
+kind: end_to_end_pipeline
+frame_alias: Shape
+status: core
+purpose: >
+  Perform bounded implementation work against a grounded repo or code surface while
+  preserving local coherence, testability, metadata hygiene, and safe escalation.
+
+entry_conditions:
+  - target_change_is_local_enough_to_bound
+  - project_truth_is_grounded_or_forensics_has_bounded_the_surface
+  - the_primary_need_is_code_change_not_system_wide_replanning
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - inspect_local_surface
+  - plan_bounded_change
+  - implement
+  - test_or_simulate
+  - audit_local_fit
+  - cleanup_and_update_metadata
+  - finalize_or_escalate
+
+phase_contracts:
+  inspect_local_surface:
+    goal: Identify the exact code surface and dependencies implicated by the change.
+    outputs:
+      - local_surface_note
+  plan_bounded_change:
+    goal: Produce a bounded change plan and invariants.
+    outputs:
+      - change_plan
+  implement:
+    goal: Apply the local implementation change.
+    outputs:
+      - changed_artifacts
+  test_or_simulate:
+    goal: Validate or simulate the change enough to know whether escalation is needed.
+    outputs:
+      - validation_note
+  audit_local_fit:
+    goal: Check local coherence and whether the work is still bounded.
+    outputs:
+      - local_fit_note
+  cleanup_and_update_metadata:
+    goal: Keep metadata, docs, and local residue from drifting.
+    outputs:
+      - metadata_update_record
+  finalize_or_escalate:
+    goal: Exit cleanly or escalate to the next safe pipeline.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - cambium-layer
+    - unfinished-proof
+  primitives:
+    - center
+    - shift
+    - press
+    - trim
+  operators:
+    - clarify
+  evaluators:
+    - contradiction_evaluator
+    - artifact_shape_evaluator
+
+pivot_conditions:
+  local_scope_expands_systemically:
+    action: sibling_shift
+    target: pipeline:Forge/development
+  validation_dominates:
+    action: sibling_shift
+    target: pipeline:Forge/testing
+  artifact_or_repo_entropy_exposed:
+    action: reroute
+    target: pipeline:Forensics/defragmentation
+  code_or_spec_surface_untrustworthy:
+    action: reroute
+    target: family:Forensics
+  docs_or_handoff_updates_required:
+    action: reroute
+    target: family:Conduit
+
+exit_conditions:
+  - change_plan_present
+  - changed_artifacts_present
+  - validation_note_present
+  - metadata_update_record_present
+
+artifacts:
+  primary:
+    - change_plan.yaml
+    - changed_artifacts.yaml
+    - validation_note.md
+    - route_recommendation.yaml
+  supporting:
+    - local_surface_note.yaml
+    - local_fit_note.yaml
+    - metadata_update_record.yaml
+    - unresolveds.yaml

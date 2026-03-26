@@ -1,0 +1,128 @@
+id: defragmentation
+family: Forensics
+kind: end_to_end_pipeline
+frame_alias: Gather
+status: core
+purpose: >
+  Restore coherent project state when artifacts, metadata, provenance, or structure
+  have become fragmented, duplicated, drifted, or otherwise unreliable.
+
+entry_conditions:
+  - forensics_has_identified_entropy_as_primary_problem
+  - canonical_structure_is_unclear_or_conflicted
+  - downstream_work_is_unsafe_until_coherence_is_restored
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - inspect_state
+  - classify_entropy
+  - choose_method
+  - execute_method
+  - normalize_metadata_and_provenance
+  - verify_restored_coherence
+  - finalize_or_reroute
+
+phase_contracts:
+  inspect_state:
+    goal: Inspect current artifact layout, duplication, fragmentation, and metadata disorder.
+    outputs:
+      - fragmentation_snapshot
+  classify_entropy:
+    goal: Determine whether the problem is tidy, consolidate, repair, or anchor severity.
+    outputs:
+      - entropy_classification
+  choose_method:
+    goal: Select the smallest defragmentation method that can restore coherence safely.
+    outputs:
+      - chosen_method
+  execute_method:
+    goal: Apply the chosen entropy-reduction method.
+    outputs:
+      - residue_disposition_ledger
+      - changed_structure_map
+  normalize_metadata_and_provenance:
+    goal: Bring metadata, indices, provenance, and canonical pointers into alignment with restored structure.
+    outputs:
+      - metadata_normalization_record
+  verify_restored_coherence:
+    goal: Confirm that one trustworthy structure now exists and that conflicting artifacts are resolved or archived.
+    outputs:
+      - trust_reassessment_note
+  finalize_or_reroute:
+    goal: Return to Forensics for recheck or exit to the newly safe family.
+    outputs:
+      - route_recommendation
+
+internal_methods:
+  tidy:
+    use_when:
+      - minor_residue
+      - naming_drift
+      - lightweight_metadata_disorder
+  consolidate:
+    use_when:
+      - overlapping_artifacts
+      - multiple_near_canonical_sources
+      - duplicated_structures_or_docs
+  repair:
+    use_when:
+      - project_shape_has_drifted
+      - code_spec_docs_or_configs_disagree
+      - lineage_is_present_but_misaligned
+  anchor:
+    use_when:
+      - no_trustworthy_current_canonical_source
+      - severe_fragmentation_or_corruption
+      - rollback_or_recovery_safer_than_local_patch
+
+smallest_sufficient_interventions:
+  motifs:
+    - unfinished-proof
+    - watershed
+  primitives:
+    - trim
+    - separate
+    - locate
+  operators:
+    - distill
+  evaluators:
+    - trust_evaluator
+    - artifact_shape_evaluator
+
+pivot_conditions:
+  canonical_conflict_unresolved:
+    action: phase_pivot
+    target: method:anchor
+  coherence_restored_but_recheck_needed:
+    action: reroute
+    target: pipeline:Forensics/project_mapping
+  coherence_restored_and_build_primary:
+    action: reroute
+    target: family:Forge
+  docs_or_handoff_reconciliation_primary:
+    action: reroute
+    target: family:Conduit
+
+exit_conditions:
+  - entropy_classification_present
+  - residue_disposition_ledger_present
+  - metadata_normalization_record_present
+  - trust_reassessment_note_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - canonical_structure_map.yaml
+    - residue_disposition_ledger.yaml
+    - metadata_normalization_record.yaml
+    - route_recommendation.yaml
+  supporting:
+    - trust_reassessment_note.yaml
+    - changed_structure_map.yaml
+    - fragmentation_snapshot.yaml

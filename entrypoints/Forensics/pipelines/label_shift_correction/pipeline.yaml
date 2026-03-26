@@ -1,0 +1,97 @@
+id: label_shift_correction
+family: Forensics
+kind: end_to_end_pipeline
+frame_alias: Calibrate
+status: experimental
+purpose: >
+  Correct label distribution shift in in-context or classifier-like tasks by
+  aligning outputs with reference label marginals and documenting the trust and
+  performance effects of the correction.
+
+entry_conditions:
+  - generative_label_shift_detected
+  - performance_drop_due_to_label_mismatch
+  - evaluation_metrics_indicate_bias
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - detect_shift
+  - gather_reference_distribution
+  - compute_calibration_mapping
+  - apply_calibration
+  - evaluate_calibrated_performance
+  - finalize_or_reroute
+
+phase_contracts:
+  detect_shift:
+    goal: Verify that a material label-marginal mismatch exists.
+    outputs:
+      - shift_assessment
+  gather_reference_distribution:
+    goal: Establish the reference distribution or explain why it is provisional.
+    outputs:
+      - reference_label_distribution
+  compute_calibration_mapping:
+    goal: Build the mapping or calibration factors.
+    outputs:
+      - calibration_mapping
+  apply_calibration:
+    goal: Apply calibration to the active outputs or decision layer.
+    outputs:
+      - adjusted_predictions
+  evaluate_calibrated_performance:
+    goal: Compare calibrated and baseline performance.
+    outputs:
+      - performance_evaluation_report
+  finalize_or_reroute:
+    goal: Exit with a calibration decision or route to the next family.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - tuning-fork
+  primitives:
+    - shift
+    - separate
+  operators:
+    - clarify
+  evaluators:
+    - support_evaluator
+    - trust_evaluator
+
+pivot_conditions:
+  reference_distribution_uncertain:
+    action: reroute
+    target: family:Inquiry
+  calibration_resolves_bias:
+    action: reroute
+    target: family:Inquiry
+  bias_source_structural_or_code_based:
+    action: reroute
+    target: family:Forge
+  source_truth_problem_detected:
+    action: reroute
+    target: family:Forensics
+
+exit_conditions:
+  - shift_assessment_present
+  - reference_label_distribution_present
+  - performance_evaluation_report_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - calibration_mapping.yaml
+    - performance_evaluation_report.yaml
+    - route_recommendation.yaml
+  supporting:
+    - shift_assessment.yaml
+    - reference_label_distribution.yaml
+    - adjusted_predictions.yaml

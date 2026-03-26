@@ -1,0 +1,109 @@
+id: hypothesis_generation
+family: Inquiry
+kind: end_to_end_pipeline
+frame_alias: Venture
+status: core
+purpose: >
+  Generate, preserve, and discriminate explanatory candidates when a question
+  remains open, an anomaly resists the current frame, or available evidence
+  supports multiple live interpretations.
+
+entry_conditions:
+  - explanatory_or_frame_selection_work_is_primary
+  - the_question_is_not_safely_resolved_by_direct_lookup_or_simple_deduction
+  - enough_signal_exists_to_generate_candidates_even_if_evidence_remains_incomplete
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - define_gap_or_anomaly
+  - generate_diverse_candidate_frames
+  - preserve_alternatives_before_closure
+  - identify_discriminators
+  - evaluate_candidates
+  - provisional_selection_with_residue
+  - finalize_or_reroute
+
+phase_contracts:
+  define_gap_or_anomaly:
+    goal: State the explanatory gap, anomaly, or frame conflict driving candidate generation.
+    outputs:
+      - gap_note
+  generate_diverse_candidate_frames:
+    goal: Generate structurally distinct explanatory candidates.
+    outputs:
+      - candidate_set
+  preserve_alternatives_before_closure:
+    goal: Prevent premature collapse while candidate space is still informative.
+    outputs:
+      - preserved_rival_note
+  identify_discriminators:
+    goal: Identify what evidence or tests would actually separate the candidates.
+    outputs:
+      - discriminator_list
+  evaluate_candidates:
+    goal: Assess candidates against available support and discriminators.
+    outputs:
+      - candidate_assessment
+  provisional_selection_with_residue:
+    goal: Make a working selection while preserving residue and unresolved rivals.
+    outputs:
+      - provisional_selection_note
+      - evidence_gap_note
+  finalize_or_reroute:
+    goal: Exit with a working frame or justified next move.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - odd-one-out
+    - unfinished-proof
+  primitives:
+    - open
+    - hold
+    - shift
+    - separate
+  operators:
+    - distill
+  evaluators:
+    - discriminator_evaluator
+    - support_evaluator
+    - frame_evaluator
+
+pivot_conditions:
+  evidential_support_too_thin:
+    action: sibling_shift
+    target: pipeline:Inquiry/research
+  data_may_sharpen_candidates:
+    action: sibling_shift
+    target: pipeline:Inquiry/data_analysis
+  candidates_cannot_be_compared_without_binding:
+    action: sibling_shift
+    target: pipeline:Inquiry/formalization
+  problem_statement_or_support_untrustworthy:
+    action: reroute
+    target: family:Forensics
+
+exit_conditions:
+  - candidate_set_present
+  - discriminator_list_present
+  - provisional_selection_note_present
+  - evidence_gap_note_present
+
+artifacts:
+  primary:
+    - candidate_set.yaml
+    - discriminator_list.yaml
+    - provisional_selection_note.yaml
+    - route_recommendation.yaml
+  supporting:
+    - gap_note.yaml
+    - preserved_rival_note.yaml
+    - evidence_gap_note.yaml
+    - candidate_assessment.yaml

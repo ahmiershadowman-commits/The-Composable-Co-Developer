@@ -1,0 +1,115 @@
+id: scholarly_writing
+frame_alias: Articulate
+family: Conduit
+kind: end_to_end_pipeline
+status: core
+
+purpose: >
+  Convert grounded material into formal scholarly communication with explicit
+  argumentative structure, claim calibration, citation discipline, and clean
+  final scholarly artifacts.
+
+entry_conditions:
+  - source_material_exists
+  - audience_or_genre_is_known_or_can_be_inferred
+  - claim_support_is_at_least_partially_grounded
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+phase_order:
+  - frame_genre
+  - extract_sources
+  - build_argument
+  - draft
+  - revise
+  - citation_pass
+  - cleanup
+  - finalize
+
+phase_contracts:
+  frame_genre:
+    goal: Fix audience, venue/genre, scope, and claim style before prose expansion.
+    outputs:
+      - genre_frame
+      - audience_frame
+  extract_sources:
+    goal: Pull the supporting material, quotations, results, and unresolved tensions into a usable source packet.
+    outputs:
+      - source_packet
+      - citation_candidates
+  build_argument:
+    goal: Create the claim hierarchy and order of support before drafting.
+    outputs:
+      - outline
+      - claim_hierarchy
+  draft:
+    goal: Produce a first complete argument-bearing draft.
+    outputs:
+      - draft_v1
+  revise:
+    goal: Strengthen structure, trim overclaim, improve transitions, and surface unsupported moves.
+    outputs:
+      - revised_draft
+  citation_pass:
+    goal: Align citations and references with actual claims and supporting material.
+    outputs:
+      - citation_map
+      - reference_section
+  cleanup:
+    goal: Normalize headings, metadata, figure/table references, appendices, and unresolved notes.
+    outputs:
+      - cleaned_draft
+  finalize:
+    goal: Produce a handoff-ready scholarly artifact with calibrated claims.
+    outputs:
+      - final_document
+      - unresolveds_log
+
+smallest_sufficient_interventions:
+  motifs:
+    - unfinished-proof
+    - returning-expedition
+  primitives:
+    - weave
+    - separate
+    - reread
+  operators:
+    - clarify
+    - distill
+  evaluators:
+    - support_strength
+    - argument_structure
+    - overclaim_check
+
+pivot_conditions:
+  support_weak:
+    action: reroute
+    target: pipeline:Inquiry/research
+  concepts_underspecified:
+    action: reroute
+    target: pipeline:Inquiry/formalization
+  document_mismatch_with_ground_truth:
+    action: reroute
+    target: pipeline:Forensics/documentation_audit
+  too_many_live_branches:
+    action: invoke_heavy_skill
+    target: pipeline:Conduit/handoff_synthesis
+
+exit_conditions:
+  - final_document_present
+  - citation_map_present
+  - unresolveds_logged
+  - metadata_tidy
+  - provenance_preserved
+
+artifacts:
+  primary:
+    - manuscript.md
+  supporting:
+    - citation_map.yaml
+    - references.bib
+    - unresolveds.yaml
+    - provenance_log.yaml

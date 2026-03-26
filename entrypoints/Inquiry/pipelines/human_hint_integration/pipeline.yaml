@@ -1,0 +1,96 @@
+id: human_hint_integration
+family: Inquiry
+kind: end_to_end_pipeline
+frame_alias: Hybrid
+status: experimental
+purpose: >
+  Integrate human hints with model reasoning on tasks where model-only performance,
+  explanations, or commonsense are insufficient.
+
+entry_conditions:
+  - uncommonsense_task_detected
+  - human_hint_available
+  - model_performance_low_or_explanations_unconvincing
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - collect_human_hints
+  - integrate_hints_with_model
+  - generate_hybrid_explanations
+  - evaluate_hybrid_performance
+  - decide_on_adoption
+  - finalize_or_reroute
+
+phase_contracts:
+  collect_human_hints:
+    goal: Gather the hints and establish their provenance and scope.
+    outputs:
+      - hint_dataset
+  integrate_hints_with_model:
+    goal: Build the chosen integration strategy.
+    outputs:
+      - integration_strategy
+  generate_hybrid_explanations:
+    goal: Produce combined outputs using hints plus model reasoning.
+    outputs:
+      - combined_explanation_set
+  evaluate_hybrid_performance:
+    goal: Compare hybrid performance against baseline behavior.
+    outputs:
+      - performance_comparison_report
+  decide_on_adoption:
+    goal: Decide whether the hybrid strategy is worth keeping.
+    outputs:
+      - adoption_decision
+  finalize_or_reroute:
+    goal: Route to the appropriate next family or exit with bounded results.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - productive-stranger
+  primitives:
+    - open
+    - weave
+    - shift
+  operators:
+    - clarify
+  evaluators:
+    - support_evaluator
+    - trust_evaluator
+
+pivot_conditions:
+  hybrid_explanation_improves_accuracy:
+    action: reroute
+    target: family:Inquiry
+  hints_conflict_with_truth_or_source:
+    action: reroute
+    target: family:Forensics
+  communication_required:
+    action: reroute
+    target: family:Conduit
+  integration_requires_code_changes:
+    action: reroute
+    target: family:Forge
+
+exit_conditions:
+  - hint_dataset_present
+  - performance_comparison_report_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - combined_explanation_set.yaml
+    - performance_comparison_report.yaml
+    - route_recommendation.yaml
+  supporting:
+    - hint_dataset.yaml
+    - integration_strategy.yaml
+    - adoption_decision.yaml

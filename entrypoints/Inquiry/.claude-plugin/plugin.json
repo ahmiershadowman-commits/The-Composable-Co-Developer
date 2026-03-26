@@ -1,0 +1,24 @@
+{
+  "name": "inquiry",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Investigation family - research, hypothesis generation, data analysis, formalization",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "family",
+  "keywords": ["inquiry", "research", "hypothesis", "analysis", "formalization"],
+  "files": [
+    "family_route_map.yaml",
+    "selector.route.yaml"
+  ],
+  "pipelines": [
+    "research",
+    "hypothesis_generation",
+    "data_analysis",
+    "formalization",
+    "mathematics"
+  ]
+}

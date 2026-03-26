@@ -1,0 +1,23 @@
+{
+  "name": "conduit",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Documentation and synthesis family - documentation, scholarly writing, handoff synthesis",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "family",
+  "keywords": ["conduit", "documentation", "writing", "synthesis", "handoff"],
+  "files": [
+    "family_route_map.yaml",
+    "selector.route.yaml"
+  ],
+  "pipelines": [
+    "documentation",
+    "scholarly_writing",
+    "professional_writing",
+    "handoff_synthesis"
+  ]
+}

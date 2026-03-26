@@ -1,0 +1,23 @@
+{
+  "name": "forge",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Build/change family - development, coding, testing, and refactor pipelines",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "family",
+  "keywords": ["forge", "development", "coding", "testing", "refactor"],
+  "files": [
+    "family_route_map.yaml",
+    "selector.route.yaml"
+  ],
+  "pipelines": [
+    "development",
+    "coding",
+    "testing",
+    "refactor"
+  ]
+}

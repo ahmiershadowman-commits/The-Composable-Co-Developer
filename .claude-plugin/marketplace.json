@@ -1,0 +1,80 @@
+{
+  "name": "the-composable-co-developer",
+  "owner": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "metadata": {
+    "description": "A metacognitive co-developer marketplace - modular AI plugins for ground-truth establishment, hypothesis generation, creative synthesis, and self-guided context engineering on Windows",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "trace",
+      "source": "./shared/Trace",
+      "description": "Metacognitive controller - applies smallest sufficient intervention for routing and supervision",
+      "version": "0.1.0",
+      "category": "shared-authority"
+    },
+    {
+      "name": "lever",
+      "source": "./shared/Lever",
+      "description": "Evaluator and escalation authority - owns commitments, pivots, and reopen rules",
+      "version": "0.1.0",
+      "category": "shared-authority"
+    },
+    {
+      "name": "residue",
+      "source": "./shared/Residue",
+      "description": "Suspicious-surface lens library - investigative interventions for anomalous signals",
+      "version": "0.1.0",
+      "category": "shared-authority"
+    },
+    {
+      "name": "primitives",
+      "source": "./shared/primitives",
+      "description": "Smallest reusable interventions - metacognitive and reasoning primitives",
+      "version": "0.1.0",
+      "category": "shared-components"
+    },
+    {
+      "name": "operators",
+      "source": "./shared/operators",
+      "description": "Reusable operator classes - bounded local transformations and evaluations",
+      "version": "0.1.0",
+      "category": "shared-components"
+    },
+    {
+      "name": "forensics",
+      "source": "./entrypoints/Forensics",
+      "description": "Ground-truth establishment family - project mapping, defragmentation, anomaly disambiguation",
+      "version": "0.1.0",
+      "category": "family",
+      "pipelines": ["project_mapping", "defragmentation", "documentation_audit", "anomaly_disambiguation"]
+    },
+    {
+      "name": "forge",
+      "source": "./entrypoints/Forge",
+      "description": "Build/change family - development, coding, testing, and refactor pipelines",
+      "version": "0.1.0",
+      "category": "family",
+      "pipelines": ["development", "coding", "testing", "refactor"]
+    },
+    {
+      "name": "inquiry",
+      "source": "./entrypoints/Inquiry",
+      "description": "Investigation family - research, hypothesis generation, data analysis, formalization",
+      "version": "0.1.0",
+      "category": "family",
+      "pipelines": ["research", "hypothesis_generation", "data_analysis", "formalization", "mathematics"]
+    },
+    {
+      "name": "conduit",
+      "source": "./entrypoints/Conduit",
+      "description": "Documentation and synthesis family - documentation, scholarly writing, handoff synthesis",
+      "version": "0.1.0",
+      "category": "family",
+      "pipelines": ["documentation", "scholarly_writing", "professional_writing", "handoff_synthesis"]
+    }
+  ]
+}

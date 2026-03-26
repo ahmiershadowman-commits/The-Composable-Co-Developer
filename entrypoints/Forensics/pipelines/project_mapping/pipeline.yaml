@@ -1,0 +1,116 @@
+id: project_mapping
+family: Forensics
+kind: end_to_end_pipeline
+frame_alias: Survey
+status: core
+purpose: >
+  Build a grounded map of actual project state before trusting documentation,
+  assumptions, or local impressions. Produce a physical dependency graph,
+  trust classification, discrepancy map, canonical-source note, and route recommendation.
+
+entry_conditions:
+  - project_or_workspace_state_is_material_to_the_task
+  - canonical_structure_or_current_truth_must_be_established_before_action
+  - drift_or_surface_inaccuracy_is_possible_even_if_not_yet_proven
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - scope_boundary
+  - inventory_artifacts_and_runtime
+  - classify_sources_and_provenance
+  - construct_physical_dependency_graph
+  - map_discrepancies_and_conflicts
+  - classify_trust_zones
+  - identify_canonical_structure_or_candidates
+  - recommend_route
+
+phase_contracts:
+  scope_boundary:
+    goal: Bound what the map must include and what would count as a trustworthy route recommendation.
+    outputs:
+      - scope_note
+  inventory_artifacts_and_runtime:
+    goal: Record the actual artifacts, runtime surfaces, and file or repo state relevant to the task.
+    outputs:
+      - inventory_ledger
+  classify_sources_and_provenance:
+    goal: Classify each source by observed provenance, freshness, and trust level.
+    outputs:
+      - provenance_ledger
+      - source_classification
+  construct_physical_dependency_graph:
+    goal: Map what actually depends on what, independent of aspirational documentation.
+    outputs:
+      - physical_dependency_graph
+  map_discrepancies_and_conflicts:
+    goal: Record material disagreement between observed state, docs, metadata, and assumptions.
+    outputs:
+      - discrepancy_ledger
+  classify_trust_zones:
+    goal: Mark what can be relied on, what is provisional, and what is suspect.
+    outputs:
+      - trust_zone_map
+  identify_canonical_structure_or_candidates:
+    goal: Identify the most trustworthy canonical structure or a bounded set of candidates.
+    outputs:
+      - canonical_source_note
+  recommend_route:
+    goal: Recommend the next safe pipeline or family based on grounded state rather than surface assumptions.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - unfinished-proof
+    - odd-one-out
+  primitives:
+    - separate
+    - locate
+    - reread
+  operators:
+    - clarify
+  evaluators:
+    - trust_evaluator
+    - artifact_shape_evaluator
+
+pivot_conditions:
+  entropy_primary:
+    action: reroute
+    target: pipeline:Forensics/defragmentation
+  project_state_trustworthy_for_build:
+    action: reroute
+    target: family:Forge
+  state_grounded_but_question_open:
+    action: reroute
+    target: family:Inquiry
+  docs_or_handoff_primary_after_grounding:
+    action: reroute
+    target: family:Conduit
+  documentation_materially_conflicted:
+    action: sibling_shift
+    target: pipeline:Forensics/documentation_audit
+
+exit_conditions:
+  - inventory_ledger_present
+  - physical_dependency_graph_present
+  - discrepancy_ledger_present
+  - trust_zone_map_present
+  - canonical_source_note_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - inventory_ledger.yaml
+    - physical_dependency_graph.yaml
+    - discrepancy_ledger.yaml
+    - trust_zone_map.yaml
+    - route_recommendation.yaml
+  supporting:
+    - provenance_ledger.yaml
+    - canonical_source_note.yaml

@@ -1,0 +1,13 @@
+id: release
+family: metacognitive
+kind: primitive
+status: core
+purpose: Reopen a frame or commitment that hardened too early.
+use_when:
+  - contradiction_after_commit
+  - new_evidence_breaks_local_closure
+  - evaluator_flags_brittle_commitment
+expected_effects:
+  - reopened_branch_space
+  - commitment_demoted_to_provisional
+smallest_sufficient_scope: local_to_pipeline

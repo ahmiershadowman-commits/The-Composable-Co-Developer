@@ -1,0 +1,31 @@
+id: feedback.conduit
+kind: family_loop_map
+family: Conduit
+purpose: >
+  Show how rendering, revision, and handoff work loop with support, grounding,
+  and transition readiness.
+
+loops:
+  - id: draft_to_revision
+    from: pipeline:Conduit/documentation
+    trigger:
+      - structure_exists_but_support_or_shape_is_weak
+    target: authority:Lever
+
+  - id: support_backfill
+    from: family:Conduit
+    trigger:
+      - claim_support_or_explanatory_depth_is_insufficient
+    target: family:Inquiry
+
+  - id: reality_check
+    from: family:Conduit
+    trigger:
+      - rendered_account_disagrees_with_actual_project_or_system_state
+    target: family:Forensics
+
+  - id: compression_pass
+    from: family:Conduit
+    trigger:
+      - material_is_grounded_but_transition_ready_compression_is_needed
+    target: pipeline:Conduit/handoff_synthesis

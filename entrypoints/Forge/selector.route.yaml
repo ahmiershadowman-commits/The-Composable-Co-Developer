@@ -1,0 +1,62 @@
+id: forge.route
+kind: persistent_selector
+family: Forge
+pipeline_scope:
+  - development
+  - coding
+  - testing
+  - refactor
+
+motif_bias:
+  primary: cambium-layer
+  secondary: unfinished-proof
+  tags:
+    - build_locally_but_watch_scope
+    - preserve_shape_while_changing_structure
+
+rubric_ref: shared/Trace/rubric.yaml
+checklist_ref: shared/Trace/checklist.yaml
+trigger_glossary_ref: shared/Trace/trigger_glossary.yaml
+target_grammar_ref: runtime/methodology/target_grammar.yaml
+
+smallest_sufficient_default: primitive
+escalation_boundary: local_evaluator
+
+trigger_policies:
+  - name: local_scope_no_longer_local
+    trigger_class: method_fit
+    preferred_action:
+      kind: sibling_shift
+      target: pipeline:Forge/development
+      reason: The issue has outgrown bounded coding and now requires system-level work.
+      intervention_level: 6
+      preserve_residue: true
+  - name: repeated_test_failure
+    trigger_class: repeated_failure
+    preferred_action:
+      kind: local_evaluator
+      target: evaluator:contradiction_evaluator
+      reason: Repeated failure suggests local fixes are underdiagnosing the issue.
+      intervention_level: 4
+      preserve_residue: true
+  - name: repo_or_spec_drift
+    trigger_class: trust_collapse
+    preferred_action:
+      kind: reroute
+      target: family:Forensics
+      reason: Build work should pause when project truth becomes uncertain.
+      intervention_level: 8
+      preserve_residue: true
+  - name: artifact_shape_drift
+    trigger_class: artifact_shape_drift
+    preferred_action:
+      kind: local_evaluator
+      target: evaluator:artifact_shape_evaluator
+      reason: Determine whether this is best handled by refactor or defragmentation.
+      intervention_level: 4
+      preserve_residue: true
+
+exit_checks:
+  - artifact_matches_intended_shape
+  - tests_and_verification_match_scope
+  - metadata_and_handoff_state_are_tidy

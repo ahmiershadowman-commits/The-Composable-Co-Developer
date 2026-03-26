@@ -1,0 +1,28 @@
+id: trace.shared.trigger_glossary
+kind: trigger_glossary
+
+triggers:
+  repeated_failure:
+    meaning: The current local path has failed enough times that local continuation is now suspect.
+    default_first_response: primitive_or_local_evaluator
+  contradiction_detected:
+    meaning: Two relevant surfaces, states, or claims materially disagree.
+    default_first_response: local_evaluator_then_lever
+  trust_collapse:
+    meaning: The visible surface can no longer be treated as ground truth.
+    default_first_response: forensics_reset
+  metadata_drift:
+    meaning: The artifact changed in ways that make metadata or provenance unreliable if left untouched.
+    default_first_response: normalize_or_cleanup
+  artifact_shape_drift:
+    meaning: The artifact is no longer tracking the target shape of the active pipeline.
+    default_first_response: pivot_or_cleanup
+  reroute_ambiguity:
+    meaning: It is not clear whether to stay local, shift sibling pipelines, or cross families.
+    default_first_response: lever
+  branch_sprawl:
+    meaning: Too many live branches exist relative to discrimination or synthesis pressure.
+    default_first_response: synthesize_or_discriminate
+  suspicious_comfort:
+    meaning: The current frame feels complete too early relative to tension, evidence, or contradiction.
+    default_first_response: residue_lens_or_evaluator

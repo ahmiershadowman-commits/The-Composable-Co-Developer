@@ -1,0 +1,102 @@
+id: anomaly_disambiguation
+family: Forensics
+kind: end_to_end_pipeline
+frame_alias: Isolate
+status: core
+purpose: >
+  Determine whether an apparent anomaly is a real signal, a measurement artifact,
+  a frame mismatch, a distribution shift, or a consequence of untrusted surface
+  assumptions before explanation or repair.
+
+entry_conditions:
+  - an_anomaly_or_suspicious_pattern_is_material_to_the_task
+  - the_cost_of_misclassifying_the_anomaly_is_nontrivial
+  - explanatory_or_corrective_work_is_unsafe_without_first_sorting_signal_from_noise
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - scope_the_anomaly
+  - inventory_sources_and_measurement_context
+  - compare_surface_account_to_observed_state
+  - classify_possible_anomaly_classes
+  - test_trust_and_distribution_assumptions
+  - produce_grounded_anomaly_classification
+  - recommend_route
+
+phase_contracts:
+  scope_the_anomaly:
+    goal: Bound the anomaly and what would count as a meaningful classification.
+    outputs:
+      - anomaly_scope_note
+  inventory_sources_and_measurement_context:
+    goal: Gather measurements, logs, datasets, and environment conditions relevant to the anomaly.
+    outputs:
+      - anomaly_source_packet
+  compare_surface_account_to_observed_state:
+    goal: Compare the anomaly as described to the anomaly as observed.
+    outputs:
+      - surface_vs_observed_comparison
+  classify_possible_anomaly_classes:
+    goal: Enumerate and rank candidate anomaly classes.
+    outputs:
+      - anomaly_class_candidates
+  test_trust_and_distribution_assumptions:
+    goal: Determine whether trust, distribution, or frame mismatch is driving the anomaly.
+    outputs:
+      - trust_and_distribution_assessment
+  produce_grounded_anomaly_classification:
+    goal: Produce the most grounded current anomaly classification with preserved uncertainty.
+    outputs:
+      - anomaly_classification
+  recommend_route:
+    goal: Route to Inquiry, Defragmentation, or exit with bounded unresolved classification.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - odd-one-out
+    - unfinished-proof
+  primitives:
+    - open
+    - locate
+    - separate
+  operators:
+    - distill
+  evaluators:
+    - trust_evaluator
+    - frame_evaluator
+    - contradiction_evaluator
+
+pivot_conditions:
+  entropy_primary:
+    action: reroute
+    target: pipeline:Forensics/defragmentation
+  explanatory_work_now_safe:
+    action: reroute
+    target: family:Inquiry
+  source_truth_uncertain:
+    action: reroute
+    target: pipeline:Forensics/project_mapping
+
+exit_conditions:
+  - anomaly_classification_present
+  - trust_and_distribution_assessment_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - anomaly_classification.yaml
+    - trust_and_distribution_assessment.yaml
+    - route_recommendation.yaml
+  supporting:
+    - anomaly_scope_note.yaml
+    - anomaly_source_packet.yaml
+    - surface_vs_observed_comparison.yaml
+    - anomaly_class_candidates.yaml

@@ -1,0 +1,65 @@
+family: Conduit
+description: >
+  Communication/transfer family. Used when the task is to render structure into
+  usable outward form for readers, collaborators, operators, or future sessions.
+
+default_entry: documentation
+
+smallest_sufficient_intervention_order:
+  - motif
+  - primitive
+  - selector_self_check
+  - local_evaluator
+  - phase_pivot
+  - sibling_pipeline_shift
+  - heavy_skill
+  - cross_family_reroute
+  - forensic_reset
+
+pipelines:
+  - id: documentation
+    alias: Clarify
+    status: core
+    use_when:
+      - operational_or_technical_documentation_is_needed
+  - id: scholarly_writing
+    alias: Articulate
+    status: core
+    use_when:
+      - formal_argumentative_or_scholarly_output_is_needed
+  - id: handoff_synthesis
+    alias: Distill
+    status: core
+    use_when:
+      - accumulated_material_must_be_compressed_without_erasing_load_bearing_structure
+  - id: professional_writing
+    alias: Convey
+    status: core
+    use_when:
+      - professional_or_operational_audience_needs_clarity
+      - communication_requires_narrative_and_recommendations_but_not_scholarly_rigor
+
+family_feedback:
+  - from: pipeline:Conduit/documentation
+    trigger:
+      - branch_accumulation_high
+      - output_needs_condensed_transfer_form
+    target: pipeline:Conduit/handoff_synthesis
+  - from: pipeline:Conduit/scholarly_writing
+    trigger:
+      - support_weak
+      - concepts_underbound
+    target: family:Inquiry
+  - from: pipeline:Conduit/professional_writing
+    trigger:
+      - underlying_claims_or_support_are_weak
+    target: family:Inquiry
+  - from: pipeline:Conduit/professional_writing
+    trigger:
+      - formal_argument_is_required
+    target: pipeline:Conduit/scholarly_writing
+  - from: family:Conduit
+    trigger:
+      - documentation_truth_unclear
+      - source_material_conflicts_with_observed_state
+    target: family:Forensics

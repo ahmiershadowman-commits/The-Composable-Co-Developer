@@ -1,0 +1,65 @@
+family: Forge
+description: >
+  Build/change family. Used when trustworthy state exists and the task is to shape,
+  modify, validate, or strengthen artifacts and systems.
+
+default_entry: development
+
+smallest_sufficient_intervention_order:
+  - motif
+  - primitive
+  - selector_self_check
+  - local_evaluator
+  - phase_pivot
+  - sibling_pipeline_shift
+  - heavy_skill
+  - cross_family_reroute
+  - forensic_reset
+
+pipelines:
+  - id: development
+    alias: Frame
+    status: core
+    use_when:
+      - change_scope_is_systemic
+      - architecture_or_repo_shape_is_in_play
+      - multiple_subtasks_need_coordination
+  - id: coding
+    alias: Shape
+    status: core
+    use_when:
+      - bounded_implementation_is_needed
+      - local_code_changes_are_primary
+  - id: testing
+    alias: Probe
+    status: core
+    use_when:
+      - validation_or_failure_diagnosis_is_primary
+      - confidence_needs_explicit_measurement
+  - id: refactor
+    alias: Temper
+    status: core
+    use_when:
+      - structure_should_change_without_behavioral_regression
+      - local_cleanup_is_insufficient_but_full_development_is_not_needed
+
+family_feedback:
+  - from: pipeline:Forge/development
+    trigger:
+      - implementation_scope_localized
+    target: pipeline:Forge/coding
+  - from: pipeline:Forge/coding
+    trigger:
+      - behavior_changed
+      - confidence_requires_validation
+    target: pipeline:Forge/testing
+  - from: pipeline:Forge/testing
+    trigger:
+      - structural_failure_detected
+    target: pipeline:Forge/development
+  - from: family:Forge
+    trigger:
+      - trust_collapse
+      - docs_state_code_disagree_deeply
+      - canonical_source_unclear
+    target: family:Forensics

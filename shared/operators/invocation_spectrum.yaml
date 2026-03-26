@@ -1,0 +1,45 @@
+id: shared.operators.invocation_spectrum
+kind: intervention_mapping
+purpose: >
+  Map the intervention spectrum to the smallest useful callable mechanism.
+
+spectrum:
+  0:
+    label: continue
+    default_callable: none
+  1:
+    label: motif_nudge
+    default_callable: motif
+  2:
+    label: primitive_or_light_operator
+    default_callable:
+      - primitive
+      - local_reading_operator
+      - local_transformation_operator
+  3:
+    label: self_check
+    default_callable: trace_micro_check
+  4:
+    label: local_evaluator
+    default_callable:
+      - lever_evaluator
+      - bounded_evaluation_operator
+  5:
+    label: within_pipeline_pivot
+    default_callable:
+      - pipeline_method_shift
+      - recovery_operator
+  6:
+    label: sibling_pipeline_shift
+    default_callable: family_route_shift
+  7:
+    label: heavy_synthesis_or_evaluator
+    default_callable:
+      - synthesis_operator
+      - heavy_evaluator
+  8:
+    label: cross_family_reroute
+    default_callable: family_reroute
+  9:
+    label: forensics_reset
+    default_callable: forensics

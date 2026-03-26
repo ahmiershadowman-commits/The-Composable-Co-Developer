@@ -1,0 +1,14 @@
+id: clarify
+kind: operator
+status: core
+purpose: >
+  Improve external legibility by sharpening structure, audience fit, and explicit
+  claim boundaries without requiring a full reroute.
+use_when:
+  - communication_structure_weak
+  - documentation_needs_audience_shape
+  - local rendering_can_be_improved_without_family_shift
+returns:
+  - clarified_structure
+  - sharper_claim_boundaries
+  - improved_reader_fit
