@@ -1,14 +1,18 @@
 from __future__ import annotations
-import unittest
+import sys
+import subprocess
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
-    suite = unittest.defaultTestLoader.discover(str(REPO_ROOT / 'tests'))
-    runner = unittest.TextTestRunner(verbosity=2)
-    result = runner.run(suite)
-    return 0 if result.wasSuccessful() else 1
+    """Run bundle validation using pytest."""
+    # Use pytest which handles path setup correctly
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", str(REPO_ROOT / "tests"), "-v", "--tb=short"],
+        cwd=str(REPO_ROOT)
+    )
+    return result.returncode
 
 if __name__ == '__main__':
     raise SystemExit(main())
