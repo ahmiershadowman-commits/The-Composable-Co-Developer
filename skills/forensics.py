@@ -1,3 +1,7 @@
+# RELOCATED — this module has moved to runtime/skills_runners/forensics.py
+# This stub exists for backwards compatibility only.
+from runtime.skills_runners.forensics import *  # noqa: F401, F403
+
 """
 Forensics Skill - Ground-truth establishment.
 

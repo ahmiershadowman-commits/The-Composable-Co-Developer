@@ -1,3 +1,7 @@
+# RELOCATED — this module has moved to runtime/skills_runners/inquiry.py
+# This stub exists for backwards compatibility only.
+from runtime.skills_runners.inquiry import *  # noqa: F401, F403
+
 """
 Inquiry Skill - Investigation and explanation.
 

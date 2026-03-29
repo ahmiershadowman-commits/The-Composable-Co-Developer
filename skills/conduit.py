@@ -1,3 +1,7 @@
+# RELOCATED — this module has moved to runtime/skills_runners/conduit.py
+# This stub exists for backwards compatibility only.
+from runtime.skills_runners.conduit import *  # noqa: F401, F403
+
 """
 Conduit Skill - Documentation and synthesis.
 

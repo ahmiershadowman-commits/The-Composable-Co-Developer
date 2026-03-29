@@ -19,21 +19,46 @@ from entrypoints.Inquiry.executors import InquiryExecutor
 from entrypoints.Conduit.executors import ConduitExecutor
 
 
+# Experimental pipelines that are not available for production use.
+# These are parked pending empirical validation.
+EXPERIMENTAL_PIPELINES = {
+    "Inquiry": {"prompt_order_optimization", "human_hint_integration"},
+}
+
+
+class ExperimentalPipelineError(Exception):
+    """Raised when an experimental pipeline is invoked."""
+    pass
+
+
 class RuntimeDispatcher:
     """
     Dispatches pipeline execution to appropriate family executor.
-    
+
     Coordinates between runtime spine and family-specific
     execution logic.
     """
-    
+
     def __init__(self, output_path: Path):
         self.output_path = output_path
         self.forensics = ForensicsExecutor(output_path)
         self.forge = ForgeExecutor(output_path)
         self.inquiry = InquiryExecutor(output_path)
         self.conduit = ConduitExecutor(output_path)
-    
+
+    def _guard_experimental(self, family_name: str, pipeline_id: str) -> None:
+        """
+        Raise ExperimentalPipelineError if the pipeline is marked experimental.
+
+        Call at the top of each _execute_* method.
+        """
+        blocked = EXPERIMENTAL_PIPELINES.get(family_name, set())
+        if pipeline_id in blocked:
+            raise ExperimentalPipelineError(
+                f"'{pipeline_id}' is an experimental pipeline and is not available for use. "
+                f"Experimental pipelines are parked pending empirical validation."
+            )
+
     def execute_pipeline(
         self,
         family: FamilyType,
@@ -72,6 +97,7 @@ class RuntimeDispatcher:
         context: Dict[str, Any],
     ) -> ExecutionState:
         """Execute Forensics pipeline."""
+        self._guard_experimental("Forensics", pipeline_id)
         if pipeline_id == "project_mapping":
             return self.forensics.execute_project_mapping(state, context)
         elif pipeline_id == "defragmentation":
@@ -91,6 +117,7 @@ class RuntimeDispatcher:
         context: Dict[str, Any],
     ) -> ExecutionState:
         """Execute Forge pipeline."""
+        self._guard_experimental("Forge", pipeline_id)
         if pipeline_id == "development":
             return self.forge.execute_development(state, context)
         elif pipeline_id == "coding":
@@ -110,6 +137,7 @@ class RuntimeDispatcher:
         context: Dict[str, Any],
     ) -> ExecutionState:
         """Execute Inquiry pipeline."""
+        self._guard_experimental("Inquiry", pipeline_id)
         if pipeline_id == "research":
             return self.inquiry.execute_research(state, context)
         elif pipeline_id == "hypothesis_generation":
@@ -131,6 +159,7 @@ class RuntimeDispatcher:
         context: Dict[str, Any],
     ) -> ExecutionState:
         """Execute Conduit pipeline."""
+        self._guard_experimental("Conduit", pipeline_id)
         if pipeline_id == "documentation":
             return self.conduit.execute_documentation(state, context)
         elif pipeline_id == "handoff_synthesis":

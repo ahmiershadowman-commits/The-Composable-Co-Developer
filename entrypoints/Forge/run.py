@@ -18,15 +18,17 @@ from runtime.artifacts.writer import ArtifactWriter
 from entrypoints.Forge.executors import ForgeExecutor
 
 
-def run_pipeline(pipeline_id: str, problem: str, output_dir: Path):
+def run_pipeline(pipeline_id: str, problem: str, output_dir: Path, project_root: Path = None):
     """Run a Forge pipeline."""
+    project_root = project_root or Path.cwd()
     print(f"Running Forge/{pipeline_id}")
     print(f"Problem: {problem}")
+    print(f"Project: {project_root}")
     print(f"Output: {output_dir}")
     print()
-    
+
     state = ExecutionState(current_family=FamilyType.FORGE)
-    executor = ForgeExecutor(output_dir)
+    executor = ForgeExecutor(output_dir, project_root=project_root)
     writer = ArtifactWriter(output_dir)
     
     context = {
@@ -69,12 +71,15 @@ def main():
                        help="Pipeline to execute")
     parser.add_argument("--problem", default="", help="Problem description")
     parser.add_argument("--output", default=str(REPO_ROOT / "runtime_output"), help="Output directory")
-    
+    parser.add_argument("--project", default=str(Path.cwd()),
+                        help="Project root directory (defaults to current working directory)")
+
     args = parser.parse_args()
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    success = run_pipeline(args.pipeline, args.problem, output_dir)
+    project_root = Path(args.project).resolve()
+
+    success = run_pipeline(args.pipeline, args.problem, output_dir, project_root=project_root)
     sys.exit(0 if success else 1)
 
 

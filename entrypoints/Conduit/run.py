@@ -18,15 +18,17 @@ from runtime.artifacts.writer import ArtifactWriter
 from entrypoints.Conduit.executors import ConduitExecutor
 
 
-def run_pipeline(pipeline_id: str, content: str, output_dir: Path):
+def run_pipeline(pipeline_id: str, content: str, output_dir: Path, project_root: Path = None):
     """Run a Conduit pipeline."""
+    project_root = project_root or Path.cwd()
     print(f"Running Conduit/{pipeline_id}")
     print(f"Content: {content[:100]}..." if len(content) > 100 else f"Content: {content}")
+    print(f"Project: {project_root}")
     print(f"Output: {output_dir}")
     print()
-    
+
     state = ExecutionState(current_family=FamilyType.CONDUIT)
-    executor = ConduitExecutor(output_dir)
+    executor = ConduitExecutor(output_dir, project_root=project_root)
     writer = ArtifactWriter(output_dir)
     
     context = {
@@ -69,12 +71,15 @@ def main():
                        help="Pipeline to execute")
     parser.add_argument("--content", default="", help="Content to process")
     parser.add_argument("--output", default=str(REPO_ROOT / "runtime_output"), help="Output directory")
-    
+    parser.add_argument("--project", default=str(Path.cwd()),
+                        help="Project root directory (defaults to current working directory)")
+
     args = parser.parse_args()
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    success = run_pipeline(args.pipeline, args.content, output_dir)
+    project_root = Path(args.project).resolve()
+
+    success = run_pipeline(args.pipeline, args.content, output_dir, project_root=project_root)
     sys.exit(0 if success else 1)
 
 

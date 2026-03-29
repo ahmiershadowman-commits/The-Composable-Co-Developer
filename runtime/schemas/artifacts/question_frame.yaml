@@ -1,0 +1,41 @@
+id: question_frame
+kind: artifact_schema
+produced_by: Inquiry/research, Inquiry/hypothesis_generation
+purpose: >
+  Bounded statement of what is being investigated. Required to be written before
+  evidence collection begins. Prevents scope drift and enables Trace check of
+  whether investigation has answered the stated question.
+
+schema:
+  type: object
+  required:
+    - question
+    - scope
+    - success_criteria
+    - generated_at
+  properties:
+    question:
+      type: string
+      description: The primary investigative question, stated precisely
+    scope:
+      type: object
+      properties:
+        in_scope:
+          type: array
+          items: {type: string}
+        out_of_scope:
+          type: array
+          items: {type: string}
+    success_criteria:
+      type: string
+      description: What would count as a satisfactory answer
+    related_questions:
+      type: array
+      items: {type: string}
+    generated_at:
+      type: string
+
+consumed_by:
+  - Inquiry/research (scope bounding)
+  - Inquiry/hypothesis_generation (hypothesis framing)
+  - Conduit (question answered before render)

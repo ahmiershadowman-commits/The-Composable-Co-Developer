@@ -1,0 +1,65 @@
+id: conduit.entry
+kind: entrypoint_skill
+family: Conduit
+frame_alias: Clarify
+purpose: >
+  Output-rendering work: documentation, handoffs, professional writing, and scholarly synthesis.
+  Use when the primary task is to transfer structure to a reader, collaborator, operator, or
+  future session. If source material conflicts or documentation truth is unclear, run Forensics first.
+
+selector: entrypoints/Conduit/selector.route.yaml
+shared_rubric: shared/Trace/rubric.yaml
+shared_checklist: shared/Trace/checklist.yaml
+shared_trigger_glossary: shared/Trace/trigger_glossary.yaml
+shared_escalation_rules: shared/Lever/escalation_rules.yaml
+
+motif_bias:
+  primary: tight-loop
+  secondary: minimal-footprint
+
+pipelines:
+  - id: documentation
+    frame_alias: Clarify
+    use_when: operational_or_technical_documentation_needed
+  - id: handoff_synthesis
+    frame_alias: Distill
+    use_when: accumulated_material_must_be_compressed_without_erasing_structure
+  - id: scholarly_writing
+    frame_alias: Articulate
+    use_when: formal_argumentative_or_scholarly_output_needed
+  - id: professional_writing
+    frame_alias: Convey
+    use_when: professional_or_operational_audience_needs_clarity_with_narrative
+
+required_artifacts:
+  - draft_document
+  - support_note
+  - unresolveds_and_risks
+  - route_recommendation
+
+entry_triggers:
+  - documentation_needed
+  - handoff_required
+  - professional_writing_requested
+  - findings_need_rendering_for_audience
+
+blocked_when:
+  - documentation_truth_unclear
+  - source_material_conflicts_with_observed_state
+
+exit_conditions:
+  - output_audience_and_purpose_explicit
+  - load_bearing_structure_preserved
+  - unsupported_claims_flagged
+  - output_artifact_written_to_runtime_output
+
+route_targets:
+  forensics:
+    when:
+      - documentation_truth_becomes_unclear_mid_render
+  inquiry:
+    when:
+      - unsupported_claims_found_requiring_evidence
+  forge:
+    when:
+      - documentation_gaps_reveal_missing_implementation
