@@ -2,11 +2,12 @@
 name: forge
 description: >
   This skill should be used when the user asks to "build this", "implement this feature",
-  "write the code for", "refactor this", "add tests", "fix this bug", "make this change",
+  "write the code for", "refactor this", "add tests", "make this change",
   or any task where the primary work is shaping, modifying, or validating artifacts and
   systems. Use Forge when trustworthy state exists and the task is a concrete build or
   change operation. Also triggers on "develop", "code this up", "write tests for",
-  "clean this up", "restructure without breaking behavior".
+  "clean this up", "restructure without breaking behavior". For "fix this bug" — use Forge
+  only when the bug cause is already known; if the cause is unknown, run Inquiry first.
 metadata:
   version: "0.2.0"
   family: Forge
@@ -90,9 +91,15 @@ Do not declare Forge work complete until:
 
 ## References
 
-- `references/artifacts.md` — Full artifact contracts for all Forge pipelines
-- `references/acceptance-matrix.md` — Exit criteria per pipeline
+- `references/artifacts.md` — Read this when you need the full field contract for an artifact you are producing or consuming.
+- `references/acceptance-matrix.md` — Read this when evaluating whether a pipeline has met its exit conditions before routing forward.
 
 ## Anti-patterns
 
-Do not continue Forge when truth has collapsed mid-build — stop and reroute to Forensics. Do not use `development` for single-file local changes (use `coding`). Do not use `refactor` when behavior change is intended.
+**Do not continue Forge when trust has collapsed mid-build.** Building on untrusted state embeds the error into the artifact — the longer Forge continues past a trust collapse, the more work is produced that cannot be verified and may need to be discarded. Stop, reroute to Forensics, and resume only after trust is re-established.
+
+**Do not use `development` for single-file local changes.** The `development` pipeline is for systemic, multi-file, or architectural changes. Using it for local work adds unnecessary scaffolding overhead — the work plan and architecture note phases produce little value when the scope is already bounded to one file. Use `coding`.
+
+**Do not use `refactor` when behavior change is intended.** Refactor's exit conditions require behavioral equivalence. If the intent is to change behavior, `refactor` will declare success prematurely — the behavioral change won't be tested or tracked. Use `development` or `coding`.
+
+**Do not use Forge to fix a bug whose cause is unknown.** Without knowing the cause, the fix is a guess. Use Inquiry/hypothesis_generation first to establish the causal model, then use Forge to implement the fix.

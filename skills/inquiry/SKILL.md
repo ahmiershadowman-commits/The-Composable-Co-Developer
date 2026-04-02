@@ -95,9 +95,15 @@ Do not declare Inquiry work complete until:
 
 ## References
 
-- `references/artifacts.md` — Full artifact contracts for all Inquiry pipelines
-- `references/acceptance-matrix.md` — Exit criteria per pipeline
+- `references/artifacts.md` — Read this when you need the full field contract for an artifact you are producing or consuming.
+- `references/acceptance-matrix.md` — Read this when evaluating whether a pipeline has met its exit conditions before routing forward.
 
 ## Anti-patterns
 
-Do not let Inquiry continue on untrusted state surfaces — reroute to Forensics. Do not use `hypothesis_generation` as a substitute for `research` when evidence exists but hasn't been collected. Do not promote experimental pipelines to default use.
+**Do not let Inquiry continue on untrusted state surfaces.** Investigation on untrusted sources produces confident-looking outputs built on unreliable inputs — the synthesis note and hypothesis set inherit the trust deficit of their sources. Reroute to Forensics before continuing.
+
+**Do not use `hypothesis_generation` as a substitute for `research` when evidence exists but hasn't been collected.** Generating hypotheses without first gathering evidence means the candidates are unconstrained by what is actually true — you get plausible-sounding explanations rather than evidence-discriminated ones. Run `research` first to constrain the hypothesis space.
+
+**Do not declare synthesis complete when gaps remain unexplained.** Unresolved threads dropped silently become invisible assumptions in downstream work. Name them explicitly in the `support_and_gap_map` before routing forward.
+
+**Do not promote experimental pipelines (`prompt_order_optimization`, `human_hint_integration`) to default use.** These pipelines are not validated for general use — their failure modes are not characterized and their outputs should not be treated as reliable.

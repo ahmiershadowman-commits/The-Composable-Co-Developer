@@ -98,9 +98,15 @@ Use the `route_recommendation` artifact to determine the next family:
 
 ## References
 
-- `references/artifacts.md` — Full artifact contracts for all Forensics pipelines
-- `references/acceptance-matrix.md` — Exit criteria per pipeline
+- `references/artifacts.md` — Read this when you need the full field contract for an artifact you are producing or consuming (required fields, types, produced-by/consumed-by chain).
+- `references/acceptance-matrix.md` — Read this when evaluating whether a pipeline has met its exit conditions before routing forward.
 
 ## Anti-patterns
 
-Do not proceed to Forge or Inquiry without completing Forensics when trust has collapsed. Do not treat documentation as ground truth when the trigger is `suspect_documentation`. Do not skip Defragmentation when entropy is actually the primary problem.
+**Do not proceed to Forge or Inquiry without completing Forensics when trust has collapsed.** Acting on untrusted state means the build or investigation is operating on a false substrate — errors compound silently and the output cannot be verified.
+
+**Do not treat documentation as ground truth when the trigger is `suspect_documentation`.** Documentation is a claim surface, not an observation. When docs are suspect, they are evidence to be tested, not a source to be followed.
+
+**Do not skip Defragmentation when entropy is actually the primary problem.** Routing directly to Forge when structure is fragmented produces changes that worsen fragmentation — each build adds to the disorder rather than resolving it.
+
+**Do not declare Forensics complete without a trust classification.** A trust level without a routing justification, or a route without a trust level, means the downstream family is operating blind.

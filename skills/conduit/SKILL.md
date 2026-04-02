@@ -6,7 +6,9 @@ description: >
   "write a paper", "draft a professional memo", "prepare this for a collaborator", or any task
   where the primary work is rendering accumulated structure into usable outward form. Also triggers
   on "clarify this for operators", "distill the key findings", "articulate this formally",
-  "write this up for a non-technical audience", "handoff synthesis".
+  "write this up for a non-technical audience", "handoff synthesis". Note: "write documentation
+  for" triggers Conduit only when the primary task is the documentation itself — if you are
+  writing docs as part of an active build or implementation task, stay in Forge.
 metadata:
   version: "0.2.0"
   family: Conduit
@@ -92,9 +94,15 @@ Do not declare Conduit work complete until:
 
 ## References
 
-- `references/artifacts.md` — Full artifact contracts for all Conduit pipelines
-- `references/acceptance-matrix.md` — Exit criteria per pipeline
+- `references/artifacts.md` — Read this when you need the full field contract for an artifact you are producing or consuming.
+- `references/acceptance-matrix.md` — Read this when evaluating whether a pipeline has met its exit conditions before routing forward.
 
 ## Anti-patterns
 
-Do not let Conduit render unsupported claims — reroute to Inquiry to fill the gap first. Do not use `scholarly_writing` for operational docs (use `documentation`). Do not use `handoff_synthesis` as a first step when source material hasn't been analyzed yet.
+**Do not let Conduit render unsupported claims.** An output that presents unsupported claims as established findings is worse than no output — it creates false confidence that compounds in downstream decisions. Reroute to Inquiry to fill the evidentiary gap before rendering.
+
+**Do not use `scholarly_writing` for operational documentation.** Scholarly writing is structured around claims, argument, and citation — operational docs need task-scoped clarity and directives. Using `scholarly_writing` for a README or runbook produces over-argued, under-actionable output. Use `documentation`.
+
+**Do not use `handoff_synthesis` as a first step when source material hasn't been analyzed.** Handoff synthesis compresses analyzed material — it cannot compress what hasn't been understood yet. If the source material is raw, run the appropriate family pipeline first, then synthesize.
+
+**Do not compress away unresolveds and risks.** Load-bearing structure includes what is unknown and what is at risk. Dropping these to make the output cleaner produces a handoff that appears complete but transfers hidden liabilities to the recipient.

@@ -85,9 +85,19 @@ Residue applies a lens and returns an interpretation. Trace then incorporates it
 
 ## References
 
-- `references/checklist.md` — Full Trace microcheck checklist
-- `references/primitives.md` — 12 primitives (metacognitive + reasoning)
-- `references/operators.md` — 6 operators
-- `references/motifs.md` — 4 core motifs
-- `references/residue-lenses.md` — 8 Residue lenses with trigger conditions
-- `references/lever-evaluators.md` — 6 Lever evaluators with use conditions
+- `references/checklist.md` — Read this when running a structured Trace microcheck; contains the full 10-question form with decision branches.
+- `references/primitives.md` — Read this when selecting a primitive intervention; contains all 12 primitives with use conditions.
+- `references/operators.md` — Read this when selecting an operator; contains all 6 operators with trigger conditions.
+- `references/motifs.md` — Read this when a motif-level intervention may be sufficient; contains the 4 core motifs.
+- `references/residue-lenses.md` — Read this when a suspicious surface signal appears and lens-based interpretation is needed before a route decision.
+- `references/lever-evaluators.md` — Read this when escalating to Lever; contains all 6 evaluators with use conditions and adjudication criteria.
+
+## Anti-patterns
+
+**Do not skip the intervention ladder and jump directly to reroute.** Every level skipped is cost added — cross-family reroutes and forensic resets are expensive. A primitive or motif resolves most problems. Reach for reroute only after cheaper options are exhausted.
+
+**Do not invoke Lever before Trace has attempted handling.** Lever is for adjudication when Trace is genuinely insufficient — not for the first sign of difficulty. Premature Lever invocation inflates authority overhead and trains the wrong escalation reflex.
+
+**Do not treat a microcheck as optional when confidence is rising.** Confidence that outruns evidence is the most common failure mode in pipeline work. Skipping the check because things feel like they're going well is exactly when the check matters most.
+
+**Do not route to Residue for decisions Trace can handle directly.** Residue applies lenses and returns interpretations — it does not make commitment decisions. Routing to Residue for something that is already resolvable by a primitive or phase pivot adds interpretation overhead without adding clarity.
