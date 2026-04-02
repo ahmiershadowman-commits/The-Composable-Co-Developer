@@ -1,0 +1,19 @@
+{
+  "name": "operators",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Reusable operator classes - bounded local transformations and evaluations",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "shared-components",
+  "keywords": ["operators", "transformation", "evaluation"],
+  "files": [
+    "clarify.yaml",
+    "distill.yaml",
+    "invocation_spectrum.yaml",
+    "registry.yaml"
+  ]
+}

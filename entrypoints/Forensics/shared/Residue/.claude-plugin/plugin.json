@@ -1,0 +1,25 @@
+{
+  "name": "residue",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Suspicious-surface lens library - investigative interventions for anomalous signals",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "shared-authority",
+  "keywords": ["residue", "investigation", "anomaly", "lens"],
+  "files": [
+    "absence.yaml",
+    "burden.yaml",
+    "edge.yaml",
+    "misfit.yaml",
+    "offset.yaml",
+    "registry.yaml",
+    "signal.yaml",
+    "tension.yaml",
+    "trigger_map.yaml",
+    "warp.yaml"
+  ]
+}

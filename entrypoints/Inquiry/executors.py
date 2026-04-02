@@ -1236,3 +1236,203 @@ class InquiryExecutor:
                 "confidence": "medium",
                 "generated_at": now,
             }
+
+
+    # -----------------------------------------------------------------------
+    # Experimental pipelines
+    # -----------------------------------------------------------------------
+
+    def execute_prompt_order_optimization(
+        self,
+        state: ExecutionState,
+        context: Dict[str, Any],
+    ) -> ExecutionState:
+        """Execute prompt_order_optimization with explicit approval and evidence."""
+        orders = context.get("orders", [])
+        baseline_scores = context.get("order_scores", {})
+
+        order_matrix = self._build_order_performance_matrix(orders, baseline_scores)
+        state.add_artifact("order_performance_matrix", order_matrix)
+
+        demonstration_dataset = {
+            "demonstrations": context.get("demonstrations", []),
+            "total": len(context.get("demonstrations", [])),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("demonstration_dataset", demonstration_dataset)
+
+        bias_report = self._compute_order_sensitivity(order_matrix)
+        state.add_artifact("bias_assessment_report", bias_report)
+
+        optimized_order = self._select_optimized_order(order_matrix)
+        state.add_artifact("optimized_prompt_order", optimized_order)
+
+        adjusted_runs = {
+            "selected_order": optimized_order.get("order", []),
+            "expected_score": optimized_order.get("score", 0.0),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("adjusted_runs", adjusted_runs)
+
+        evaluation_report = self._evaluate_order_improvement(order_matrix, optimized_order)
+        state.add_artifact("evaluation_report", evaluation_report)
+
+        state.add_artifact(
+            "route_recommendation",
+            self._experimental_inquiry_route(evaluation_report, "prompt_templates_require_code_changes"),
+        )
+        return state
+
+    def execute_human_hint_integration(
+        self,
+        state: ExecutionState,
+        context: Dict[str, Any],
+    ) -> ExecutionState:
+        """Execute human_hint_integration with explicit approval and evidence."""
+        hints = context.get("human_hints", [])
+        baseline_metric = float(context.get("baseline_metric", 0.0))
+        hybrid_metric = float(context.get("hybrid_metric", baseline_metric))
+
+        hint_dataset = {
+            "hints": hints,
+            "total": len(hints),
+            "provenance": context.get("hint_provenance", "manual"),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("hint_dataset", hint_dataset)
+
+        integration_strategy = {
+            "strategy": context.get("integration_strategy", "prepend_hints_then_reason"),
+            "confidence": context.get("integration_confidence", "provisional"),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("integration_strategy", integration_strategy)
+
+        combined_explanation_set = {
+            "explanations": context.get("combined_explanations", []),
+            "hint_count": len(hints),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("combined_explanation_set", combined_explanation_set)
+
+        performance_report = {
+            "baseline_metric": baseline_metric,
+            "hybrid_metric": hybrid_metric,
+            "improvement": round(hybrid_metric - baseline_metric, 4),
+            "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("performance_comparison_report", performance_report)
+
+        adoption_decision = {
+            "adopt": hybrid_metric >= baseline_metric,
+            "rationale": context.get(
+                "adoption_rationale",
+                "Adopt when hybrid performance is at least baseline and explanations remain coherent.",
+            ),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("adoption_decision", adoption_decision)
+
+        state.add_artifact(
+            "route_recommendation",
+            self._experimental_inquiry_route(performance_report, "integration_requires_code_changes"),
+        )
+        return state
+
+    def _build_order_performance_matrix(
+        self,
+        orders: List[Any],
+        order_scores: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Build a comparable matrix of prompt orders and scores."""
+        rows = []
+        for index, order in enumerate(orders):
+            key = f"order_{index + 1}"
+            rows.append(
+                {
+                    "order_id": key,
+                    "order": order,
+                    "score": float(order_scores.get(key, 0.0)),
+                }
+            )
+        return {
+            "rows": rows,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _compute_order_sensitivity(self, order_matrix: Dict[str, Any]) -> Dict[str, Any]:
+        """Compute spread metrics for prompt order sensitivity."""
+        scores = [float(row.get("score", 0.0)) for row in order_matrix.get("rows", [])]
+        if not scores:
+            return {
+                "score_range": 0.0,
+                "mean_score": 0.0,
+                "sensitivity": "unknown",
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+            }
+        score_range = max(scores) - min(scores)
+        mean_score = sum(scores) / len(scores)
+        sensitivity = "high" if score_range >= 0.1 else "medium" if score_range >= 0.03 else "low"
+        return {
+            "score_range": round(score_range, 4),
+            "mean_score": round(mean_score, 4),
+            "sensitivity": sensitivity,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _select_optimized_order(self, order_matrix: Dict[str, Any]) -> Dict[str, Any]:
+        """Select the best observed prompt order."""
+        rows = order_matrix.get("rows", [])
+        if not rows:
+            return {"order": [], "score": 0.0, "generated_at": datetime.now(timezone.utc).isoformat()}
+        best = max(rows, key=lambda row: float(row.get("score", 0.0)))
+        return {
+            "order": best.get("order", []),
+            "score": float(best.get("score", 0.0)),
+            "order_id": best.get("order_id"),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _evaluate_order_improvement(
+        self,
+        order_matrix: Dict[str, Any],
+        optimized_order: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Compare the optimized order against the observed baseline."""
+        scores = [float(row.get("score", 0.0)) for row in order_matrix.get("rows", [])]
+        baseline = scores[0] if scores else 0.0
+        optimized = float(optimized_order.get("score", 0.0))
+        return {
+            "baseline_score": baseline,
+            "optimized_score": optimized,
+            "improvement": round(optimized - baseline, 4),
+            "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _experimental_inquiry_route(
+        self,
+        report: Dict[str, Any],
+        code_change_key: str,
+    ) -> Dict[str, Any]:
+        """Route experimental inquiry work based on improvement and code impact."""
+        now = datetime.now(timezone.utc).isoformat()
+        if bool(report.get(code_change_key)):
+            return {
+                "recommended_next": "Forge/coding",
+                "rationale": "Validated experimental result now requires implementation work.",
+                "confidence": "medium",
+                "generated_at": now,
+            }
+        if float(report.get("improvement", 0.0)) > 0:
+            return {
+                "recommended_next": "Conduit/handoff_synthesis",
+                "rationale": "Experimental result improved outcomes and should be documented for adoption.",
+                "confidence": "medium",
+                "generated_at": now,
+            }
+        return {
+            "recommended_next": "Forensics/anomaly_disambiguation",
+            "rationale": "Experimental intervention did not improve results; investigate the cause before rollout.",
+            "confidence": "medium",
+            "generated_at": now,
+        }

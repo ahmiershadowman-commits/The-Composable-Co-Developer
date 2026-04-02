@@ -7,7 +7,13 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
     """Run bundle validation using pytest."""
-    # Use pytest which handles path setup correctly
+    market_result = subprocess.run(
+        [sys.executable, str(REPO_ROOT / "tools" / "validate_marketplace.py")],
+        cwd=str(REPO_ROOT)
+    )
+    if market_result.returncode != 0:
+        return market_result.returncode
+
     result = subprocess.run(
         [sys.executable, "-m", "pytest", str(REPO_ROOT / "tests"), "-v", "--tb=short"],
         cwd=str(REPO_ROOT)

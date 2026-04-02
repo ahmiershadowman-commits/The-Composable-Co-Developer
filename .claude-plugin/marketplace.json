@@ -1,88 +1,45 @@
 {
-  "name": "the-composable-co-developer",
+  "name": "composable-co-developer",
   "owner": {
     "name": "Ashton Brown",
     "url": "https://github.com/ahmiershadowman-commits"
   },
   "metadata": {
-    "description": "A metacognitive co-developer marketplace - modular AI plugins for ground-truth establishment, hypothesis generation, creative synthesis, and self-guided context engineering on Windows",
-    "version": "1.0.0"
+    "description": "A metacognitive co-developer marketplace - modular AI pipelines for ground-truth establishment, hypothesis generation, creative synthesis, and self-guided context engineering",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "forensics",
-      "source": "./entrypoints/Forensics",
+      "source": "../entrypoints/Forensics",
       "description": "Ground-truth establishment - project mapping, defragmentation, documentation audit, anomaly disambiguation",
-      "version": "1.0.0",
-      "category": "family",
-      "commands": ["forensics"],
-      "agents": ["forensics"],
-      "pipelines": ["project_mapping", "defragmentation", "documentation_audit", "anomaly_disambiguation"]
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Forensics/commands/forensics.md"],
+      "agents": ["../entrypoints/Forensics/agents/forensics.md"]
     },
     {
       "name": "forge",
-      "source": "./entrypoints/Forge",
+      "source": "../entrypoints/Forge",
       "description": "Build/change work - development planning, coding, testing, refactoring",
-      "version": "1.0.0",
-      "category": "family",
-      "commands": ["forge"],
-      "agents": ["forge"],
-      "pipelines": ["development", "coding", "testing", "refactor"]
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Forge/commands/forge.md"],
+      "agents": ["../entrypoints/Forge/agents/forge.md"]
     },
     {
       "name": "inquiry",
-      "source": "./entrypoints/Inquiry",
+      "source": "../entrypoints/Inquiry",
       "description": "Investigation and research - hypothesis generation, data analysis, formalization, mathematics",
-      "version": "1.0.0",
-      "category": "family",
-      "commands": ["inquiry"],
-      "agents": ["inquiry"],
-      "pipelines": ["research", "hypothesis_generation", "data_analysis", "formalization", "mathematics"]
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Inquiry/commands/inquiry.md"],
+      "agents": ["../entrypoints/Inquiry/agents/inquiry.md"]
     },
     {
       "name": "conduit",
-      "source": "./entrypoints/Conduit",
+      "source": "../entrypoints/Conduit",
       "description": "Documentation and synthesis - technical docs, scholarly writing, handoff materials",
-      "version": "1.0.0",
-      "category": "family",
-      "commands": ["conduit"],
-      "agents": ["conduit"],
-      "pipelines": ["documentation", "scholarly_writing", "professional_writing", "handoff_synthesis"]
-    },
-    {
-      "name": "trace",
-      "source": "./shared/Trace",
-      "description": "Metacognitive controller - routing supervision and smallest-sufficient intervention",
-      "version": "1.0.0",
-      "category": "shared-authority"
-    },
-    {
-      "name": "lever",
-      "source": "./shared/Lever",
-      "description": "Evaluator and escalation authority - commitments, pivots, reopen rules",
-      "version": "1.0.0",
-      "category": "shared-authority"
-    },
-    {
-      "name": "residue",
-      "source": "./shared/Residue",
-      "description": "Suspicious-surface lens library - investigative interventions for anomalies",
-      "version": "1.0.0",
-      "category": "shared-authority"
-    },
-    {
-      "name": "primitives",
-      "source": "./shared/primitives",
-      "description": "Smallest reusable interventions - metacognitive and reasoning primitives",
-      "version": "1.0.0",
-      "category": "shared-components"
-    },
-    {
-      "name": "operators",
-      "source": "./shared/operators",
-      "description": "Reusable operator classes - bounded local transformations and evaluations",
-      "version": "1.0.0",
-      "category": "shared-components"
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Conduit/commands/conduit.md"],
+      "agents": ["../entrypoints/Conduit/agents/conduit.md"]
     }
   ]
 }

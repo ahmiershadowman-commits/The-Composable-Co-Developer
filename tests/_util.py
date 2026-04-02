@@ -4,6 +4,7 @@ import re
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+EXCLUDED_YAML_DIRS = {"runtime_output", "test_runtime_output", ".venv", "venv", "__pycache__"}
 
 TARGET_PATTERN = re.compile(
     r'^(primitive:[\w_]+|operator:[\w_]+|evaluator:[\w_]+|method:[\w_]+|pipeline:[A-Za-z]+/[\w_]+|family:[A-Za-z]+|authority:(Trace|Lever|Residue)|forensics_reset)$'
@@ -22,7 +23,11 @@ def family_route_maps():
     return list(REPO_ROOT.glob('entrypoints/*/family_route_map.yaml'))
 
 def all_yaml_files():
-    return [p for p in REPO_ROOT.rglob('*.yaml') if p.is_file()]
+    return [
+        p
+        for p in REPO_ROOT.rglob('*.yaml')
+        if p.is_file() and not any(part in EXCLUDED_YAML_DIRS for part in p.parts)
+    ]
 
 def inventory():
     inv = {}

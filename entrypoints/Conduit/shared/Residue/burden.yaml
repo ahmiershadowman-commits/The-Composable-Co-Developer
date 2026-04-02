@@ -1,0 +1,20 @@
+id: residue.lens.burden
+kind: investigative_lens
+frame_alias: Burden
+purpose: >
+  Surface hidden assumptions, dependencies, or commitments being carried implicitly.
+
+use_when:
+  - a conclusion_relies_on_unstated_assumptions
+  - documentation_or_code_seems_to_skip_load_bearing_context
+  - evaluation_is_happening_on_an_implicit_model
+
+questions:
+  - What must already be assumed for this to work?
+  - Which assumptions are local, and which change the whole route?
+  - Can the burden be made explicit enough for formal or forensic handling?
+
+possible_outcomes:
+  - route_to_formalization
+  - route_to_forensics_provenance
+  - invoke_support_evaluator

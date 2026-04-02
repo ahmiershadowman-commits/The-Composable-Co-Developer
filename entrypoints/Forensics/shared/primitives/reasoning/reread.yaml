@@ -1,0 +1,13 @@
+id: reread
+family: reasoning
+kind: primitive
+status: core
+purpose: Re-interpret earlier material under a changed frame or newly significant signal.
+use_when:
+  - late_signal_arrives
+  - earlier_material_may_change_meaning
+  - hidden_pattern_suspected
+expected_effects:
+  - updated_reading
+  - retroactive_coherence_or_disconfirmation
+smallest_sufficient_scope: local

@@ -1,0 +1,61 @@
+id: lever.shared.reroute_rules
+kind: reroute_authority
+purpose: >
+  Define the high-leverage reroute patterns that Lever may authorize when local or
+  sibling correction is insufficient.
+
+reroute_patterns:
+  - from: Forge
+    to: Forensics
+    when:
+      - repo_or_spec_drift
+      - canonical_source_unclear
+      - documentation_cannot_be_trusted_as_ground_truth
+
+  - from: Inquiry
+    to: Forensics
+    when:
+      - evidence_surface_is_suspect
+      - anomaly_source_cannot_be_disambiguated_from_current_state
+      - state_and_explanation_are_confounded
+
+  - from: Conduit
+    to: Forensics
+    when:
+      - outward_artifact_disagrees_with_observed_state
+      - documentation_may_be_aspirational_or_stale
+
+  - from: Forge
+    to: Inquiry
+    when:
+      - requirements_or_problem_model_are_underdefined
+      - implementation_is_blocked_by_explanatory_uncertainty
+
+  - from: Inquiry
+    to: Conduit
+    when:
+      - grounded_material_is_ready_for_external_articulation
+      - synthesis_is_now_the_primary_task
+
+  - from: Forensics
+    to: Forge
+    when:
+      - ground_truth_is_sufficiently_stable_for_build_work
+
+  - from: Forensics
+    to: Inquiry
+    when:
+      - state_is_grounded_but_question_or_explanation_remains_open
+
+  - from: Forensics
+    to: Conduit
+    when:
+      - communicative_reconciliation_or_handoff_is_primary
+
+notes:
+  prefer_sibling_shift_before_cross_family_reroute_if:
+    - trust_surface_is_adequate
+    - frame_fit_is_not_in_doubt
+  force_cross_family_reroute_if:
+    - active_family_cannot_legally_repair_the_problem
+    - consequence_class_exceeds_local_pipeline_authority

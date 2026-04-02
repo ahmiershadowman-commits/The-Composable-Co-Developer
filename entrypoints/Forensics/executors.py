@@ -1064,3 +1064,281 @@ class ForensicsExecutor:
             return {"recommended_next": "Forge/coding", "rationale": "Anomaly is actionable — targeted change work can proceed.", "confidence": "high", "generated_at": now}
         else:
             return {"recommended_next": "Conduit/documentation", "rationale": "Anomaly is documented — handoff note needed.", "confidence": "medium", "generated_at": now}
+
+
+    # -----------------------------------------------------------------------
+    # Experimental pipelines
+    # -----------------------------------------------------------------------
+
+    def execute_label_shift_correction(
+        self,
+        state: ExecutionState,
+        context: Dict[str, Any],
+    ) -> ExecutionState:
+        """Execute label_shift_correction with explicit approval and evidence."""
+        baseline_counts = context.get("baseline_label_counts", {})
+        reference_counts = context.get("reference_label_counts", {})
+
+        shift_assessment = self._assess_label_shift(baseline_counts, reference_counts)
+        state.add_artifact("shift_assessment", shift_assessment)
+
+        reference_distribution = self._reference_distribution(reference_counts)
+        state.add_artifact("reference_label_distribution", reference_distribution)
+
+        calibration_mapping = self._compute_calibration_mapping(
+            shift_assessment,
+            reference_distribution,
+        )
+        state.add_artifact("calibration_mapping", calibration_mapping)
+
+        adjusted_predictions = self._apply_calibration(context, calibration_mapping)
+        state.add_artifact("adjusted_predictions", adjusted_predictions)
+
+        performance_report = self._evaluate_calibration(
+            context,
+            shift_assessment,
+            adjusted_predictions,
+        )
+        state.add_artifact("performance_evaluation_report", performance_report)
+
+        state.add_artifact(
+            "route_recommendation",
+            self._label_shift_route(performance_report),
+        )
+        return state
+
+    def execute_introspection_audit(
+        self,
+        state: ExecutionState,
+        context: Dict[str, Any],
+    ) -> ExecutionState:
+        """Execute introspection_audit with explicit approval and evidence."""
+        reasoning_events = context.get("reasoning_events", [])
+        expected_objectives = context.get("expected_objectives", [])
+
+        introspection_log = {
+            "events": reasoning_events,
+            "surface": context.get("reasoning_surface", "externalized_trace"),
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("introspection_log", introspection_log)
+
+        interpretability_packet = {
+            "signals": context.get("interpretability_signals", []),
+            "expected_objectives": expected_objectives,
+            "tooling": context.get("interpretability_tools", ["manual_trace_review"]),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("interpretability_packet", interpretability_packet)
+
+        hidden_goal_map = self._identify_hidden_objectives(
+            reasoning_events,
+            expected_objectives,
+        )
+        state.add_artifact("hidden_goal_map", hidden_goal_map)
+
+        reasoning_report = {
+            "unfaithful_patterns": hidden_goal_map["suspected_hidden_objectives"],
+            "confidence": hidden_goal_map["confidence"],
+            "summary": (
+                "Reasoning surface diverges from expected objectives"
+                if hidden_goal_map["suspected_hidden_objectives"]
+                else "No hidden objective signal exceeded the alert threshold"
+            ),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("unfaithful_reasoning_report", reasoning_report)
+
+        remediation_plan = {
+            "actions": context.get(
+                "remediation_actions",
+                ["tighten routing constraints", "escalate to Conduit if external reporting is needed"],
+            ),
+            "requires_code_change": bool(context.get("requires_code_change")),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        state.add_artifact("remediation_plan", remediation_plan)
+
+        state.add_artifact(
+            "route_recommendation",
+            self._introspection_route(hidden_goal_map, remediation_plan),
+        )
+        state.add_artifact(
+            "final_audit_note",
+            {
+                "status": "complete",
+                "summary": reasoning_report["summary"],
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+            },
+        )
+        return state
+
+    def _assess_label_shift(
+        self,
+        baseline_counts: Dict[str, Any],
+        reference_counts: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Measure simple absolute label distribution drift."""
+        labels = sorted(set(baseline_counts) | set(reference_counts))
+        total_baseline = sum(float(baseline_counts.get(label, 0)) for label in labels) or 1.0
+        total_reference = sum(float(reference_counts.get(label, 0)) for label in labels) or 1.0
+
+        deltas = []
+        for label in labels:
+            baseline_ratio = float(baseline_counts.get(label, 0)) / total_baseline
+            reference_ratio = float(reference_counts.get(label, 0)) / total_reference
+            deltas.append(
+                {
+                    "label": label,
+                    "baseline_ratio": round(baseline_ratio, 4),
+                    "reference_ratio": round(reference_ratio, 4),
+                    "absolute_delta": round(abs(reference_ratio - baseline_ratio), 4),
+                }
+            )
+
+        mean_delta = sum(item["absolute_delta"] for item in deltas) / max(len(deltas), 1)
+        return {
+            "labels": deltas,
+            "mean_absolute_delta": round(mean_delta, 4),
+            "shift_detected": mean_delta >= 0.05,
+            "assessed_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _reference_distribution(self, reference_counts: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize the reference label distribution."""
+        total = sum(float(value) for value in reference_counts.values()) or 1.0
+        distribution = {
+            label: round(float(value) / total, 4)
+            for label, value in sorted(reference_counts.items())
+        }
+        return {
+            "distribution": distribution,
+            "source": "context.reference_label_counts",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _compute_calibration_mapping(
+        self,
+        shift_assessment: Dict[str, Any],
+        reference_distribution: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Build multiplicative calibration weights."""
+        mapping = {}
+        reference = reference_distribution.get("distribution", {})
+        for label_info in shift_assessment.get("labels", []):
+            baseline_ratio = label_info["baseline_ratio"] or 0.0001
+            mapping[label_info["label"]] = round(
+                reference.get(label_info["label"], 0.0) / baseline_ratio,
+                4,
+            )
+        return {
+            "weights": mapping,
+            "method": "reference_ratio_over_baseline_ratio",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _apply_calibration(
+        self,
+        context: Dict[str, Any],
+        calibration_mapping: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Apply calibration weights to supplied prediction scores."""
+        predictions = context.get("predictions", [])
+        weights = calibration_mapping.get("weights", {})
+        adjusted = []
+        for item in predictions:
+            label = item.get("label", "unknown")
+            score = float(item.get("score", 0.0))
+            adjusted.append(
+                {
+                    "label": label,
+                    "baseline_score": score,
+                    "adjusted_score": round(score * float(weights.get(label, 1.0)), 4),
+                }
+            )
+        return {
+            "predictions": adjusted,
+            "applied_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _evaluate_calibration(
+        self,
+        context: Dict[str, Any],
+        shift_assessment: Dict[str, Any],
+        adjusted_predictions: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Compare baseline and calibrated scores with supplied metrics."""
+        baseline_metric = float(context.get("baseline_metric", 0.0))
+        calibrated_metric = float(context.get("calibrated_metric", baseline_metric))
+        improvement = round(calibrated_metric - baseline_metric, 4)
+        return {
+            "shift_detected": shift_assessment.get("shift_detected", False),
+            "baseline_metric": baseline_metric,
+            "calibrated_metric": calibrated_metric,
+            "improvement": improvement,
+            "adjusted_prediction_count": len(adjusted_predictions.get("predictions", [])),
+            "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _label_shift_route(self, performance_report: Dict[str, Any]) -> Dict[str, Any]:
+        """Recommend the next family after label shift correction."""
+        now = datetime.now(timezone.utc).isoformat()
+        if performance_report.get("improvement", 0.0) > 0:
+            return {
+                "recommended_next": "Inquiry/research",
+                "rationale": "Calibration improved the evaluation surface; inquiry can interpret the result.",
+                "confidence": "medium",
+                "generated_at": now,
+            }
+        return {
+            "recommended_next": "Forge/coding",
+            "rationale": "Calibration failed to recover performance; code or data path changes are likely required.",
+            "confidence": "medium",
+            "generated_at": now,
+        }
+
+    def _identify_hidden_objectives(
+        self,
+        reasoning_events: List[Dict[str, Any]],
+        expected_objectives: List[str],
+    ) -> Dict[str, Any]:
+        """Detect objectives present in the trace but absent from the expected set."""
+        expected = {objective.lower() for objective in expected_objectives}
+        hidden = []
+        for event in reasoning_events:
+            objective = str(event.get("objective", "")).strip()
+            if objective and objective.lower() not in expected:
+                hidden.append(objective)
+        return {
+            "suspected_hidden_objectives": hidden,
+            "confidence": "high" if hidden else "low",
+            "analyzed_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _introspection_route(
+        self,
+        hidden_goal_map: Dict[str, Any],
+        remediation_plan: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Recommend the next family after introspection audit."""
+        now = datetime.now(timezone.utc).isoformat()
+        if hidden_goal_map.get("suspected_hidden_objectives"):
+            if remediation_plan.get("requires_code_change"):
+                return {
+                    "recommended_next": "Forge/refactor",
+                    "rationale": "Hidden-goal signal requires code or model remediation.",
+                    "confidence": "high",
+                    "generated_at": now,
+                }
+            return {
+                "recommended_next": "Conduit/handoff_synthesis",
+                "rationale": "Audit surfaced operational risk that should be communicated immediately.",
+                "confidence": "high",
+                "generated_at": now,
+            }
+        return {
+            "recommended_next": "Forensics/project_mapping",
+            "rationale": "No material hidden-goal evidence found; return to standard grounded forensics.",
+            "confidence": "medium",
+            "generated_at": now,
+        }

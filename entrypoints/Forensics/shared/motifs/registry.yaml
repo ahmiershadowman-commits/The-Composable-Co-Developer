@@ -1,0 +1,33 @@
+id: shared.motifs.registry
+kind: motif_registry
+purpose: >
+  Register the available motifs for semantic conditioning.
+  Motifs detect structural patterns and influence attention
+  without directly triggering actions.
+
+motifs:
+  - id: unfinished-proof
+    category: reasoning-gap
+    description: Detects incomplete reasoning chains or claims without support
+    file: unfinished_proof.yaml
+
+  - id: watershed
+    category: decision-point
+    description: Marks high-stakes decision junctures
+    file: watershed.yaml
+
+  - id: tension_point
+    category: conflict
+    description: Identifies active disagreements between claims
+    file: tension_point.yaml
+
+  - id: absence_signal
+    category: missingness
+    description: Surfaces conspicuously missing information
+    file: absence_signal.yaml
+
+usage_guidelines:
+  - reference_by_id: Use motif IDs in pipeline specs
+  - combine_sparingly: 1-3 motifs per pipeline is typical
+  - dont_over_condition: Too many motifs dilutes their effect
+  - test_empirically: Verify motifs improve outcomes in worked traces

@@ -1,0 +1,16 @@
+{
+  "name": "primitives",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Smallest reusable interventions - metacognitive and reasoning primitives",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "shared-components",
+  "keywords": ["primitives", "interventions", "metacognitive", "reasoning"],
+  "files": [
+    "registry.yaml"
+  ]
+}

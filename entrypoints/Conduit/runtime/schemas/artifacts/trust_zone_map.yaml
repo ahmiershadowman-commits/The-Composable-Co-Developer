@@ -1,0 +1,51 @@
+id: trust_zone_map
+kind: artifact_schema
+produced_by: Forensics/project_mapping
+purpose: >
+  Maps project areas to trust levels. The presence of this artifact in
+  runtime_output/Forensics/project_mapping/ is used by the PreToolUse hook
+  to gate Forge and Inquiry invocation.
+
+schema:
+  type: object
+  required:
+    - project_root
+    - zones
+    - overall_trust
+    - generated_at
+  properties:
+    project_root:
+      type: string
+      description: Absolute path to the project root
+    zones:
+      type: array
+      description: Trust classification per project area
+      items:
+        type: object
+        required: [area, trust_level, rationale]
+        properties:
+          area:
+            type: string
+            description: Directory or file pattern
+          trust_level:
+            type: string
+            enum: [high, provisional, low, collapsed]
+          rationale:
+            type: string
+          discrepancies:
+            type: array
+            items: {type: string}
+          notes:
+            type: string
+    overall_trust:
+      type: string
+      enum: [high, provisional, low, collapsed]
+    overall_rationale:
+      type: string
+    generated_at:
+      type: string
+
+consumed_by:
+  - PreToolUse hook (Forensics gate)
+  - Forge/development (trust verification)
+  - Inquiry/research (source trust classification)

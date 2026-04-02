@@ -4,16 +4,20 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-A metacognitive co-developer marketplace providing modular AI plugins for ground-truth establishment, hypothesis generation, creative synthesis, and self-guided context engineering.
+A Claude Code plugin marketplace first, with an adaptive runtime spine underneath it. The marketplace packages family plugins for ground-truth establishment, build work, investigation, and synthesis without collapsing their routing semantics.
 
 ## Features
 
-- **7 Macro Roles**: Forensics, Forge, Inquiry, Conduit, Trace, Lever, Residue
-- **Dependency Law**: Enforced routing based on trust and state
-- **Canonical Target Grammar**: Structured routing with validation
-- **Shared Authorities**: Trace, Lever, Residue for metacognitive control
-- **Family Executors**: Modular pipeline execution per family
-- **Artifact Provenance**: Full audit trail of all executions
+- **Marketplace-first packaging**: `.claude-plugin/marketplace.json` publishes the family plugins Claude Code installs.
+- **Four core family plugins**: Forensics, Forge, Inquiry, Conduit.
+- **Dependency law**: Forensics establishes truth before downstream work proceeds.
+- **Canonical target grammar**: Structured routing with validation.
+- **Shared authorities**: Trace, Lever, Residue remain distinct and load-bearing.
+- **Artifact provenance**: Execution emits structured artifacts and provenance records.
+- **Managed MCP runtime**: The spine loads managed MCP definitions and can probe endpoint health on demand.
+- **Execution reports**: The spine can render HTML reports for plugin-facing review surfaces.
+- **Concurrent dispatch**: Independent pipeline requests can run concurrently with isolated state.
+- **Experimental approvals**: Experimental pipelines run only with explicit evidence-backed approval payloads.
 
 ## Quick Start
 
@@ -28,8 +32,41 @@ pip install -r requirements.txt
 # Run tests
 python -m pytest tests -v
 
-# Run vertical slice
-python tools/run_vertical_slice.py
+# Run the marketplace validator
+python tools/validate_marketplace.py
+```
+
+## Marketplace Installation
+
+Add the marketplace to Claude Code:
+
+```bash
+# Local installation
+claude plugin marketplace add ./path/to/the-composable-co-developer/.claude-plugin
+
+# From GitHub (once published)
+claude plugin marketplace add ahmiershadowman-commits/the-composable-co-developer
+```
+
+Each plugin entry in `.claude-plugin/marketplace.json` points at a family plugin root under `entrypoints/`.
+
+## Project Structure
+
+```text
+the-composable-co-developer/
+|-- .claude-plugin/          # Marketplace catalog and top-level metadata
+|-- entrypoints/             # Claude Code family plugins
+|   |-- Forensics/
+|   |-- Forge/
+|   |-- Inquiry/
+|   `-- Conduit/
+|-- shared/                  # Shared authorities, primitives, operators, motifs
+|-- runtime/                 # Adaptive runtime spine
+|-- hooks/                   # Claude Code hook configs and guard scripts
+|-- tests/                   # Test suite
+|-- tools/                   # Validators, probes, and runners
+|-- docs/                    # Architecture and implementation docs
+`-- examples/                # Worked traces
 ```
 
 ## Architecture
@@ -51,6 +88,32 @@ python tools/run_vertical_slice.py
 | **Lever** | Evaluator/escalation |
 | **Residue** | Suspicious-surface lenses |
 
+## Hooks, Managed MCP, and Reports
+
+- Hook guarding: `hooks/hooks.json` runs `hooks/block_destructive_commands.py` before shell tool usage to block destructive commands (`rm -rf`, `mkfs`, `git push --force`) and obvious secret-bearing shell invocations.
+- Managed MCP: `managed-mcp.json` provides team-wide MCP definitions (`github-managed`, `jira-managed`) with environment-variable placeholders. Keep secrets in the environment (`GITHUB_TOKEN`, `JIRA_TOKEN`, `JIRA_SITE`) and rotate regularly.
+- Managed MCP probing: `python tools/probe_managed_mcp.py --timeout-seconds 0.5` writes a session health report to `runtime_output/_reports/managed_mcp_sessions.yaml`.
+- HTML reports: pass `render_report=True` in pipeline context or use `python tools/render_runtime_report.py --input payload.yaml --family Forensics --pipeline project_mapping` to generate a report in `runtime_output/_reports/`.
+- Experimental approvals: pass an `experimental_approval` payload with `ticket`, `rationale`, `rollback_plan`, and `empirical_evidence` to run an experimental pipeline.
+
+## Testing
+
+```bash
+# Full test suite
+python -m pytest tests -v
+
+# Marketplace packaging validation
+python tools/validate_marketplace.py
+
+# Managed MCP probe
+python tools/probe_managed_mcp.py --timeout-seconds 0.5
+
+# Vertical slice runner
+python tools/run_vertical_slice.py
+```
+
+`tests/runtime/test_vertical_slice.py` is skipped during default `pytest tests` runs because it is intentionally slow. CI runs the vertical slice explicitly as a separate step.
+
 ## Documentation
 
 - [Build Contract](BUILD_CONTRACT.md) - Architecture specification
@@ -59,73 +122,9 @@ python tools/run_vertical_slice.py
 - [Architecture Docs](docs/architecture/) - Detailed architecture
 - [Implementation Docs](docs/implementation/) - Implementation details
 
-## Testing
-
-```bash
-# Full test suite
-python -m pytest tests -v
-
-# Coverage report
-python -m pytest tests --cov=. --cov-report=html
-```
-
-## Marketplace Installation
-
-Add the marketplace to Claude Code:
-
-```bash
-# Local installation
-claude plugin marketplace add ./path/to/the-composable-co-developer
-
-# From GitHub (once published)
-claude plugin marketplace add ahmiershadowman-commits/the-composable-co-developer
-```
-
-## Project Structure
-
-```
-the-composable-co-developer/
-├── .claude-plugin/          # Marketplace manifest
-├── entrypoints/             # Family plugins
-│   ├── Forensics/
-│   ├── Forge/
-│   ├── Inquiry/
-│   └── Conduit/
-├── shared/                  # Shared components
-│   ├── Trace/
-│   ├── Lever/
-│   ├── Residue/
-│   ├── primitives/
-│   ├── operators/
-│   └── motifs/
-├── runtime/                 # Runtime spine
-├── tests/                   # Test suite
-├── tools/                   # Development tools
-├── docs/                    # Documentation
-└── examples/                # Worked traces
-```
-
-## Development
-
-### Adding New Pipelines
-
-1. Create pipeline directory under appropriate family
-2. Add `pipeline.yaml` specification
-3. Implement executor method in family executors
-4. Add tests for new pipeline
-5. Update family route map
-
-### Running Vertical Slice
-
-```bash
-python tools/run_vertical_slice.py
-```
-
-This runs an end-to-end test through Forensics → Forge pipeline.
-
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 

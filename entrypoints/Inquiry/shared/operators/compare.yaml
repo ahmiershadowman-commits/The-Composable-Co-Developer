@@ -1,0 +1,35 @@
+id: compare
+kind: operator
+class: bounded_evaluation
+status: core
+purpose: >
+  Identify similarities and differences between two or more items,
+  producing a structured comparison map that reveals trade-offs and
+  distinguishing factors.
+use_when:
+  - multiple_options_need_evaluation
+  - perspectives_seem_to_conflict
+  - trade_offs_need_explicit_articulation
+  - decision_criteria_are_unclear
+returns:
+  - comparison_map
+  - similarities
+  - differences
+  - trade_offs
+  - discriminators
+inputs:
+  items:
+    type: array
+    description: Items to compare (2-5 recommended)
+  criteria:
+    type: array
+    description: Comparison criteria (optional)
+related_interventions:
+  primitives:
+    - separate
+    - bind
+  operators:
+    - distill
+    - reframe
+  evaluators:
+    - discriminator_evaluator

@@ -1,0 +1,40 @@
+id: triangulate
+kind: operator
+class: bounded_evaluation
+status: core
+purpose: >
+  Cross-reference multiple sources to verify, complete, or correct
+  information, establishing more reliable understanding through
+  independent confirmation.
+use_when:
+  - single_source_seems_unreliable
+  - claims_seem_too_good_to_be_true
+  - multiple_stakeholders_involved
+  - documentation_may_be_outdated
+  - high_stakes_decisions_depend_on_accuracy
+returns:
+  - triangulation_result
+  - verified
+  - disputed
+  - gaps
+  - confidence
+inputs:
+  primary_source:
+    type: object
+    description: Main source to verify/supplement
+  secondary_sources:
+    type: array
+    description: Additional sources for cross-reference
+  triangulation_target:
+    type: string
+    description: What to verify
+related_interventions:
+  primitives:
+    - locate
+    - bind
+  operators:
+    - compare
+    - extract
+  evaluators:
+    - support_evaluator
+    - contradiction_evaluator

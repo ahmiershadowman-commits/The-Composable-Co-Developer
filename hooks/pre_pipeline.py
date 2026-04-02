@@ -40,15 +40,32 @@ def validate_entry_hook(context: HookContext) -> HookResult:
         )
     
     # Validate context has required fields
-    if "scope" not in context.context and family == "Forensics":
+    if family == "Forensics" and pipeline_name == "project_mapping" and "scope" not in context.context:
         return HookResult.halt(
             f"Forensics pipeline requires 'scope' in context"
         )
     
-    if "problem" not in context.context and family == "Forge":
-        return HookResult.halt(
-            f"Forge pipeline requires 'problem' in context"
-        )
+    if family == "Forge":
+        if pipeline_name == "development" and "problem" not in context.context:
+            return HookResult.halt(
+                f"Forge pipeline requires 'problem' in context"
+            )
+        if pipeline_name == "coding" and not any(
+            key in context.context for key in ("problem", "change_type", "affected_files")
+        ):
+            return HookResult.halt(
+                "Forge/coding requires one of 'problem', 'change_type', or 'affected_files' in context"
+            )
+        if pipeline_name == "testing" and not any(
+            key in context.context for key in ("test_scope", "problem")
+        ):
+            return HookResult.halt(
+                "Forge/testing requires 'test_scope' or 'problem' in context"
+            )
+        if pipeline_name == "refactor" and "problem" not in context.context:
+            return HookResult.halt(
+                "Forge/refactor requires 'problem' in context"
+            )
     
     # Check for state errors before starting
     if context.state.errors:

@@ -1,0 +1,61 @@
+id: pipeline.schema
+kind: schema
+status: core
+purpose: >
+  Canonical schema for all marketplace pipeline specifications. Every pipeline
+  should use this top-level shape so selectors, route maps, tests, and feedback
+  loops can operate consistently.
+
+required_fields:
+  - id
+  - family
+  - kind
+  - frame_alias
+  - status
+  - purpose
+  - entry_conditions
+  - shared_authorities
+  - phase_order
+  - phase_contracts
+  - smallest_sufficient_interventions
+  - pivot_conditions
+  - exit_conditions
+  - artifacts
+
+field_notes:
+  id: plain_snake_case canonical pipeline identifier
+  family: one of Forensics, Forge, Inquiry, Conduit
+  kind: end_to_end_pipeline
+  frame_alias: gentle mode-bias alias for human or model-facing frontmatter
+  status: core | experimental | incubating
+  entry_conditions: conditions under which this pipeline is appropriate
+  shared_authorities:
+    trace: runtime/trace
+    lever: runtime/lever
+    residue: runtime/residue
+  phase_order: ordered list of phase ids
+  phase_contracts: >
+    per-phase goal/output contracts. Use reroute_on or notes only when materially helpful.
+  smallest_sufficient_interventions:
+    motifs: light stance biases
+    primitives: low-cost reusable interventions
+    operators: heavier local transforms
+    evaluators: Lever-callable bounded evaluators
+  pivot_conditions: >
+    trigger-to-action map. Targets must follow the canonical target grammar.
+  exit_conditions: truth, artifact, provenance, and residue requirements for clean exit
+  artifacts:
+    primary: main deliverables
+    supporting: metadata, logs, provenance, unresolveds, indices
+
+deprecated_fields:
+  - phases
+  - methods
+  - local_methods
+  - triggers
+  - critical_triggers
+  - required_artifacts
+
+migration_rule: >
+  Older dialect fields should be translated into the canonical fields above rather
+  than mixed in alongside them.

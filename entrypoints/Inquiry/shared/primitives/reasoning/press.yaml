@@ -1,0 +1,13 @@
+id: press
+family: reasoning
+kind: primitive
+status: core
+purpose: Stress a claim, frame, or artifact to surface weak points or hidden dependencies.
+use_when:
+  - confidence_needs_testing
+  - contradiction_suspected
+  - proof_or_code_should_be_pressure_checked
+expected_effects:
+  - exposed_failure_modes
+  - stronger_or_rejected_candidate
+smallest_sufficient_scope: local

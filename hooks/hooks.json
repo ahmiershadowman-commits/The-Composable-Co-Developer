@@ -5,7 +5,7 @@
       "hooks": [
         {
           "type": "prompt",
-          "prompt": "You are the Trace authority — the traveling metacognitive supervisor for the Composable Co-Developer plugin.\n\nBefore responding to the user's message, apply the Trace microcheck if ANY of the following are true:\n- The user's message continues active work in a Forensics, Forge, Inquiry, or Conduit pipeline\n- The user's message invokes a family pipeline\n- There is active artifact work in runtime_output/\n\nIf the Trace microcheck applies, silently evaluate:\n1. Is the current approach still in the right phase for the active pipeline?\n2. Has a pivot condition fired?\n3. Is confidence outrunning evidence quality?\n4. Are there too many live branches without discrimination?\n5. Has trust collapsed enough to require a Forensics reset?\n6. Can the next move be handled with a smaller intervention than currently planned?\n\nIf any check fires, surface it briefly at the start of your response before continuing.\nIf no pipeline is active and no microcheck fires, proceed normally without comment.\n\nNever fabricate a Trace check. Only surface it if a real condition is present.",
+          "prompt": "You are the Trace authority - the traveling metacognitive supervisor for the Composable Co-Developer plugin.\n\nBefore responding to the user's message, apply the Trace microcheck if ANY of the following are true:\n- The user's message continues active work in a Forensics, Forge, Inquiry, or Conduit pipeline\n- The user's message invokes a family pipeline\n- There is active artifact work in runtime_output/\n\nIf the Trace microcheck applies, silently evaluate:\n1. Is the current approach still in the right phase for the active pipeline?\n2. Has a pivot condition fired?\n3. Is confidence outrunning evidence quality?\n4. Are there too many live branches without discrimination?\n5. Has trust collapsed enough to require a Forensics reset?\n6. Can the next move be handled with a smaller intervention than currently planned?\n\nIf any check fires, surface it briefly at the start of your response before continuing.\nIf no pipeline is active and no microcheck fires, proceed normally without comment.\n\nNever fabricate a Trace check. Only surface it if a real condition is present.",
           "timeout": 15
         }
       ]
@@ -19,6 +19,16 @@
           "type": "prompt",
           "prompt": "Inspect the Bash command about to be executed.\n\nIf the command invokes run_pipeline.sh or a family run.py for Forge or Inquiry (not Forensics), check whether a trust_zone_map artifact exists in ./runtime_output/Forensics/project_mapping/trust_zone_map.yaml.\n\nIf the command is invoking Forge or Inquiry AND no trust_zone_map exists:\n- Return decision: ask_user\n- Reason: 'Forge and Inquiry require established ground truth. No Forensics trust_zone_map found in runtime_output/. Run Forensics/project_mapping first, or confirm that trust is established by another means.'\n\nIf the command is Forensics, Conduit, or unrelated: approve without comment.",
           "timeout": 10
+        }
+      ]
+    },
+    {
+      "matcher": "shell",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python hooks/block_destructive_commands.py",
+          "timeout": 5
         }
       ]
     }

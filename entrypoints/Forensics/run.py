@@ -1,78 +1,86 @@
 #!/usr/bin/env python3
-"""
-Forensics Family Runner - Execute Forensics pipelines.
+"""Forensics family runner."""
 
-Usage:
-    python entrypoints/Forensics/run.py --pipeline project_mapping [--scope "description"] [--project /path/to/project]
-"""
-
-import sys
 import argparse
+import json
+import sys
 from pathlib import Path
 
-# Add repo root to path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from runtime.state.models import ExecutionState, FamilyType, TrustAssessment
 from runtime.artifacts.writer import ArtifactWriter
-from entrypoints.Forensics.executors import ForensicsExecutor
+from runtime.execution.dispatcher import RuntimeDispatcher
+from runtime.state.models import ExecutionState, FamilyType
 
 
-def run_pipeline(pipeline_id: str, scope: str, output_dir: Path, project_root: Path):
-    """Run a Forensics pipeline."""
+PRIMARY_CONTEXT_KEY = "scope"
+FAMILY = FamilyType.FORENSICS
+PIPELINE_CHOICES = ['project_mapping', 'defragmentation', 'documentation_audit', 'anomaly_disambiguation', 'label_shift_correction', 'introspection_audit']
+
+
+def _load_json_payload(raw_value: str):
+    """Load JSON from an inline string or a file path."""
+    if not raw_value:
+        return None
+    candidate = Path(raw_value)
+    if candidate.exists():
+        return json.loads(candidate.read_text(encoding="utf-8"))
+    return json.loads(raw_value)
+
+
+def run_pipeline(
+    pipeline_id: str,
+    primary_value: str,
+    output_dir: Path,
+    project_root: Path,
+    approval_json: str = "",
+    render_report: bool = False,
+    required_mcp=None,
+    connect_all_mcp: bool = False,
+):
+    """Run one family pipeline through the shared runtime dispatcher."""
     print(f"Running Forensics/{pipeline_id}")
-    print(f"Scope: {scope}")
+    print(f"Scope: {primary_value}")
     print(f"Project: {project_root}")
     print(f"Output: {output_dir}")
     print()
 
-    # Initialize
-    state = ExecutionState(current_family=FamilyType.FORENSICS)
-    executor = ForensicsExecutor(output_dir, project_root=project_root)
+    state = ExecutionState(current_family=FAMILY)
     writer = ArtifactWriter(output_dir)
+    dispatcher = RuntimeDispatcher(output_dir)
 
     context = {
-        "scope": {
-            "description": scope or f"Forensics analysis via {pipeline_id}",
-            "boundaries": [],
-        },
+        PRIMARY_CONTEXT_KEY: primary_value or f"Forensics execution via {pipeline_id}",
         "project_root": str(project_root),
+        "render_report": render_report,
+        "required_mcp": required_mcp or [],
+        "connect_all_mcp": connect_all_mcp,
     }
 
-    # Execute pipeline
+    if FAMILY == FamilyType.FORENSICS:
+        context["scope"] = {
+            "description": primary_value or f"Forensics execution via {pipeline_id}",
+            "boundaries": [],
+        }
+    if approval_json:
+        context["experimental_approval"] = _load_json_payload(approval_json)
+
     try:
-        if pipeline_id == "project_mapping":
-            state = executor.execute_project_mapping(state, context)
-        elif pipeline_id == "defragmentation":
-            state = executor.execute_defragmentation(state, context)
-        elif pipeline_id == "documentation_audit":
-            state = executor.execute_documentation_audit(state, context)
-        elif pipeline_id == "anomaly_disambiguation":
-            state = executor.execute_anomaly_disambiguation(state, context)
-        else:
-            print(f"ERROR: Unknown pipeline: {pipeline_id}")
-            return False
-
-        # Write artifacts
+        state = dispatcher.execute_pipeline(FAMILY, pipeline_id, state, context)
         for name, data in state.artifacts.items():
-            writer.write_artifact(name, data, pipeline_id, FamilyType.FORENSICS)
+            writer.write_artifact(name, data, pipeline_id, FAMILY)
 
-        # Report results
-        print(f"\nPipeline completed successfully")
+        print("\nPipeline completed")
         print(f"Artifacts produced: {list(state.artifacts.keys())}")
-
-        if state.trust_assessment:
-            ta = state.trust_assessment
-            print(f"\nTrust Assessment:")
-            print(f"  Level: {ta.trust_level}")
-            print(f"  Entropy: {ta.entropy_level}")
-            print(f"  Coherence restored: {ta.coherence_restored}")
-
+        if state.metadata:
+            print(f"Metadata: {list(state.metadata.keys())}")
+        if state.errors:
+            print(f"Errors: {state.errors}")
+            return False
         return True
-
-    except Exception as e:
-        print(f"ERROR: {e}")
+    except Exception as exc:
+        print(f"ERROR: {exc}")
         import traceback
         traceback.print_exc()
         return False
@@ -80,22 +88,30 @@ def run_pipeline(pipeline_id: str, scope: str, output_dir: Path, project_root: P
 
 def main():
     parser = argparse.ArgumentParser(description="Run Forensics family pipelines")
-    parser.add_argument("--pipeline", required=True,
-                        choices=["project_mapping", "defragmentation",
-                                 "documentation_audit", "anomaly_disambiguation"],
-                        help="Pipeline to execute")
-    parser.add_argument("--scope", default="", help="Scope description")
-    parser.add_argument("--output", default=str(REPO_ROOT / "runtime_output"),
-                        help="Output directory")
-    parser.add_argument("--project", default=str(Path.cwd()),
-                        help="Project root to analyze (defaults to current working directory)")
+    parser.add_argument("--pipeline", required=True, choices=PIPELINE_CHOICES, help="Pipeline to execute")
+    parser.add_argument("--scope", default="", help="Primary pipeline input")
+    parser.add_argument("--output", default=str(REPO_ROOT / "runtime_output"), help="Output directory")
+    parser.add_argument("--project", default=str(Path.cwd()), help="Project root to analyze")
+    parser.add_argument("--approval-json", default="", help="Inline JSON or path to a JSON file for experimental approval")
+    parser.add_argument("--render-report", action="store_true", help="Render an HTML runtime report")
+    parser.add_argument("--require-mcp", action="append", dest="required_mcp", help="Managed MCP name to probe before execution")
+    parser.add_argument("--connect-all-mcp", action="store_true", help="Probe all managed MCP definitions before execution")
 
     args = parser.parse_args()
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
     project_root = Path(args.project).resolve()
 
-    success = run_pipeline(args.pipeline, args.scope, output_dir, project_root)
+    success = run_pipeline(
+        args.pipeline,
+        getattr(args, PRIMARY_CONTEXT_KEY),
+        output_dir,
+        project_root,
+        approval_json=args.approval_json,
+        render_report=args.render_report,
+        required_mcp=args.required_mcp,
+        connect_all_mcp=args.connect_all_mcp,
+    )
     sys.exit(0 if success else 1)
 
 

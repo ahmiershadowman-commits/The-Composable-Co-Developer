@@ -1,0 +1,13 @@
+id: open
+family: metacognitive
+kind: primitive
+status: core
+purpose: Widen the current search when the model has collapsed too quickly into a narrow basin.
+use_when:
+  - branch_diversity_low
+  - first_plausible_answer_selected_too_early
+  - anomaly_unexplained_but_search_closed
+expected_effects:
+  - more_structurally_distinct_candidates
+  - preserved_uncertainty
+smallest_sufficient_scope: local

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "github-managed",
+    "transport": "https",
+    "url": "https://mcp.example.com/github",
+    "env": {
+      "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+    },
+    "notes": "Org-managed GitHub MCP; token must be repo-scoped and read-only by default. Rotate every 90 days."
+  },
+  {
+    "name": "jira-managed",
+    "transport": "https",
+    "url": "https://mcp.example.com/jira",
+    "env": {
+      "JIRA_TOKEN": "${JIRA_TOKEN}",
+      "JIRA_SITE": "${JIRA_SITE}"
+    },
+    "notes": "Project-scoped Jira MCP. Enforce minimum scopes and audit logs."
+  }
+]

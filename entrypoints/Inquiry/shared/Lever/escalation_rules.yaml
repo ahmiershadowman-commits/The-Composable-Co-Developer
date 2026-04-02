@@ -1,0 +1,52 @@
+id: lever.shared.escalation_rules
+kind: escalation_authority
+purpose: >
+  Define when Trace must hand off to Lever and what outputs Lever may return.
+
+escalate_when:
+  - trigger: contradiction_detected
+    condition: contradiction_cannot_be_resolved_by_local_primitive
+    response: local_evaluator
+
+  - trigger: repeated_failure
+    condition: local_method_exhausted_or_looping
+    response: local_evaluator_or_within_pipeline_pivot
+
+  - trigger: confidence_support_gap
+    condition: commitment_pressure_rising_with_weak_support
+    response: commitment_delay_or_support_evaluator
+
+  - trigger: reroute_ambiguity
+    condition: sibling_shift_vs_cross_family_reroute_is_unclear
+    response: reroute_judgment
+
+  - trigger: branch_sprawl
+    condition: accumulated_branches_now_require_discrimination_or_synthesis
+    response: synthesis_or_discriminator_evaluator
+
+  - trigger: trust_collapse
+    condition: visible_surface_not_reliably_actionable
+    response: forensics_reset
+
+outputs:
+  - continue_as_is
+  - continue_with_specified_primitive
+  - invoke_local_evaluator
+  - invoke_heavy_evaluator
+  - pivot_within_pipeline
+  - shift_to_sibling_pipeline
+  - reroute_to_other_family
+  - reset_to_forensics
+  - permit_guarded_commitment
+  - require_reopen_or_hold
+
+commitment_rules:
+  permit_guarded_commitment_only_if:
+    - evidence_sufficiency_is_explicit
+    - contradiction_is_below_blocking_threshold
+    - residue_is_preserved
+    - reopen_conditions_are_named
+  require_reopen_if:
+    - contradiction_is_unresolved_and_material
+    - support_is_weak_for_consequence_class
+    - route_choice_is_masking_frame_error

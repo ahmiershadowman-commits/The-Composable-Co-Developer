@@ -1,0 +1,63 @@
+type: object
+description: >
+  Structured handoff artifact for unresolved issues, known risks, and bounded next steps
+  that must travel with Conduit handoff_synthesis output.
+required:
+  - unresolveds
+  - risks
+  - transfer_requirements
+properties:
+  unresolveds:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - statement
+        - severity
+        - owner
+      properties:
+        id:
+          type: string
+        statement:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        owner:
+          type: string
+        blocking:
+          type: boolean
+        evidence:
+          type: array
+          items:
+            type: string
+  risks:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - description
+        - mitigation
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        mitigation:
+          type: string
+        likelihood:
+          type: string
+          enum: [low, medium, high]
+        impact:
+          type: string
+          enum: [low, medium, high, critical]
+  transfer_requirements:
+    type: array
+    items:
+      type: string
+  next_safe_steps:
+    type: array
+    items:
+      type: string

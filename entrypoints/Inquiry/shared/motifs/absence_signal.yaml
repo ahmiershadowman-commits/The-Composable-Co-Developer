@@ -1,0 +1,22 @@
+id: absence_signal
+kind: motif
+category: missingness
+description: >
+  Surfaces information that should be present based on context
+  patterns but is conspicuously missing.
+detection_signals:
+  - expected_section_absent
+  - claim_without_methodology
+  - result_without_measurement
+  - architecture_without_constraints
+conditioning_effect: >
+  Increases attention on pattern completion and prompts investigation
+  of whether absence is intentional or oversight.
+related_interventions:
+  primitives:
+    - locate
+    - open
+  operators:
+    - triangulate
+  evaluators:
+    - artifact_shape_evaluator

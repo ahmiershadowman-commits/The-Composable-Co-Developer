@@ -1,0 +1,13 @@
+id: separate
+family: reasoning
+kind: primitive
+status: core
+purpose: Pull apart blended elements so they can be assessed or routed distinctly.
+use_when:
+  - evidence_and_interpretation_blended
+  - failure_classes_mixed
+  - multiple_questions_conflated
+expected_effects:
+  - disentangled_components
+  - cleaner_branching
+smallest_sufficient_scope: local

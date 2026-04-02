@@ -1,0 +1,54 @@
+id: discrepancy_ledger
+kind: artifact_schema
+produced_by: Forensics/project_mapping, Forensics/documentation_audit
+purpose: >
+  Records all identified conflicts between documented state and observed state.
+  Used to route to defragmentation or targeted repair work.
+
+schema:
+  type: object
+  required:
+    - discrepancies
+    - generated_at
+  properties:
+    discrepancies:
+      type: array
+      items:
+        type: object
+        required: [id, area, documented_claim, observed_state, severity]
+        properties:
+          id:
+            type: string
+          area:
+            type: string
+            description: File, directory, or component affected
+          documented_claim:
+            type: string
+            description: What documentation/specs assert
+          observed_state:
+            type: string
+            description: What actually exists in the filesystem/runtime
+          severity:
+            type: string
+            enum: [critical, major, minor, informational]
+          resolution_status:
+            type: string
+            enum: [unresolved, deferred, resolved]
+          resolution_note:
+            type: string
+    summary:
+      type: object
+      properties:
+        total_discrepancies:
+          type: number
+        critical_count:
+          type: number
+        major_count:
+          type: number
+    generated_at:
+      type: string
+
+consumed_by:
+  - Forensics/defragmentation
+  - Forensics/documentation_audit
+  - route_recommendation (entropy assessment)

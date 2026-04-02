@@ -1,0 +1,13 @@
+id: hold
+family: metacognitive
+kind: primitive
+status: core
+purpose: Preserve productive incompleteness rather than collapsing early.
+use_when:
+  - unresolved_tension_is_still_informative
+  - branch_competition_should_remain_live
+  - premature_closure_pressure_detected
+expected_effects:
+  - preserved_live_gap
+  - delayed_commitment
+smallest_sufficient_scope: local

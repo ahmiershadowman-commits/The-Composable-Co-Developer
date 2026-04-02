@@ -1,0 +1,13 @@
+id: bind
+family: reasoning
+kind: primitive
+status: core
+purpose: Make objects, assumptions, or relations explicit enough for rigorous handling.
+use_when:
+  - formal_work_is_underbound
+  - symbols_or_terms_shift
+  - proof_or_analysis_requires_explicit_structure
+expected_effects:
+  - explicit_definition_set
+  - constrained_object_language
+smallest_sufficient_scope: local_to_pipeline

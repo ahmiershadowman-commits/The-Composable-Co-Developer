@@ -45,7 +45,7 @@ def review_output_hook(context: HookContext) -> HookResult:
     family = context.state.current_family.value
     
     if family == "Forensics":
-        return _check_forensics_artifacts(artifacts, pipeline_id)
+        return _check_forensics_artifacts(context)
     elif family == "Forge":
         return _check_forge_artifacts(artifacts, pipeline_id)
     elif family == "Inquiry":
@@ -56,8 +56,10 @@ def review_output_hook(context: HookContext) -> HookResult:
     return HookResult.success()
 
 
-def _check_forensics_artifacts(artifacts: dict, pipeline_id: str) -> HookResult:
+def _check_forensics_artifacts(context: HookContext) -> HookResult:
     """Check Forensics-specific required artifacts."""
+    artifacts = context.state.artifacts
+    pipeline_id = context.pipeline_id
     # All Forensics pipelines should produce trust-related artifacts
     if "trust_assessment" not in artifacts and context.state.trust_assessment is None:
         return HookResult(

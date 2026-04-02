@@ -1,0 +1,31 @@
+id: extract
+kind: operator
+class: local_reading
+status: core
+purpose: >
+  Pull out specific information from a larger body of content,
+  producing a focused subset that isolates what is needed.
+use_when:
+  - content_is_larger_than_needed
+  - specific_information_types_are_needed
+  - signal_to_noise_ratio_is_low
+  - structured_output_is_needed_from_unstructured_input
+returns:
+  - extracted_content
+  - extraction_metadata
+inputs:
+  source:
+    type: object
+    description: Source content to extract from
+  extraction_target:
+    type: string
+    description: What to extract
+related_interventions:
+  primitives:
+    - locate
+    - separate
+  operators:
+    - clarify
+    - distill
+  evaluators:
+    - artifact_shape_evaluator

@@ -1,0 +1,20 @@
+id: residue.lens.signal
+kind: investigative_lens
+frame_alias: Signal
+purpose: >
+  Deepen the anomaly before explanation so downstream reasoning must account for the full disturbance.
+
+use_when:
+  - an_anomaly_is_real_but_underdescribed
+  - a first_explanation_is_too_tidy
+  - the disturbance_radius_is_not_yet_mapped
+
+questions:
+  - What else would have to be true if this anomaly is exactly real?
+  - What settled assumptions does it now press against?
+  - What would a successful explanation need to cover beyond the first answer?
+
+possible_outcomes:
+  - return_to_hypothesis_generation
+  - invoke_misfit
+  - invoke_frame_evaluator

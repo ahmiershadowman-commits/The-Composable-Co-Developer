@@ -1,0 +1,32 @@
+id: feedback.forensics
+kind: family_loop_map
+family: Forensics
+purpose: >
+  Show how truth-establishing work loops into entropy reduction, discrepancy
+  reconciliation, and route recommendation.
+
+loops:
+  - id: mapping_to_defragmentation
+    from: pipeline:Forensics/project_mapping
+    trigger:
+      - entropy_or_canonical_conflict_is_primary
+    target: pipeline:Forensics/defragmentation
+
+  - id: documentation_conflict
+    from: pipeline:Forensics/project_mapping
+    trigger:
+      - docs_disagree_with_observed_state
+    target: pipeline:Forensics/documentation_audit
+
+  - id: anomaly_sorting
+    from: pipeline:Forensics/project_mapping
+    trigger:
+      - observed_pattern_cannot_be_trusted_as_signal_or_noise
+    target: pipeline:Forensics/anomaly_disambiguation
+
+  - id: post_restoration_recheck
+    from: pipeline:Forensics/defragmentation
+    trigger:
+      - coherence_has_been_restored_enough_for_reassessment
+    target: pipeline:Forensics/project_mapping
+    purpose: confirm_that_canonical_state_is_now_trustworthy

@@ -1,0 +1,36 @@
+id: primitive_registry
+kind: registry
+status: core
+description: >
+  Shared primitive inventory. Primitives are the smallest reusable interventions
+  that can improve robustness without forcing a pipeline or family reroute.
+
+intervention_spectrum:
+  - motif_nudge
+  - primitive
+  - selector_self_check
+  - local_evaluator
+  - phase_pivot
+  - sibling_pipeline_shift
+  - heavy_skill
+  - cross_family_reroute
+  - forensic_reset
+
+metacognitive:
+  - center
+  - open
+  - trim
+  - shift
+  - hold
+  - release
+  - locate
+
+reasoning:
+  - reread
+  - weave
+  - separate
+  - bind
+  - press
+
+notes:
+  - clarify and distill are operators, not primitives
