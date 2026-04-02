@@ -50,6 +50,8 @@ claude plugin marketplace add ahmiershadowman-commits/the-composable-co-develope
 
 Each plugin entry in `.claude-plugin/marketplace.json` points at a family plugin root under `entrypoints/`.
 
+> **Note on `CLAUDE_PLUGIN_ROOT`**: When the plugin is active inside Claude Code, the runtime automatically injects `CLAUDE_PLUGIN_ROOT` as an environment variable pointing to the plugin installation directory. `scripts/run_pipeline.sh` uses this to locate the Python runners. If you invoke the script outside Claude Code (e.g. for standalone testing), the script falls back to deriving the root from its own location — so `bash scripts/run_pipeline.sh Forensics project_mapping "scope"` works from the repo root without any extra setup.
+
 ## Project Structure
 
 ```text
