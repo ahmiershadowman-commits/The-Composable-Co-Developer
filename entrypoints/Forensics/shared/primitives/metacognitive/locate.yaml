@@ -1,0 +1,13 @@
+id: locate
+family: metacognitive
+kind: primitive
+status: core
+purpose: Diagnose where the actual problem sits before heavier reroute or repair.
+use_when:
+  - failure_source_unclear
+  - local_fix_attempts_repeated
+  - disagreement_between_surface_problem_and_actual_blocker
+expected_effects:
+  - problem_location_hypothesis
+  - improved_reroute_choice
+smallest_sufficient_scope: local_to_family

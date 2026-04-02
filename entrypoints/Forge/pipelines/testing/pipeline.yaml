@@ -1,0 +1,100 @@
+id: testing
+frame_alias: Probe
+family: Forge
+kind: end_to_end_pipeline
+status: core
+
+purpose: >
+  Validate artifact behavior through explicit strategy selection, execution,
+  diagnosis, and reroute when defects exceed local repair scope.
+
+entry_conditions:
+  - test_target_exists
+  - expected_behavior_can_be_stated
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+phase_order:
+  - identify_targets
+  - choose_strategy
+  - execute
+  - diagnose
+  - reroute_or_repair
+  - cleanup
+  - finalize
+
+phase_contracts:
+  identify_targets:
+    goal: Specify what is being validated and what failure would mean.
+    outputs:
+      - target_matrix
+  choose_strategy:
+    goal: Select appropriate test types and confidence thresholds.
+    outputs:
+      - test_strategy
+  execute:
+    goal: Run tests and capture failures, passes, and uncertain outcomes.
+    outputs:
+      - test_results
+  diagnose:
+    goal: Determine whether failure is local, structural, environmental, or premise-level.
+    outputs:
+      - defect_classification
+  reroute_or_repair:
+    goal: Route to the smallest sufficient next move.
+    outputs:
+      - repair_or_route_plan
+  cleanup:
+    goal: Normalize logs, temp artifacts, and metadata from the test run.
+    outputs:
+      - cleaned_test_artifacts
+  finalize:
+    goal: Produce a test report and exit with explicit confidence state.
+    outputs:
+      - test_report
+      - confidence_statement
+
+smallest_sufficient_interventions:
+  motifs:
+    - odd-one-out
+    - tuning-fork
+  primitives:
+    - press
+    - separate
+    - locate
+    - shift
+  evaluators:
+    - failure_classifier
+    - environment_check
+    - premise_check
+
+pivot_conditions:
+  local_failure:
+    action: reroute
+    target: pipeline:Forge/coding
+  structural_failure:
+    action: reroute
+    target: pipeline:Forge/development
+  environment_suspect:
+    action: reroute
+    target: pipeline:Forensics/project_mapping
+  target_definition_wrong:
+    action: invoke_evaluator
+    target: evaluator:frame_evaluator
+
+exit_conditions:
+  - test_report_present
+  - confidence_statement_present
+  - temp_artifacts_cleaned
+  - provenance_preserved
+
+artifacts:
+  primary:
+    - test_report.md
+  supporting:
+    - results.json
+    - defect_log.yaml
+    - provenance_log.yaml

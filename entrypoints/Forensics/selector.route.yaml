@@ -1,0 +1,64 @@
+id: forensics.route
+kind: persistent_selector
+family: Forensics
+pipeline_scope:
+  - project_mapping
+  - defragmentation
+  - documentation_audit
+  - anomaly_disambiguation
+
+motif_bias:
+  primary: unfinished-proof
+  secondary: odd-one-out
+  tags:
+    - distrust_surface
+    - ground_truth_first
+    - establish_canon_before_action
+
+rubric_ref: shared/Trace/rubric.yaml
+checklist_ref: shared/Trace/checklist.yaml
+trigger_glossary_ref: shared/Trace/trigger_glossary.yaml
+target_grammar_ref: runtime/methodology/target_grammar.yaml
+
+smallest_sufficient_default: primitive
+escalation_boundary: local_evaluator
+
+trigger_policies:
+  - name: suspect_documentation
+    trigger_class: contradiction_detected
+    preferred_action:
+      kind: primitive
+      target: primitive:reread
+      reason: Separate documented claims from observed state before trusting docs.
+      intervention_level: 2
+      preserve_residue: true
+  - name: unresolved_canonical_conflict
+    trigger_class: trust_collapse
+    preferred_action:
+      kind: forensics_reset
+      target: forensics_reset
+      reason: Canonical source cannot be trusted yet.
+      intervention_level: 9
+      preserve_residue: true
+  - name: fragmentation_detected
+    trigger_class: artifact_shape_drift
+    preferred_action:
+      kind: sibling_shift
+      target: pipeline:Forensics/defragmentation
+      reason: Entropy reduction is now the primary need.
+      intervention_level: 6
+      preserve_residue: true
+  - name: grounded_state_ready_for_other_family
+    trigger_class: phase_fit
+    preferred_action:
+      kind: phase_pivot
+      target: operator:distill
+      reason: Forensic depth is sufficient; compress route recommendation and exit safely.
+      intervention_level: 5
+      preserve_residue: true
+
+exit_checks:
+  - inventory_ledger_present
+  - trust_zone_map_present
+  - discrepancy_ledger_present
+  - route_recommendation_present

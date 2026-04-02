@@ -1,0 +1,62 @@
+id: inventory_ledger
+kind: artifact_schema
+produced_by: Forensics/project_mapping
+purpose: >
+  Records all artifacts, files, and runtime surfaces discovered during
+  Forensics project mapping.
+
+schema:
+  type: object
+  required:
+    - artifacts
+    - inventoried_at
+  properties:
+    artifacts:
+      type: array
+      description: List of discovered artifacts
+      items:
+        type: object
+        required: [name, path, type]
+        properties:
+          name:
+            type: string
+          path:
+            type: string
+          type:
+            type: string
+            enum: [code, doc, config, test, data, other]
+          size_bytes:
+            type: number
+          last_modified:
+            type: string
+          checksum:
+            type: string
+    runtime_surfaces:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          type:
+            type: string
+          version:
+            type: string
+    file_state:
+      type: object
+      properties:
+        modified:
+          type: array
+          items: {type: string}
+        added:
+          type: array
+          items: {type: string}
+        deleted:
+          type: array
+          items: {type: string}
+    inventoried_at:
+      type: string
+
+consumed_by:
+  - Forensics/project_mapping (classify_sources_and_provenance)
+  - Forensics/project_mapping (construct_physical_dependency_graph)

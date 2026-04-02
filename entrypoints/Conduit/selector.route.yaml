@@ -1,0 +1,62 @@
+id: conduit.route
+kind: persistent_selector
+family: Conduit
+pipeline_scope:
+  - documentation
+  - scholarly_writing
+  - professional_writing
+  - handoff_synthesis
+
+motif_bias:
+  primary: returning-expedition
+  secondary: unfinished-proof
+  tags:
+    - carry_structure_without_flattening
+    - outward_legibility_without_false_closure
+
+rubric_ref: shared/Trace/rubric.yaml
+checklist_ref: shared/Trace/checklist.yaml
+trigger_glossary_ref: shared/Trace/trigger_glossary.yaml
+target_grammar_ref: runtime/methodology/target_grammar.yaml
+
+smallest_sufficient_default: primitive
+escalation_boundary: local_evaluator
+
+trigger_policies:
+  - name: weak_support_for_claims
+    trigger_class: confidence_support_mismatch
+    preferred_action:
+      kind: reroute
+      target: family:Inquiry
+      reason: Communication should not outrun grounded support.
+      intervention_level: 8
+      preserve_residue: true
+  - name: docs_disagree_with_observed_state
+    trigger_class: contradiction_detected
+    preferred_action:
+      kind: reroute
+      target: family:Forensics
+      reason: Documentation must reconcile with actual state before being treated as accurate.
+      intervention_level: 8
+      preserve_residue: true
+  - name: draft_sprawl_or_structure_loss
+    trigger_class: artifact_shape_drift
+    preferred_action:
+      kind: primitive
+      target: primitive:weave
+      reason: Restore structure before expanding further.
+      intervention_level: 2
+      preserve_residue: true
+  - name: accumulated_material_ready_for_handoff
+    trigger_class: synthesis_needed
+    preferred_action:
+      kind: sibling_shift
+      target: pipeline:Conduit/handoff_synthesis
+      reason: Enough grounded material exists to produce a coherent outward artifact.
+      intervention_level: 6
+      preserve_residue: true
+
+exit_checks:
+  - outward_artifact_matches_intended_audience_and_shape
+  - support_state_is_calibrated
+  - metadata_and_handoff_requirements_are_tidy

@@ -1,0 +1,14 @@
+id: distill
+kind: operator
+status: core
+purpose: >
+  Compress grounded material into a smaller transfer-ready structure while
+  preserving load-bearing residue and unresolved risk.
+use_when:
+  - branch_accumulation_high
+  - handoff_or_summary_needed
+  - synthesis_required_but_full_pipeline_shift_not_yet_necessary
+returns:
+  - distilled_structure
+  - preserved_residue
+  - next_action_surface

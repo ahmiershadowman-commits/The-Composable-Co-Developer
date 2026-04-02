@@ -1,0 +1,39 @@
+id: feedback.global
+kind: loop_map
+purpose: >
+  Capture universal loops that any pipeline may enter when trust collapses,
+  ambiguity exceeds local handling capacity, or the current surface state stops
+  being safe to rely on.
+
+loops:
+  - id: trust_collapse
+    from: any_pipeline
+    trigger:
+      - canonical_state_is_uncertain
+      - provenance_is_materially_ambiguous
+      - observed_state_conflicts_with_surface_claims
+    target: family:Forensics
+    purpose: re_establish_ground_truth_before_continuing
+
+  - id: smallest_sufficient_intervention
+    from: authority:Trace
+    trigger:
+      - local_oddity_detected
+    response_spectrum:
+      - motif_nudge
+      - primitive
+      - selector_self_check
+      - local_evaluator
+      - phase_pivot
+      - sibling_pipeline_shift
+      - heavy_skill
+      - cross_family_reroute
+      - forensic_reset
+    purpose: avoid_unnecessary_complexity_or_premature_reroute
+
+  - id: unresolved_surface
+    from: any_pipeline
+    trigger:
+      - persistent_oddity_or_residue_remains_after_local_work
+    target: authority:Residue
+    purpose: apply_investigative_lens_before_escalating

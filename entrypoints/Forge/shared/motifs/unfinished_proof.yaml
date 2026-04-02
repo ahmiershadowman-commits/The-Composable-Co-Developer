@@ -1,0 +1,22 @@
+id: unfinished-proof
+kind: motif
+category: reasoning-gap
+description: >
+  Detects when reasoning chains terminate prematurely without reaching
+  a justified conclusion, or when claims lack supporting evidence.
+detection_signals:
+  - claim_without_support
+  - reasoning_chain_terminates_early
+  - conclusion_preceded_by_insufficient_premises
+  - therefore_without_because
+conditioning_effect: >
+  Increases attention on evidence gaps and prompts completion of
+  reasoning chains before commitment.
+related_interventions:
+  primitives:
+    - bind
+    - weave
+  operators:
+    - clarify
+  evaluators:
+    - support_evaluator

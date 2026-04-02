@@ -1,0 +1,23 @@
+id: methodology.target_grammar
+kind: grammar
+status: core
+purpose: >
+  Canonical target grammar for selectors, pivot conditions, route maps, and
+  feedback loops.
+
+allowed_target_forms:
+  - primitive:<name>
+  - operator:<name>
+  - evaluator:<name>
+  - method:<name>
+  - pipeline:<Family>/<pipeline_id>
+  - family:<Family>
+  - authority:<Trace|Lever|Residue>
+  - forensics_reset
+
+notes:
+  - Frame aliases must never appear as runtime targets.
+  - Family names are valid only with the family: prefix.
+  - Shared authorities are valid only with the authority: prefix.
+  - Pipeline ids must be canonical snake_case names.
+  - Method targets are only valid inside pipelines that explicitly define internal_methods.

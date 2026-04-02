@@ -1,0 +1,21 @@
+id: residue.lens.tension
+kind: investigative_lens
+frame_alias: Tension
+purpose: >
+  Make unresolved contradiction or pressure explicit so it can guide routing rather than
+  be absorbed by rhetorical smoothing.
+
+use_when:
+  - two_claims_or_states_pull_against_each_other
+  - local_repair_is_hiding_a_larger_conflict
+  - an apparent solution_feels_too_comfortable
+
+questions:
+  - What are the actual poles of the tension?
+  - Is the tension local, structural, or frame-level?
+  - Does this require holding, discriminating, or rerouting?
+
+possible_outcomes:
+  - invoke_contradiction_evaluator
+  - hold_with_residue
+  - reroute_to_forensics_or_formalization

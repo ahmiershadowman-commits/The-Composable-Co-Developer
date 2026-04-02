@@ -1,0 +1,36 @@
+id: feedback.inquiry
+kind: family_loop_map
+family: Inquiry
+purpose: >
+  Show how evidence work, explanation work, and formal binding work loop into one another.
+
+loops:
+  - id: evidence_to_explanation
+    from: pipeline:Inquiry/research
+    trigger:
+      - enough_signal_exists_but_explanation_remains_open
+    target: pipeline:Inquiry/hypothesis_generation
+
+  - id: explanation_back_to_evidence
+    from: pipeline:Inquiry/hypothesis_generation
+    trigger:
+      - discriminators_require_more_support
+    target: pipeline:Inquiry/research
+
+  - id: explanation_to_binding
+    from: pipeline:Inquiry/hypothesis_generation
+    trigger:
+      - candidate_frames_require_explicit_objects_or_assumptions
+    target: pipeline:Inquiry/formalization
+
+  - id: binding_back_to_explanation
+    from: pipeline:Inquiry/formalization
+    trigger:
+      - current_frame_cannot_be_bound_honestly_without_new_candidates
+    target: pipeline:Inquiry/hypothesis_generation
+
+  - id: trust_collapse
+    from: family:Inquiry
+    trigger:
+      - source_material_or_problem_statement_is_not_trustworthy
+    target: family:Forensics

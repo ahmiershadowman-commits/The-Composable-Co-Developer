@@ -1,0 +1,20 @@
+id: residue.lens.warp
+kind: investigative_lens
+frame_alias: Warp
+purpose: >
+  Detect whether the current frame is distorting what is being seen or asked.
+
+use_when:
+  - answers_fit_a_different_question_too_well
+  - a frame_requires_contortion_to_keep_working
+  - repeated_local_edits_do_not_reduce_error
+
+questions:
+  - What is being bent to preserve the current frame?
+  - Would another frame make the same facts straighter or less forced?
+  - Is this a wrong-question or wrong-level problem?
+
+possible_outcomes:
+  - invoke_frame_evaluator
+  - primitive_recenter
+  - reroute_to_forensics_or_inquiry

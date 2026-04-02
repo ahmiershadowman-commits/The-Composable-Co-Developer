@@ -1,0 +1,14 @@
+id: center
+family: metacognitive
+kind: primitive
+status: core
+purpose: Re-center active work on the actual target question or objective when local activity has drifted.
+use_when:
+  - surrogate_question_risk
+  - local_progress_not_affecting_real_target
+  - repeated_work_without_surface_change
+expected_effects:
+  - target_question_rearticulated
+  - irrelevant_branch_deweighted
+  - next_move_realigned
+smallest_sufficient_scope: local

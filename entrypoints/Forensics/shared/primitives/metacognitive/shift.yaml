@@ -1,0 +1,13 @@
+id: shift
+family: metacognitive
+kind: primitive
+status: core
+purpose: Reweight attention or evidential force without fully rerouting.
+use_when:
+  - overlooked_signal_detected
+  - current_weighting_feels_convenient_not_discriminative
+  - local_priority_update_needed
+expected_effects:
+  - revised_attention_distribution
+  - updated_evidence_priority
+smallest_sufficient_scope: local

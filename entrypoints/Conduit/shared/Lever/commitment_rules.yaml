@@ -1,0 +1,19 @@
+id: lever.shared.commitment_rules
+kind: commitment_policy
+
+guarded_commitment:
+  definition: >
+    A working commitment that is actionable enough to proceed but explicit about
+    retained residue, remaining uncertainty, and reopen conditions.
+
+required_fields:
+  - selected_frame_or_direction
+  - reason_for_selection
+  - unresolved_residue
+  - reopen_condition
+  - consequence_class
+
+forbidden_patterns:
+  - final_tone_without_evidence_support
+  - erased_rival_frames_when_they_remain_load_bearing
+  - commitment_without_reopen_condition

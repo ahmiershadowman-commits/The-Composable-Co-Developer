@@ -1,0 +1,70 @@
+id: forge.entry
+kind: entrypoint_skill
+family: Forge
+frame_alias: Shape
+purpose: >
+  Build, implementation, refactoring, and validation work on trustworthy project state.
+  Only invoke when trust is established. If trust has collapsed, run Forensics first.
+
+selector: entrypoints/Forge/selector.route.yaml
+shared_rubric: shared/Trace/rubric.yaml
+shared_checklist: shared/Trace/checklist.yaml
+shared_trigger_glossary: shared/Trace/trigger_glossary.yaml
+shared_escalation_rules: shared/Lever/escalation_rules.yaml
+
+motif_bias:
+  primary: tight-loop
+  secondary: minimal-footprint
+
+pipelines:
+  - id: development
+    frame_alias: Frame
+    use_when: systemic_change_or_coordination_needed
+  - id: coding
+    frame_alias: Shape
+    use_when: bounded_local_implementation
+  - id: testing
+    frame_alias: Probe
+    use_when: validation_or_failure_diagnosis_primary
+  - id: refactor
+    frame_alias: Temper
+    use_when: structure_change_without_behavioral_regression
+
+required_artifacts:
+  - problem_frame
+  - work_plan
+  - change_plan
+  - route_recommendation
+
+entry_triggers:
+  - bounded_implementation_needed
+  - systemic_change_required
+  - validation_or_testing_needed
+  - structural_cleanup_needed
+
+entry_conditions:
+  trust_zone_map_present: true
+  docs_state_code_agree: true
+
+blocked_when:
+  - trust_collapse
+  - docs_state_code_disagree_deeply
+  - canonical_source_unclear
+
+exit_conditions:
+  - change_is_implemented_and_coherent
+  - behavior_regressions_checked_or_deferred
+  - artifacts_written_to_runtime_output
+  - route_recommendation_surfaced
+
+route_targets:
+  forensics:
+    when:
+      - trust_collapses_mid_build
+      - canonical_source_becomes_unclear
+  inquiry:
+    when:
+      - explanation_of_behavior_needed_before_proceeding
+  conduit:
+    when:
+      - implementation_complete_and_documentation_needed

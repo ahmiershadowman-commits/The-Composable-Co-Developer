@@ -1,0 +1,5 @@
+# The Composable Co-Developer — runtime dependencies
+# Python 3.10+ required
+
+pyyaml>=6.0
+pytest>=7.0

@@ -1,0 +1,98 @@
+id: prompt_order_optimization
+family: Inquiry
+kind: end_to_end_pipeline
+frame_alias: Order
+status: experimental
+purpose: >
+  Evaluate and optimize the ordering of in-context demonstrations to mitigate
+  prompt-order sensitivity and improve task performance.
+
+entry_conditions:
+  - demonstration_order_effect_detected
+  - inconsistent_performance_across_orders
+  - high_order_sensitivity_for_task
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - sample_orders_and_measure_performance
+  - compute_order_sensitivity_metrics
+  - model_bias_and_generate_optimal_orderings
+  - apply_optimized_order
+  - evaluate_improvement
+  - finalize_or_reroute
+
+phase_contracts:
+  sample_orders_and_measure_performance:
+    goal: Collect performance data across multiple prompt/demo orders.
+    outputs:
+      - order_performance_matrix
+      - demonstration_dataset
+  compute_order_sensitivity_metrics:
+    goal: Quantify how order-sensitive the task is.
+    outputs:
+      - bias_assessment_report
+  model_bias_and_generate_optimal_orderings:
+    goal: Construct and search an optimization model over demonstration orderings.
+    outputs:
+      - optimized_prompt_order
+  apply_optimized_order:
+    goal: Apply the optimized or candidate order and produce adjusted runs.
+    outputs:
+      - adjusted_runs
+  evaluate_improvement:
+    goal: Compare optimized order performance against baseline.
+    outputs:
+      - evaluation_report
+  finalize_or_reroute:
+    goal: Exit with a validated order or route recommendation.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - tuning-fork
+  primitives:
+    - shift
+    - open
+  operators:
+    - distill
+  evaluators:
+    - support_evaluator
+    - trust_evaluator
+
+pivot_conditions:
+  order_bias_indicates_truth_problem:
+    action: reroute
+    target: family:Forensics
+  optimal_order_found_and_validated:
+    action: reroute
+    target: family:Inquiry
+  results_need_reporting:
+    action: reroute
+    target: family:Conduit
+  prompt_templates_require_code_changes:
+    action: reroute
+    target: family:Forge
+
+exit_conditions:
+  - order_performance_matrix_present
+  - bias_assessment_report_present
+  - evaluation_report_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - order_performance_matrix.yaml
+    - bias_assessment_report.yaml
+    - optimized_prompt_order.yaml
+    - evaluation_report.yaml
+  supporting:
+    - demonstration_dataset.yaml
+    - adjusted_runs.yaml
+    - route_recommendation.yaml

@@ -1,0 +1,39 @@
+id: trace.shared.rubric
+kind: shared_rubric
+purpose: >
+  Persistent low-cost supervision for active work. The rubric is not a heavy evaluator.
+  It is a recurring structure for deciding whether the current move remains legal,
+  sufficient, and proportionate.
+
+domains:
+  phase_fit:
+    questions:
+      - Are we still in the correct phase for the active pipeline?
+      - Has a phase transition become justified?
+      - Is the current phase being overextended past its intended purpose?
+  method_fit:
+    questions:
+      - Is the current local method still appropriate?
+      - Has a method-specific pivot trigger fired?
+      - Is a smaller intervention sufficient before changing method?
+  artifact_state:
+    questions:
+      - Has artifact shape drifted from the pipeline's target form?
+      - Has metadata changed enough to require normalization?
+      - Has residue accumulated that should be preserved, cleaned, or indexed?
+  epistemic_state:
+    questions:
+      - Is confidence outrunning support?
+      - Is contradiction present, unresolved, or merely apparent?
+      - Is the active frame suspiciously comfortable or under-discriminated?
+  routing_state:
+    questions:
+      - Is a motif nudge enough?
+      - Is a primitive enough?
+      - Is a local evaluator justified?
+      - Has trust in the visible surface dropped enough to require Forensics?
+
+selection_bias:
+  default_rule: smallest_sufficient_intervention
+  escalation_boundary: local_evaluator
+  preserve_residue_by_default: true

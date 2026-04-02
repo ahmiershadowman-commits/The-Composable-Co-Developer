@@ -1,0 +1,22 @@
+id: tension_point
+kind: motif
+category: conflict
+description: >
+  Identifies locations where multiple claims, perspectives, or
+  requirements are in active disagreement.
+detection_signals:
+  - contradictory_statements_nearby
+  - competing_constraints_present
+  - trade_off_not_explicitly_acknowledged
+  - stakeholder_interests_diverge
+conditioning_effect: >
+  Increases attention on conflict resolution and prompts explicit
+  acknowledgment of tensions before synthesis.
+related_interventions:
+  primitives:
+    - hold
+    - shift
+  operators:
+    - reframe
+  evaluators:
+    - contradiction_evaluator

@@ -1,0 +1,19 @@
+{
+  "name": "lever",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Evaluator and escalation authority - owns commitments, pivots, and reopen rules",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "shared-authority",
+  "keywords": ["evaluator", "escalation", "commitment", "lever"],
+  "files": [
+    "commitment_rules.yaml",
+    "escalation_rules.yaml",
+    "evaluator_registry.yaml",
+    "reroute_rules.yaml"
+  ]
+}

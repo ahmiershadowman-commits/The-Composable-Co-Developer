@@ -1,0 +1,20 @@
+id: residue.lens.absence
+kind: investigative_lens
+frame_alias: Absence
+purpose: >
+  Read missing or predicted-but-absent structure as evidence rather than as empty space.
+
+use_when:
+  - expected_artifacts_or_evidence_are_missing
+  - documentation_skips_a_crucial_question
+  - a dependency_graph_has_suspicious_silences
+
+questions:
+  - What should be here given the current model, but is not?
+  - Is the silence uniform enough to imply structure rather than accident?
+  - What pattern is formed by what is not present?
+
+possible_outcomes:
+  - route_to_forensics_inventory
+  - route_to_research_retrieval
+  - invoke_burden

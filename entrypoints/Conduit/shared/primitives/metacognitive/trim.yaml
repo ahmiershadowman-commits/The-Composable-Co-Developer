@@ -1,0 +1,13 @@
+id: trim
+family: metacognitive
+kind: primitive
+status: core
+purpose: Narrow a search that has become diffuse or repetitive.
+use_when:
+  - branch_sprawl
+  - near_duplicate_candidates
+  - synthesis_blocked_by_excess_options
+expected_effects:
+  - reduced_candidate_set
+  - preserved_differentiators
+smallest_sufficient_scope: local

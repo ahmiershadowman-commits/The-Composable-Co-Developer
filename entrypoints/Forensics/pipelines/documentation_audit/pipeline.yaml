@@ -1,0 +1,106 @@
+id: documentation_audit
+family: Forensics
+kind: end_to_end_pipeline
+frame_alias: Reconcile
+status: core
+purpose: >
+  Determine whether documentation is descriptive, stale, aspirational,
+  contradictory, or trustworthy relative to observed project state and produce a
+  docs trust assessment plus route recommendation.
+
+entry_conditions:
+  - documentation_is_being_used_as_authority_or_instruction
+  - documentation_materially_affects_build_analysis_or_handoff
+  - documentation_may_be_stale_aspirational_or_conflicted
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - collect_documentation_surface
+  - collect_observed_state
+  - extract_material_claims
+  - compare_claims_to_observed_state
+  - classify_claim_accuracy_and_risk
+  - map_required_reconciliation
+  - recommend_route
+
+phase_contracts:
+  collect_documentation_surface:
+    goal: Gather the documentation being treated as authoritative or operationally relevant.
+    outputs:
+      - documentation_packet
+  collect_observed_state:
+    goal: Gather the observed code, repo, config, or environment state the docs purport to describe.
+    outputs:
+      - observed_state_packet
+  extract_material_claims:
+    goal: Pull out claims that would change action, trust, or interpretation if false.
+    outputs:
+      - claim_ledger
+  compare_claims_to_observed_state:
+    goal: Compare material claims to observed state.
+    outputs:
+      - claim_state_comparison
+  classify_claim_accuracy_and_risk:
+    goal: Classify each claim by correctness and risk if trusted.
+    outputs:
+      - documentation_trust_assessment
+  map_required_reconciliation:
+    goal: Identify what must be updated, preserved, or treated as aspirational.
+    outputs:
+      - reconciliation_map
+  recommend_route:
+    goal: Route to Conduit, Forge, Inquiry, or return to Forensics based on audit outcome.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - returning-expedition
+    - odd-one-out
+  primitives:
+    - reread
+    - separate
+    - shift
+  operators:
+    - clarify
+  evaluators:
+    - trust_evaluator
+    - contradiction_evaluator
+
+pivot_conditions:
+  docs_conflict_with_code_or_state:
+    action: reroute
+    target: family:Forensics
+  docs_need_rendering_reconciliation:
+    action: reroute
+    target: family:Conduit
+  docs_reveal_real_implementation_gap:
+    action: reroute
+    target: family:Forge
+  docs_support_question_but_not_explanation:
+    action: reroute
+    target: family:Inquiry
+
+exit_conditions:
+  - documentation_packet_present
+  - claim_ledger_present
+  - documentation_trust_assessment_present
+  - reconciliation_map_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - claim_ledger.yaml
+    - documentation_trust_assessment.yaml
+    - reconciliation_map.yaml
+    - route_recommendation.yaml
+  supporting:
+    - documentation_packet.yaml
+    - observed_state_packet.yaml
+    - claim_state_comparison.yaml

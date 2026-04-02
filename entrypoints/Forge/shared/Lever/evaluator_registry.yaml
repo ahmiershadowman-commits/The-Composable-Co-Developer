@@ -1,0 +1,72 @@
+id: lever.shared.evaluator_registry
+kind: evaluator_registry
+status: core
+purpose: >
+  Register the evaluator classes Lever may invoke when Trace-level supervision is no
+  longer sufficient. Evaluators should produce actionable outcomes, not generic critique.
+
+evaluators:
+  contradiction_evaluator:
+    use_when:
+      - contradiction_detected
+      - local_primitives_failed_to_resolve_conflict
+    returns:
+      - contradiction_classification
+      - materiality_assessment
+      - local_resolution_or_reroute_recommendation
+
+  discriminator_evaluator:
+    use_when:
+      - branch_sprawl_without_clear_discriminators
+      - multiple_candidates_compete_without_evidence_ranking
+    returns:
+      - discriminator_set
+      - candidate_ranking_basis
+      - synthesis_or_pruning_recommendation
+
+  support_evaluator:
+    use_when:
+      - confidence_support_gap
+      - claim_consequence_class_high
+    returns:
+      - support_sufficiency_assessment
+      - downgrade_hold_or_research_recommendation
+
+  frame_evaluator:
+    use_when:
+      - wrong_question_risk
+      - repeated_local_failure_with_stable_surface
+      - route_choice_may_be_masking_frame_error
+    returns:
+      - frame_fit_assessment
+      - reframe_or_recenter_recommendation
+
+  trust_evaluator:
+    use_when:
+      - suspect_documentation
+      - canonical_conflict
+      - provenance_uncertainty
+    returns:
+      - trust_zone_map
+      - forensics_required_boolean
+      - temporary_safe_scope_if_any
+
+  artifact_shape_evaluator:
+    use_when:
+      - structure_drift
+      - metadata_incoherence
+      - handoff_risk_due_to_artifact_sprawl
+    returns:
+      - shape_violation_list
+      - cleanup_or_defragmentation_recommendation
+
+response_contract:
+  must_return:
+    - recommended_action
+    - rationale
+    - intervention_level
+    - residue_to_preserve
+    - target
+  may_return:
+    - evaluator_notes
+    - confidence_calibration

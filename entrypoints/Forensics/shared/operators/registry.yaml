@@ -1,0 +1,109 @@
+id: shared.operators.registry
+kind: operator_registry
+purpose: >
+  Register the reusable operator classes that pipelines, Trace, and Lever may call.
+  Operators are stronger than primitives: they encapsulate a local work pattern,
+  consume bounded input state, and return structured outputs.
+
+design_rules:
+  - operators_should_add_robustness_more_than_complexity
+  - operators_should_be_callable_across_families_when_their_shape_generalizes
+  - operators_should_not_replace_family_or_pipeline_level_methodology
+  - operators_should_publish_inputs_outputs_and_failure_modes
+
+operator_classes:
+  local_reading:
+    intervention_band: 2
+    examples:
+      - source_extract
+      - claim_parse
+      - dependency_slice
+      - code_surface_read
+      - extract
+    use_when:
+      - more_than_a_primitive_is_needed_but_phase_and_family_still_fit
+
+  local_transformation:
+    intervention_band: 2
+    examples:
+      - rewrite_local_structure
+      - metadata_normalize
+      - evidence_reweight
+      - branch_prune
+      - clarify
+      - distill
+      - reframe
+    use_when:
+      - bounded_local_change_can_restore_progress
+
+  bounded_evaluation:
+    intervention_band: 4
+    examples:
+      - contradiction_check
+      - support_check
+      - shape_check
+      - trust_check
+      - compare
+      - triangulate
+    use_when:
+      - Trace_has_identified_a_need_for_stronger_discrimination
+
+  synthesis:
+    intervention_band: 7
+    examples:
+      - handoff_synthesis
+      - branch_integration
+      - findings_compression
+      - documentation_reconciliation
+    use_when:
+      - accumulated_material_needs_higher_order_coherence
+
+  recovery:
+    intervention_band: 5
+    examples:
+      - canonical_candidate_selection
+      - residue_disposition
+      - rollback_anchor_resolution
+    use_when:
+      - entropy_or_drift_is_primary_but_full_family_reroute_is_not_yet_required
+
+registered_operators:
+  - id: clarify
+    class: local_transformation
+    description: Make unclear concepts precise
+    file: clarify.yaml
+
+  - id: distill
+    class: local_transformation
+    description: Extract essential elements
+    file: distill.yaml
+
+  - id: compare
+    class: bounded_evaluation
+    description: Identify similarities and differences
+    file: compare.yaml
+
+  - id: extract
+    class: local_reading
+    description: Pull out specific information
+    file: extract.yaml
+
+  - id: reframe
+    class: local_transformation
+    description: Shift perspective
+    file: reframe.yaml
+
+  - id: triangulate
+    class: bounded_evaluation
+    description: Cross-reference multiple sources
+    file: triangulate.yaml
+
+response_contract:
+  must_return:
+    - recommended_next_move
+    - intervention_band
+    - residue_to_preserve
+  may_return:
+    - generated_artifacts
+    - escalation_recommendation
+    - route_recommendation

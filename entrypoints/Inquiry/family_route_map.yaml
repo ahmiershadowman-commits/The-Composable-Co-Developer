@@ -1,0 +1,75 @@
+family: Inquiry
+description: >
+  Question/evidence/explanation family. Used when understanding, explanation,
+  formal binding, or analysis is the active problem rather than artifact change.
+
+default_entry: research
+
+smallest_sufficient_intervention_order:
+  - motif
+  - primitive
+  - selector_self_check
+  - local_evaluator
+  - phase_pivot
+  - sibling_pipeline_shift
+  - heavy_skill
+  - cross_family_reroute
+  - forensic_reset
+
+pipelines:
+  - id: research
+    alias: Seek
+    status: core
+    use_when:
+      - evidence_collection_comparison_or_synthesis_is_needed
+  - id: hypothesis_generation
+    alias: Venture
+    status: core
+    use_when:
+      - explanatory_frames_are_needed
+      - anomaly_or_open_causal_slot_exists
+  - id: data_analysis
+    alias: Read
+    status: core
+    use_when:
+      - data_needs_inspection_validation_or_modeling
+  - id: formalization
+    alias: Bind
+    status: core
+    use_when:
+      - concepts_or_relations_need_explicit_structure
+  - id: mathematics
+    alias: Resolve
+    status: core
+    use_when:
+      - proof_derivation_counterexample_or_rigor_is_primary
+
+experimental_pipelines:
+  - id: prompt_order_optimization
+    alias: Order
+  - id: human_hint_integration
+    alias: Hybrid
+
+family_feedback:
+  - from: pipeline:Inquiry/research
+    trigger:
+      - evidence_exists_but_explanation_is_open
+    target: pipeline:Inquiry/hypothesis_generation
+  - from: pipeline:Inquiry/hypothesis_generation
+    trigger:
+      - evidence_insufficient_for_selection
+    target: pipeline:Inquiry/research
+  - from: pipeline:Inquiry/formalization
+    trigger:
+      - object_language_is_stable_enough_for_rigorous_work
+    target: pipeline:Inquiry/mathematics
+  - from: pipeline:Inquiry/mathematics
+    trigger:
+      - underspecification_or_symbol_instability_detected
+    target: pipeline:Inquiry/formalization
+  - from: family:Inquiry
+    trigger:
+      - source_truth_suspect
+      - anomaly_source_ambiguous
+      - documentation_or_state_claims_untrusted
+    target: family:Forensics

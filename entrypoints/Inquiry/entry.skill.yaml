@@ -1,0 +1,72 @@
+id: inquiry.entry
+kind: entrypoint_skill
+family: Inquiry
+frame_alias: Seek
+purpose: >
+  Understanding, analysis, formal investigation, and evidence synthesis work.
+  Use when the task is to explain, investigate, reason about, or formalize —
+  not to build or change artifacts. If source truth is suspect, run Forensics first.
+
+selector: entrypoints/Inquiry/selector.route.yaml
+shared_rubric: shared/Trace/rubric.yaml
+shared_checklist: shared/Trace/checklist.yaml
+shared_trigger_glossary: shared/Trace/trigger_glossary.yaml
+shared_escalation_rules: shared/Lever/escalation_rules.yaml
+
+motif_bias:
+  primary: unfinished-proof
+  secondary: zero-in
+
+pipelines:
+  - id: research
+    frame_alias: Seek
+    use_when: evidence_collection_comparison_or_synthesis
+  - id: hypothesis_generation
+    frame_alias: Venture
+    use_when: explanatory_frames_needed_for_anomaly_or_open_causal_slot
+  - id: data_analysis
+    frame_alias: Read
+    use_when: data_needs_inspection_validation_or_modeling
+    status: experimental
+  - id: formalization
+    frame_alias: Bind
+    use_when: concepts_or_relations_need_explicit_structure
+  - id: mathematics
+    frame_alias: Resolve
+    use_when: proof_derivation_counterexample_or_rigor_is_primary
+
+required_artifacts:
+  - question_frame
+  - source_ledger
+  - synthesis_note
+  - route_recommendation
+
+entry_triggers:
+  - explanation_needed
+  - investigation_requested
+  - evidence_collection_needed
+  - hypothesis_required
+  - formal_structure_needed
+
+blocked_when:
+  - source_truth_suspect
+  - anomaly_source_ambiguous
+  - documentation_or_state_claims_untrusted
+
+exit_conditions:
+  - question_or_investigation_scope_bounded
+  - evidence_sufficient_to_support_output_claims
+  - artifacts_written_to_runtime_output
+  - unresolved_threads_explicitly_noted
+
+route_targets:
+  forensics:
+    when:
+      - source_truth_becomes_suspect_mid_investigation
+      - trust_in_state_surfaces_collapses
+  forge:
+    when:
+      - investigation_complete_and_implementation_work_identified
+  conduit:
+    when:
+      - findings_ready_for_communication_or_handoff

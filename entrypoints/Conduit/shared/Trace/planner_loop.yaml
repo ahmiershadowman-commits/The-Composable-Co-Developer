@@ -1,0 +1,46 @@
+id: trace.shared.planner_loop
+kind: planner_loop
+purpose: >
+  Define the recurring smallest-sufficient supervision cycle that travels with every
+  active pipeline. Trace does not replace the pipeline. It repeatedly checks whether
+  the pipeline's current move is still legal, proportionate, and grounded.
+
+loop_order:
+  - identify_active_phase
+  - run_micro_checks
+  - scan_for_triggers
+  - choose_smallest_sufficient_intervention
+  - execute_or_recommend_next_move
+  - recheck_exit_pivot_and_trust_state
+
+micro_checks:
+  - name: phase_fit
+    question: Is the current phase still the right one for the active objective?
+  - name: method_fit
+    question: Is the current local method still appropriate inside the phase?
+  - name: artifact_drift
+    question: Has structure, metadata, or residue drifted enough to require correction?
+  - name: support_calibration
+    question: Is confidence outrunning support or consequence class?
+  - name: trust_surface
+    question: Has trust in the visible surface dropped enough to require Forensics?
+  - name: intervention_size
+    question: Is there a smaller sufficient move than rerouting or escalation?
+
+intervention_spectrum:
+  0: continue
+  1: motif_nudge
+  2: primitive_call
+  3: local_self_check
+  4: local_evaluator
+  5: within_pipeline_pivot
+  6: sibling_pipeline_shift
+  7: heavy_synthesis_or_evaluator
+  8: cross_family_reroute
+  9: forensics_reset
+
+default_policy:
+  choose_lowest_effective_level: true
+  preserve_residue_before_compression: true
+  prefer_local_repair_before_cross_family_reroute: true
+  force_forensics_when_trust_is_materially_uncertain: true

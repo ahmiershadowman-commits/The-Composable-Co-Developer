@@ -1,0 +1,63 @@
+id: inquiry.route
+kind: persistent_selector
+family: Inquiry
+pipeline_scope:
+  - research
+  - hypothesis_generation
+  - data_analysis
+  - formalization
+  - mathematics
+
+motif_bias:
+  primary: unfinished-proof
+  secondary: odd-one-out
+  tags:
+    - evidence_before_comfort
+    - preserve_alternatives_until_discrimination
+
+rubric_ref: shared/Trace/rubric.yaml
+checklist_ref: shared/Trace/checklist.yaml
+trigger_glossary_ref: shared/Trace/trigger_glossary.yaml
+target_grammar_ref: runtime/methodology/target_grammar.yaml
+
+smallest_sufficient_default: primitive
+escalation_boundary: local_evaluator
+
+trigger_policies:
+  - name: evidence_missing_for_explanation
+    trigger_class: confidence_support_mismatch
+    preferred_action:
+      kind: sibling_shift
+      target: pipeline:Inquiry/research
+      reason: Explanatory work should return to evidence acquisition when support is thin.
+      intervention_level: 6
+      preserve_residue: true
+  - name: underspecified_structure
+    trigger_class: method_fit
+    preferred_action:
+      kind: sibling_shift
+      target: pipeline:Inquiry/formalization
+      reason: Objects and relations need explicit binding before deeper reasoning proceeds.
+      intervention_level: 6
+      preserve_residue: true
+  - name: branch_sprawl_without_discriminators
+    trigger_class: branch_sprawl
+    preferred_action:
+      kind: local_evaluator
+      target: evaluator:discriminator_evaluator
+      reason: Open inquiry must not drift into uncontrolled branch accumulation.
+      intervention_level: 4
+      preserve_residue: true
+  - name: suspect_ground_truth
+    trigger_class: trust_collapse
+    preferred_action:
+      kind: reroute
+      target: family:Forensics
+      reason: Inquiry should not continue on a corrupted or merely assumed state surface.
+      intervention_level: 8
+      preserve_residue: true
+
+exit_checks:
+  - evidence_and_frame_state_are_explicit
+  - unresolveds_or_residue_are_logged
+  - next_route_or_commitment_is_justified

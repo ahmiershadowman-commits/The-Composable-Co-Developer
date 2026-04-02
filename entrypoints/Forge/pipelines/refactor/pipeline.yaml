@@ -1,0 +1,110 @@
+id: refactor
+family: Forge
+kind: end_to_end_pipeline
+frame_alias: Temper
+status: core
+purpose: >
+  Reshape code and architecture to improve structure, readability, modularity,
+  or maintainability without changing intended behavior unless explicitly authorized.
+
+entry_conditions:
+  - project_state_is_grounded_enough_for_build_work
+  - behavioural_invariants_can_be_stated
+  - structural_or_architectural_improvement_is_primary_goal
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - analyze_current_structure
+  - isolate_change_targets
+  - draft_refactor_plan
+  - perform_incremental_changes
+  - validate_behavior_consistency
+  - update_documentation_and_metadata
+  - finalize_or_reroute
+
+phase_contracts:
+  analyze_current_structure:
+    goal: Understand current structure, duplication, and pain points.
+    outputs:
+      - current_shape_map
+      - friction_points
+  isolate_change_targets:
+    goal: Identify what can change and what must remain invariant.
+    outputs:
+      - invariants_ledger
+      - change_targets
+  draft_refactor_plan:
+    goal: Select the smallest structural changes that improve target qualities.
+    outputs:
+      - refactor_plan
+  perform_incremental_changes:
+    goal: Apply structural changes in bounded reversible steps.
+    outputs:
+      - change_log
+  validate_behavior_consistency:
+    goal: Confirm intended behavior or interfaces still hold.
+    outputs:
+      - behavior_validation_report
+  update_documentation_and_metadata:
+    goal: Keep docs and metadata aligned with the new structure.
+    outputs:
+      - updated_documentation_note
+  finalize_or_reroute:
+    goal: Exit with improved structure or escalate safely.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - cambium-layer
+    - watershed
+  primitives:
+    - separate
+    - shift
+    - trim
+    - press
+  operators:
+    - clarify
+  evaluators:
+    - artifact_shape_evaluator
+    - contradiction_evaluator
+
+pivot_conditions:
+  behavior_uncertain:
+    action: sibling_shift
+    target: pipeline:Forge/testing
+  scope_expands_beyond_structure:
+    action: sibling_shift
+    target: pipeline:Forge/development
+  fragmentation_or_entropy_detected:
+    action: reroute
+    target: pipeline:Forensics/defragmentation
+  truth_or_canonical_state_uncertain:
+    action: reroute
+    target: family:Forensics
+  communication_or_handoff_primary:
+    action: reroute
+    target: family:Conduit
+
+exit_conditions:
+  - refactor_plan_present
+  - behavior_validation_report_present
+  - updated_documentation_note_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - refactor_plan.yaml
+    - behavior_validation_report.md
+    - route_recommendation.yaml
+  supporting:
+    - current_shape_map.yaml
+    - invariants_ledger.yaml
+    - change_log.yaml
+    - updated_documentation_note.yaml

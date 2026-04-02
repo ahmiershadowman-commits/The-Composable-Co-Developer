@@ -1,0 +1,113 @@
+id: data_analysis
+family: Inquiry
+kind: end_to_end_pipeline
+frame_alias: Read
+status: core
+purpose: >
+  Inspect, validate, and model data to extract insight, resolve anomalies, or
+  support explanatory frames while keeping data-driven claims grounded in
+  trustworthy observations.
+
+entry_conditions:
+  - data_or_observations_are_available_to_interrogate
+  - explanation_or_decision_requires_inspection_or_modeling
+  - signal_quality_is_sufficient_to_justify_analysis
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - define_analysis_question
+  - collect_and_preprocess_data
+  - explore_patterns_and_distributions
+  - build_or_select_models
+  - evaluate_results_and_uncertainties
+  - interpret_results_in_context
+  - finalize_or_reroute
+
+phase_contracts:
+  define_analysis_question:
+    goal: State the analysis target, decision surface, or anomaly to be resolved.
+    outputs:
+      - analysis_question
+  collect_and_preprocess_data:
+    goal: Gather and preprocess the relevant data while preserving provenance.
+    outputs:
+      - dataset_ledger
+      - preprocessing_record
+  explore_patterns_and_distributions:
+    goal: Explore distributions, outliers, and candidate signals.
+    outputs:
+      - exploration_summary
+  build_or_select_models:
+    goal: Choose or build the right model or analysis method.
+    outputs:
+      - model_specification
+  evaluate_results_and_uncertainties:
+    goal: Evaluate fit, uncertainties, and assumption violations.
+    outputs:
+      - results_report
+      - uncertainty_note
+  interpret_results_in_context:
+    goal: Tie results back to the actual question and possible downstream routes.
+    outputs:
+      - interpretation_note
+  finalize_or_reroute:
+    goal: Exit with a bounded answer or route recommendation.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - tuning-fork
+    - odd-one-out
+  primitives:
+    - separate
+    - shift
+    - press
+  operators:
+    - clarify
+  evaluators:
+    - support_evaluator
+    - contradiction_evaluator
+    - trust_evaluator
+
+pivot_conditions:
+  data_insufficient_or_misleading:
+    action: sibling_shift
+    target: pipeline:Inquiry/research
+  analysis_reveals_new_anomaly:
+    action: sibling_shift
+    target: pipeline:Inquiry/hypothesis_generation
+  objects_or_assumptions_need_binding:
+    action: sibling_shift
+    target: pipeline:Inquiry/formalization
+  rigorous_proof_or_counterexample_required:
+    action: sibling_shift
+    target: pipeline:Inquiry/mathematics
+  data_truth_or_provenance_uncertain:
+    action: reroute
+    target: family:Forensics
+
+exit_conditions:
+  - analysis_question_present
+  - dataset_ledger_present
+  - results_report_present
+  - route_recommendation_present
+
+artifacts:
+  primary:
+    - analysis_question.yaml
+    - dataset_ledger.yaml
+    - results_report.md
+    - route_recommendation.yaml
+  supporting:
+    - preprocessing_record.yaml
+    - exploration_summary.md
+    - model_specification.yaml
+    - uncertainty_note.yaml
+    - interpretation_note.yaml

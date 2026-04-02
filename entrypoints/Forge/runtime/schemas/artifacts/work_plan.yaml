@@ -1,0 +1,50 @@
+id: work_plan
+kind: artifact_schema
+produced_by: Forge/development, Forge/coding
+purpose: >
+  Ordered implementation plan produced after problem framing. Consumed during
+  implementation to sequence work slices and avoid uncoordinated changes.
+
+schema:
+  type: object
+  required:
+    - problem_summary
+    - slices
+    - generated_at
+  properties:
+    problem_summary:
+      type: string
+      description: Scoped statement of what is being changed and why
+    slices:
+      type: array
+      description: Independently implementable work units in execution order
+      items:
+        type: object
+        required: [id, description, dependencies]
+        properties:
+          id:
+            type: string
+          description:
+            type: string
+          files_affected:
+            type: array
+            items: {type: string}
+          dependencies:
+            type: array
+            items: {type: string}
+            description: IDs of slices that must complete before this one
+          validation_check:
+            type: string
+          status:
+            type: string
+            enum: [pending, in_progress, complete, blocked]
+    regression_checks:
+      type: array
+      description: What must not break
+      items: {type: string}
+    generated_at:
+      type: string
+
+consumed_by:
+  - Forge/coding (implementation sequencing)
+  - Forge/testing (regression check list)

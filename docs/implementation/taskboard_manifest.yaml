@@ -1,0 +1,85 @@
+version: 1
+updated_at: "2026-04-02"
+product_mode: claude_code_plugin_first
+tracks:
+  marketplace_surface:
+    status: complete
+    items:
+      - id: marketplace_catalog
+        status: complete
+        path: .claude-plugin/marketplace.json
+      - id: family_plugin_manifests
+        status: complete
+        path: entrypoints/*/.claude-plugin/plugin.json
+      - id: marketplace_validator
+        status: complete
+        path: tools/validate_marketplace.py
+  runtime_spine:
+    status: complete
+    items:
+      - id: target_resolution
+        status: complete
+        path: runtime/methodology/target_resolver.py
+      - id: dispatcher
+        status: complete
+        path: runtime/execution/dispatcher.py
+      - id: persistence
+        status: complete
+        path: runtime/state/persistence.py
+      - id: concurrency
+        status: complete
+        path: runtime/execution/concurrent.py
+      - id: visualization
+        status: complete
+        path: runtime/visualization/report.py
+  hooks:
+    status: complete
+    items:
+      - id: packaged_hook_config
+        status: complete
+        path: hooks/hooks.json
+      - id: runtime_hook_registry
+        status: complete
+        path: hooks/registry.py
+      - id: dispatcher_hook_orchestration
+        status: complete
+        path: runtime/execution/dispatcher.py
+  mcp:
+    status: complete
+    items:
+      - id: managed_mcp_template
+        status: complete
+        path: managed-mcp.json
+      - id: managed_mcp_runtime_loader
+        status: complete
+        path: runtime/mcp/registry.py
+      - id: managed_mcp_probe_host
+        status: complete
+        path: runtime/mcp/session_host.py
+      - id: managed_mcp_probe_tool
+        status: complete
+        path: tools/probe_managed_mcp.py
+  documentation:
+    status: complete
+    items:
+      - id: stale_status_cleanup
+        status: complete
+        path: docs/architecture/missing_components_spec.md
+      - id: runtime_scope_alignment
+        status: complete
+        path: docs/implementation/runtime_spine_scope.md
+      - id: build_record
+        status: complete
+        path: docs/implementation/runtime_spine_build_plan.md
+  experimental_policy:
+    status: complete
+    items:
+      - id: inquiry_experimental_pipelines
+        status: complete
+        path: entrypoints/Inquiry/executors.py
+      - id: forensics_experimental_pipelines
+        status: complete
+        path: entrypoints/Forensics/executors.py
+      - id: approval_gate
+        status: complete
+        path: runtime/execution/experimental.py

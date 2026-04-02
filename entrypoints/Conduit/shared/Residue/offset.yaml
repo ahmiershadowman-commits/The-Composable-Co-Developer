@@ -1,0 +1,20 @@
+id: residue.lens.offset
+kind: investigative_lens
+frame_alias: Offset
+purpose: >
+  Compare two registers, representations, or accounts to detect informative mismatch.
+
+use_when:
+  - docs_and_state_disagree
+  - formal_and_intuitive_accounts_diverge
+  - two_sources_converge_only_partially
+
+questions:
+  - Where do the two readings actually differ?
+  - Is the mismatch due to error, granularity, or hidden structure?
+  - Which representation is carrying signal the other suppresses?
+
+possible_outcomes:
+  - documentation_audit
+  - cross_register_discrimination
+  - invoke_trust_evaluator

@@ -1,0 +1,21 @@
+id: residue.lens.misfit
+kind: investigative_lens
+frame_alias: Misfit
+purpose: >
+  Protect whatever resists the current frame from premature smoothing or dismissal.
+
+use_when:
+  - one_element_keeps_failing_to_fit
+  - anomaly_is_being_explained_too_quickly
+  - a discarded_alternative_still_has_load_bearing_force
+
+questions:
+  - What specifically does not fit the current account?
+  - Is the misfit noise, or evidence that the frame was built not to see something?
+  - What would change if the misfit were treated as central rather than peripheral?
+
+possible_outcomes:
+  - preserve_anomaly_and_continue
+  - invoke_signal
+  - invoke_frame_evaluator
+  - reroute_to_forensics

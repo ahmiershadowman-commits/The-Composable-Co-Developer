@@ -1,0 +1,113 @@
+id: mathematics
+frame_alias: Resolve
+family: Inquiry
+kind: end_to_end_pipeline
+status: core
+
+purpose: >
+  Carry out rigorous derivation, proof, counterexample search, structural constraint
+  testing, or mathematically disciplined problem reduction once the object language
+  is sufficiently bound.
+
+entry_conditions:
+  - claim_or_problem_is_formal_enough
+  - assumptions_can_be_stated
+  - symbol_set_is_stable_enough_to_operate
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+phase_order:
+  - state_problem
+  - bind_assumptions
+  - derive_or_search
+  - edge_case_check
+  - rigor_check
+  - notation_cleanup
+  - finalize
+
+phase_contracts:
+  state_problem:
+    goal: State the exact claim, task, or structure under mathematical attention.
+    outputs:
+      - problem_statement
+      - target_result_or_open_question
+  bind_assumptions:
+    goal: Make assumptions and definitions explicit enough to support derivation.
+    outputs:
+      - assumptions_ledger
+      - defined_objects
+    reroute_on:
+      - object_underspecified -> Inquiry/formalization
+  derive_or_search:
+    goal: Execute proof, derivation, or structured search over candidate argument paths.
+    outputs:
+      - derivation_paths
+      - candidate_argument
+  edge_case_check:
+    goal: Search for counterexamples, boundary failures, or hidden exclusions.
+    outputs:
+      - counterexample_attempts
+      - edge_case_notes
+  rigor_check:
+    goal: Verify that each step is justified and that no hidden assumptions were smuggled in.
+    outputs:
+      - rigor_assessment
+      - unresolved_gaps
+  notation_cleanup:
+    goal: Normalize symbols, lemma naming, and structural presentation.
+    outputs:
+      - notation_ledger
+  finalize:
+    goal: Exit with a proof sketch, proof, counterexample, or bounded unresolved state.
+    outputs:
+      - result_artifact
+      - unresolveds_log
+
+smallest_sufficient_interventions:
+  motifs:
+    - unfinished-proof
+    - tuning-fork
+  primitives:
+    - bind
+    - press
+    - reread
+    - release
+    - release
+  evaluators:
+    - contradiction_evaluator
+    - frame_evaluator
+    - trust_evaluator
+
+pivot_conditions:
+  object_underspecified:
+    action: reroute
+    target: pipeline:Inquiry/formalization
+  evidence_needed_from_outside_math:
+    action: reroute
+    target: pipeline:Inquiry/research
+  repeated_derivation_failure:
+    action: invoke_evaluator
+    target: evaluator:support_evaluator
+  notation_instability:
+    action: pivot
+    target_phase: notation_cleanup
+
+exit_conditions:
+  - result_artifact_present
+  - assumptions_ledger_present
+  - unresolveds_logged
+  - notation_consistent
+  - provenance_preserved
+
+artifacts:
+  primary:
+    - proof.md
+    - counterexample.md
+    - derivation.md
+  supporting:
+    - assumptions.yaml
+    - unresolveds.yaml
+    - provenance_log.yaml

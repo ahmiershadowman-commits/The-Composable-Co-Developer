@@ -1,0 +1,21 @@
+id: residue.lens.edge
+kind: investigative_lens
+frame_alias: Edge
+purpose: >
+  Look at unstable boundaries where categories, responsibilities, or pipeline families
+  begin to blur or leak into each other.
+
+use_when:
+  - family_boundaries_are_unclear
+  - a pipeline_keeps_touching_an_adjacent_mode
+  - state_becomes_unstable_at_the_boundary_of_two_classes
+
+questions:
+  - Where is the boundary actually failing?
+  - Is this a sibling shift, a cross-family reroute, or a forensics reset?
+  - What would happen if the overlap were treated as informative rather than accidental?
+
+possible_outcomes:
+  - sibling_shift
+  - reroute_judgment
+  - hold_with_residue

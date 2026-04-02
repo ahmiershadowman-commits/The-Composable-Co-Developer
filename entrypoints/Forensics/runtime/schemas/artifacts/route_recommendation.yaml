@@ -1,0 +1,48 @@
+id: route_recommendation
+kind: artifact_schema
+produced_by: all families (all pipelines)
+purpose: >
+  States what should happen next after a pipeline completes. Required exit artifact
+  for all family pipelines. If a pipeline does not produce this, routing is undefined.
+
+schema:
+  type: object
+  required:
+    - recommended_next
+    - rationale
+    - generated_at
+  properties:
+    recommended_next:
+      type: string
+      description: >
+        Next action in canonical target grammar.
+        Examples: Forge/coding, Inquiry/research, Conduit/documentation,
+        Forensics/defragmentation, none (work complete)
+    rationale:
+      type: string
+      description: Why this route is recommended given current artifacts
+    confidence:
+      type: string
+      enum: [high, medium, low]
+    alternatives:
+      type: array
+      description: Other viable routes if recommended_next is blocked
+      items:
+        type: object
+        properties:
+          route:
+            type: string
+          condition:
+            type: string
+    blockers:
+      type: array
+      description: Conditions that must be resolved before routing
+      items:
+        type: string
+    generated_at:
+      type: string
+
+consumed_by:
+  - All family skill after-execution handlers
+  - Trace authority (pivot condition evaluation)
+  - Session handoff (unresolveds_and_risks transfer)

@@ -1,0 +1,71 @@
+family: Forensics
+description: >
+  Ground-truth establishment family. Used when the surface cannot yet be trusted
+  and a physical dependency graph, discrepancy map, or trust map must be established
+  before continuing.
+
+default_entry: project_mapping
+
+smallest_sufficient_intervention_order:
+  - motif
+  - primitive
+  - selector_self_check
+  - local_evaluator
+  - phase_pivot
+  - sibling_pipeline_shift
+  - heavy_skill
+  - cross_family_reroute
+  - forensic_reset
+
+pipelines:
+  - id: project_mapping
+    alias: Survey
+    status: core
+    use_when:
+      - project_state_needs_mapping
+      - canonical_sources_unclear
+      - repository_or_workspace_inventory_needed
+  - id: defragmentation
+    alias: Gather
+    status: core
+    use_when:
+      - entropy_or_fragmentation_detected
+      - residue_conflicts_with_canonical_shape
+      - project_drift_requires_repair
+  - id: documentation_audit
+    alias: Reconcile
+    status: core
+    use_when:
+      - documentation_is_authoritative_but_unverified
+      - docs_disagree_with_code_or_state
+      - multiple_docs_compete_for_truth
+  - id: anomaly_disambiguation
+    alias: Isolate
+    status: core
+    use_when:
+      - suspicious_signal_needs_source_disambiguation
+      - anomaly_may_be_data_artifact_process_issue_or_true_misfit
+
+experimental_pipelines:
+  - id: label_shift_correction
+    alias: Calibrate
+  - id: introspection_audit
+    alias: Introspect
+
+family_feedback:
+  - from: pipeline:Forensics/defragmentation
+    trigger:
+      - coherence_has_been_restored_enough_for_reassessment
+    target: pipeline:Forensics/project_mapping
+  - from: pipeline:Forensics/project_mapping
+    trigger:
+      - route_recommendation_ready
+    target: operator:distill
+  - from: pipeline:Forensics/documentation_audit
+    trigger:
+      - docs_reconciled_and_next_family_known
+    target: authority:Trace
+  - from: pipeline:Forensics/anomaly_disambiguation
+    trigger:
+      - anomaly_source_classified
+    target: authority:Trace

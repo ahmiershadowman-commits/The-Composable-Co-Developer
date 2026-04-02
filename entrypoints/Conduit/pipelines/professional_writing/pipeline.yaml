@@ -1,0 +1,103 @@
+id: professional_writing
+family: Conduit
+kind: end_to_end_pipeline
+frame_alias: Convey
+status: core
+purpose: >
+  Produce clear, concise, and context-appropriate professional communication for
+  operational or stakeholder audiences without requiring scholarly argument form.
+
+entry_conditions:
+  - work_product_or_findings_need_to_be_communicated_externally
+  - audience_is_professional_or_operational_rather_than_academic
+  - message_requires_structure_beyond_simple_documentation
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - identify_audience_and_objective
+  - outline_key_points_and_support
+  - draft_narrative_and_structure
+  - refine_language_and_style
+  - validate_accuracy_and_consistency
+  - finalize_and_deliver
+
+phase_contracts:
+  identify_audience_and_objective:
+    goal: Define audience, stakes, and communication objective.
+    outputs:
+      - audience_and_objective_statement
+  outline_key_points_and_support:
+    goal: Create the core message structure and support surface.
+    outputs:
+      - outline
+  draft_narrative_and_structure:
+    goal: Produce a practical draft.
+    outputs:
+      - draft_document
+  refine_language_and_style:
+    goal: Improve readability, tone, and audience fit.
+    outputs:
+      - refinement_log
+  validate_accuracy_and_consistency:
+    goal: Check factual accuracy, consistency, and support.
+    outputs:
+      - validation_note
+  finalize_and_deliver:
+    goal: Exit with a ready-to-send or ready-to-handoff document.
+    outputs:
+      - delivery_record
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - returning-expedition
+  primitives:
+    - trim
+    - weave
+    - separate
+  operators:
+    - clarify
+    - distill
+  evaluators:
+    - support_evaluator
+    - contradiction_evaluator
+
+pivot_conditions:
+  content_is_purely_operational:
+    action: sibling_shift
+    target: pipeline:Conduit/documentation
+  argument_requires_formal_citation_or_rigor:
+    action: sibling_shift
+    target: pipeline:Conduit/scholarly_writing
+  accumulated_material_needs_transfer_compression:
+    action: sibling_shift
+    target: pipeline:Conduit/handoff_synthesis
+  support_or_source_weak_or_uncertain:
+    action: reroute
+    target: family:Inquiry
+  source_material_untrusted:
+    action: reroute
+    target: family:Forensics
+
+exit_conditions:
+  - audience_and_objective_statement_present
+  - draft_document_present
+  - validation_note_present
+  - delivery_record_present
+
+artifacts:
+  primary:
+    - draft_document.md
+    - delivery_record.yaml
+    - route_recommendation.yaml
+  supporting:
+    - audience_and_objective_statement.yaml
+    - outline.yaml
+    - refinement_log.yaml
+    - validation_note.yaml

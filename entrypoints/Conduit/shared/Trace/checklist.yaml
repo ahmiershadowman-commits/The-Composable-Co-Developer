@@ -1,0 +1,44 @@
+id: trace.shared.checklist
+kind: recurring_microcheck
+cadence: after_each_bounded_step
+
+checks:
+  - id: right_phase
+    question: Are we still in the right phase?
+    on_fail: pivot_or_escalate
+
+  - id: legal_next_move
+    question: Is the current next move legal under the active pipeline and policy?
+    on_fail: stop_and_reselect
+
+  - id: method_pivot_trigger
+    question: Has a local pivot condition fired?
+    on_fail: pivot_within_pipeline
+
+  - id: artifact_drift
+    question: Has the artifact drifted enough to require cleanup, normalization, or reevaluation?
+    on_fail: invoke_cleanup_or_defragmentation_method
+
+  - id: metadata_drift
+    question: Has metadata or provenance changed enough to require tidying or re-indexing?
+    on_fail: normalize_metadata
+
+  - id: contradiction_pressure
+    question: Is contradiction or tension now high enough that local handling may be insufficient?
+    on_fail: consider_lever
+
+  - id: confidence_support_gap
+    question: Is local confidence rising faster than evidence quality?
+    on_fail: invoke_evaluator_or_reweight
+
+  - id: branch_sprawl
+    question: Have too many live branches accumulated without synthesis or discrimination?
+    on_fail: synthesis_or_discrimination
+
+  - id: trust_collapse
+    question: Has trust in the visible surface collapsed enough to justify a Forensics reset?
+    on_fail: reset_to_forensics
+
+  - id: smallest_sufficient_intervention
+    question: Can this be handled with a smaller intervention than rerouting?
+    on_fail: escalate_one_level_only

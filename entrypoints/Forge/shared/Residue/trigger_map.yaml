@@ -1,0 +1,81 @@
+id: residue_trigger_map
+kind: trigger_map
+status: core
+description: >
+  Maps suspicious-surface lenses to smallest-sufficient interventions. This file
+  exists to prevent over-rerouting when a lens can still be handled locally.
+
+residue_to_intervention:
+  misfit:
+    first_response:
+      - motif_nudge: odd-one-out
+      - primitive: primitive:open
+    escalate_when:
+      - anomaly_still_unexplained_after_local_branching
+    next:
+      - local_evaluator: evaluator:contradiction_evaluator
+      - sibling_pipeline_shift: pipeline:Inquiry/hypothesis_generation
+      - forensic_reset: forensics_reset
+
+  absence:
+    first_response:
+      - primitive: primitive:reread
+      - primitive: primitive:separate
+    escalate_when:
+      - expected_support_remains_missing
+    next:
+      - local_evaluator: evaluator:support_evaluator
+      - sibling_pipeline_shift: pipeline:Inquiry/research
+      - forensic_reset: forensics_reset
+
+  tension:
+    first_response:
+      - primitive: primitive:hold
+      - primitive: primitive:shift
+    escalate_when:
+      - contradiction_blocks_phase_progress
+    next:
+      - local_evaluator: evaluator:contradiction_evaluator
+      - phase_pivot: authority:Trace
+      - sibling_pipeline_shift: pipeline:Inquiry/formalization
+
+  warp:
+    first_response:
+      - primitive: primitive:center
+      - primitive: primitive:locate
+    escalate_when:
+      - current_question_may_be_surrogate
+    next:
+      - local_evaluator: evaluator:frame_evaluator
+      - cross_family_reroute: pipeline:Forensics/documentation_audit
+
+  burden:
+    first_response:
+      - primitive: primitive:bind
+      - primitive: primitive:press
+    escalate_when:
+      - hidden_assumption_changes_result_space
+    next:
+      - local_evaluator: evaluator:frame_evaluator
+      - sibling_pipeline_shift: pipeline:Inquiry/formalization
+
+  edge:
+    first_response:
+      - primitive: primitive:press
+      - primitive: primitive:open
+    escalate_when:
+      - boundary_failure_is_systemic
+    next:
+      - local_evaluator: evaluator:artifact_shape_evaluator
+      - sibling_pipeline_shift: pipeline:Forge/testing
+      - forensic_reset: forensics_reset
+
+  offset:
+    first_response:
+      - primitive: primitive:separate
+      - primitive: primitive:reread
+    escalate_when:
+      - registers_remain_irreconcilable
+    next:
+      - local_evaluator: evaluator:trust_evaluator
+      - heavy_skill: pipeline:Conduit/handoff_synthesis

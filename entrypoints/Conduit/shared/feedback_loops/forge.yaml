@@ -1,0 +1,38 @@
+id: feedback.forge
+kind: family_loop_map
+family: Forge
+purpose: >
+  Show the common build/change loop across development, coding, testing, and
+  reroute decisions.
+
+loops:
+  - id: architecture_to_local_work
+    from: pipeline:Forge/development
+    trigger:
+      - implementation_scope_is_bounded_enough
+    target: pipeline:Forge/coding
+
+  - id: local_validation
+    from: pipeline:Forge/coding
+    trigger:
+      - change_has_been_made
+      - claim_of_fix_exists
+    target: pipeline:Forge/testing
+
+  - id: test_failure_local
+    from: pipeline:Forge/testing
+    trigger:
+      - failure_is_local_and_bounded
+    target: pipeline:Forge/coding
+
+  - id: test_failure_systemic
+    from: pipeline:Forge/testing
+    trigger:
+      - failure_implies_architectural_or_project_shape_issue
+    target: pipeline:Forge/development
+
+  - id: trust_collapse
+    from: family:Forge
+    trigger:
+      - repo_state_or_docs_or_runtime_cannot_be_trusted
+    target: family:Forensics

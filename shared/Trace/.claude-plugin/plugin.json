@@ -1,0 +1,19 @@
+{
+  "name": "trace",
+  "kind": "plugin",
+  "version": "0.1.0",
+  "description": "Metacognitive controller - applies smallest sufficient intervention for routing and supervision",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT",
+  "category": "shared-authority",
+  "keywords": ["metacognitive", "routing", "supervision", "intervention", "trace"],
+  "files": [
+    "checklist.yaml",
+    "planner_loop.yaml",
+    "rubric.yaml",
+    "trigger_glossary.yaml"
+  ]
+}

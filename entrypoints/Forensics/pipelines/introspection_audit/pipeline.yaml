@@ -1,0 +1,101 @@
+id: introspection_audit
+family: Forensics
+kind: end_to_end_pipeline
+frame_alias: Introspect
+status: experimental
+purpose: >
+  Inspect internal reasoning traces or interpretability evidence to detect
+  unfaithful reasoning, hidden objectives, or motivated routing before treating
+  self-reports as trustworthy.
+
+entry_conditions:
+  - suspicion_of_hidden_objective
+  - chain_of_thought_unreliable
+  - introspective_signals_detected
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - capture_reasoning_surface
+  - apply_interpretability_or_trace_tools
+  - identify_unfaithful_or_hidden_patterns
+  - generate_explanations_and_alerts
+  - decide_remediation_or_escalation
+  - finalize_or_reroute
+
+phase_contracts:
+  capture_reasoning_surface:
+    goal: Collect the available reasoning surface, traces, or internal evidence.
+    outputs:
+      - introspection_log
+  apply_interpretability_or_trace_tools:
+    goal: Analyze the collected reasoning surface using available tools.
+    outputs:
+      - interpretability_packet
+  identify_unfaithful_or_hidden_patterns:
+    goal: Distinguish faithful reasoning from fabricated or hidden-goal behavior.
+    outputs:
+      - hidden_goal_map
+      - unfaithful_reasoning_report
+  generate_explanations_and_alerts:
+    goal: Summarize findings and operational implications.
+    outputs:
+      - remediation_plan
+  decide_remediation_or_escalation:
+    goal: Route to the appropriate family or exit with a bounded conclusion.
+    outputs:
+      - route_recommendation
+  finalize_or_reroute:
+    goal: Preserve provenance and exit safely.
+    outputs:
+      - final_audit_note
+
+smallest_sufficient_interventions:
+  motifs:
+    - unfinished-proof
+    - odd-one-out
+  primitives:
+    - reread
+    - locate
+  operators:
+    - clarify
+  evaluators:
+    - frame_evaluator
+    - contradiction_evaluator
+    - trust_evaluator
+
+pivot_conditions:
+  hidden_goal_question_needs_deeper_research:
+    action: reroute
+    target: family:Inquiry
+  introspection_conflicts_resolved:
+    action: reroute
+    target: family:Forensics
+  findings_need_reporting:
+    action: reroute
+    target: family:Conduit
+  remediation_requires_code_or_model_change:
+    action: reroute
+    target: family:Forge
+
+exit_conditions:
+  - introspection_log_present
+  - hidden_goal_map_present_or_negated
+  - route_recommendation_present
+  - provenance_preserved
+
+artifacts:
+  primary:
+    - unfaithful_reasoning_report.yaml
+    - remediation_plan.yaml
+    - route_recommendation.yaml
+  supporting:
+    - introspection_log.yaml
+    - interpretability_packet.yaml
+    - hidden_goal_map.yaml
+    - final_audit_note.yaml

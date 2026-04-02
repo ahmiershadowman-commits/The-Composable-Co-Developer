@@ -1,0 +1,32 @@
+id: reframe
+kind: operator
+class: local_transformation
+status: core
+purpose: >
+  Shift perspective on a problem, situation, or content to reveal
+  new interpretations or solutions that may unlock new approaches.
+use_when:
+  - problem_seems_unsolvable_in_current_frame
+  - false_dichotomy_is_limiting_options
+  - stakeholder_perspectives_conflict
+  - constraint_feels_like_pure_limitation
+  - goal_seems_unachievable
+returns:
+  - reframed_perspective
+  - frame_comparison
+  - new_possibilities
+reframe_types:
+  - stakeholder_shift
+  - time_scale_shift
+  - abstraction_shift
+  - goal_shift
+  - constraint_reframe
+related_interventions:
+  primitives:
+    - hold
+    - shift
+  operators:
+    - compare
+    - distill
+  evaluators:
+    - frame_evaluator

@@ -1,0 +1,45 @@
+{
+  "name": "composable-co-developer",
+  "owner": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "metadata": {
+    "description": "A metacognitive co-developer marketplace - modular AI pipelines for ground-truth establishment, hypothesis generation, creative synthesis, and self-guided context engineering",
+    "version": "1.1.0"
+  },
+  "plugins": [
+    {
+      "name": "forensics",
+      "source": "../entrypoints/Forensics",
+      "description": "Ground-truth establishment - project mapping, defragmentation, documentation audit, anomaly disambiguation",
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Forensics/commands/forensics.md"],
+      "agents": ["../entrypoints/Forensics/agents/forensics.md"]
+    },
+    {
+      "name": "forge",
+      "source": "../entrypoints/Forge",
+      "description": "Build/change work - development planning, coding, testing, refactoring",
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Forge/commands/forge.md"],
+      "agents": ["../entrypoints/Forge/agents/forge.md"]
+    },
+    {
+      "name": "inquiry",
+      "source": "../entrypoints/Inquiry",
+      "description": "Investigation and research - hypothesis generation, data analysis, formalization, mathematics",
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Inquiry/commands/inquiry.md"],
+      "agents": ["../entrypoints/Inquiry/agents/inquiry.md"]
+    },
+    {
+      "name": "conduit",
+      "source": "../entrypoints/Conduit",
+      "description": "Documentation and synthesis - technical docs, scholarly writing, handoff materials",
+      "version": "1.1.0",
+      "commands": ["../entrypoints/Conduit/commands/conduit.md"],
+      "agents": ["../entrypoints/Conduit/agents/conduit.md"]
+    }
+  ]
+}

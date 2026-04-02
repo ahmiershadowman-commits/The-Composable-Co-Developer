@@ -1,0 +1,21 @@
+id: residue.shared.registry
+kind: investigative_lens_registry
+status: core
+purpose: >
+  Residue lenses are small investigative interventions used when something in the
+  surface account remains suspicious, over-smoothed, unexplained, or structurally odd.
+
+default_policy:
+  prefer_single_lens_before_stack: true
+  preserve_oddity_before_explanation: true
+  escalate_to_evaluator_if_lens_exposes_material_conflict: true
+
+lenses:
+  - misfit
+  - absence
+  - tension
+  - warp
+  - burden
+  - edge
+  - offset
+  - signal

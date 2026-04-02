@@ -1,0 +1,109 @@
+id: development
+family: Forge
+kind: end_to_end_pipeline
+frame_alias: Frame
+status: core
+purpose: >
+  Perform system-level build or change work across architecture, repository shape,
+  tooling, packaging, and coordinated implementation slices.
+
+entry_conditions:
+  - project_state_is_grounded_enough_for_build_work
+  - issue_scope_exceeds_single_local_code_change_or_requires_system_coordination
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - inspect_system_state
+  - shape_work_plan
+  - choose_or_spawn_local_work_slices
+  - integrate_changes
+  - verify_system_fit
+  - cleanup_and_package
+  - finalize_or_handoff
+
+phase_contracts:
+  inspect_system_state:
+    goal: Understand current system shape, dependencies, and active constraints.
+    outputs:
+      - system_state_note
+  shape_work_plan:
+    goal: Define the system-level plan and boundaries for the current change.
+    outputs:
+      - work_plan
+      - architecture_note
+  choose_or_spawn_local_work_slices:
+    goal: Decide which local slices should be delegated to coding, testing, docs, or refactor.
+    outputs:
+      - slice_map
+  integrate_changes:
+    goal: Bring local slices back into a coherent system state.
+    outputs:
+      - integration_state_note
+  verify_system_fit:
+    goal: Confirm the build/change still fits architecture and project goals.
+    outputs:
+      - verification_summary
+  cleanup_and_package:
+    goal: Normalize metadata, packaging state, and handoff shape.
+    outputs:
+      - packaging_note
+  finalize_or_handoff:
+    goal: Exit with a coherent system-level state or handoff packet.
+    outputs:
+      - handoff_or_release_note
+
+smallest_sufficient_interventions:
+  motifs:
+    - cambium-layer
+    - watershed
+  primitives:
+    - center
+    - separate
+    - trim
+    - press
+  operators:
+    - distill
+  evaluators:
+    - frame_evaluator
+    - artifact_shape_evaluator
+    - contradiction_evaluator
+
+pivot_conditions:
+  implementation_localized:
+    action: sibling_shift
+    target: pipeline:Forge/coding
+  validation_dominates_construction:
+    action: sibling_shift
+    target: pipeline:Forge/testing
+  project_truth_uncertain:
+    action: reroute
+    target: family:Forensics
+  entropy_or_shape_drift_primary:
+    action: reroute
+    target: pipeline:Forensics/defragmentation
+  communication_or_handoff_blocking:
+    action: reroute
+    target: family:Conduit
+
+exit_conditions:
+  - work_plan_present
+  - verification_summary_present
+  - handoff_or_release_note_present
+  - metadata_and_handoff_state_tidy
+
+artifacts:
+  primary:
+    - work_plan.yaml
+    - verification_summary.md
+    - handoff_or_release_note.md
+  supporting:
+    - architecture_note.yaml
+    - slice_map.yaml
+    - integration_state_note.yaml
+    - packaging_note.yaml

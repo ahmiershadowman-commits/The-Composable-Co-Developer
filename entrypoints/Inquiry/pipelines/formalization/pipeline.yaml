@@ -1,0 +1,109 @@
+id: formalization
+family: Inquiry
+kind: end_to_end_pipeline
+frame_alias: Bind
+status: core
+purpose: >
+  Convert loose conceptual material into explicit objects, relations, assumptions,
+  constraints, and notation so downstream reasoning can proceed without hidden
+  ambiguity or silent frame drift.
+
+entry_conditions:
+  - conceptual_material_is_load_bearing_but_underdefined
+  - downstream_comparison_or_derivation_requires_explicit_structure
+  - ambiguity_is_currently_blocking_honest_progress
+
+
+shared_authorities:
+  trace: runtime/trace
+  lever: runtime/lever
+  residue: runtime/residue
+
+
+phase_order:
+  - collect_live_concepts_and_claims
+  - identify_objects_relations_and_assumptions
+  - define_terms_and_boundaries
+  - check_internal_consistency
+  - expose_remaining_gaps_or_underspecification
+  - tidy_notation_and_representation
+  - finalize_or_reroute
+
+phase_contracts:
+  collect_live_concepts_and_claims:
+    goal: Gather the concepts, claims, and implicit structures that need binding.
+    outputs:
+      - concept_packet
+  identify_objects_relations_and_assumptions:
+    goal: Separate objects, relations, and assumptions that are currently blurred together.
+    outputs:
+      - object_relation_map
+      - assumption_ledger
+  define_terms_and_boundaries:
+    goal: Make terms and boundaries explicit enough for downstream rigorous work.
+    outputs:
+      - definition_set
+  check_internal_consistency:
+    goal: Verify that the bound structure does not internally contradict itself.
+    outputs:
+      - consistency_note
+  expose_remaining_gaps_or_underspecification:
+    goal: Preserve unresolved gaps instead of smudging them over.
+    outputs:
+      - gap_note
+  tidy_notation_and_representation:
+    goal: Normalize notation, naming, and representational choices.
+    outputs:
+      - notation_sheet
+  finalize_or_reroute:
+    goal: Exit with explicit bound structure or a justified next route.
+    outputs:
+      - route_recommendation
+
+smallest_sufficient_interventions:
+  motifs:
+    - unfinished-proof
+    - cambium-layer
+  primitives:
+    - bind
+    - separate
+    - shift
+    - release
+  operators:
+    - clarify
+  evaluators:
+    - contradiction_evaluator
+    - frame_evaluator
+
+pivot_conditions:
+  explicit_enough_for_derivation_or_proof:
+    action: sibling_shift
+    target: pipeline:Inquiry/mathematics
+  key_terms_or_dependencies_lack_grounded_support:
+    action: sibling_shift
+    target: pipeline:Inquiry/research
+  frame_too_weak_to_bind_without_new_candidates:
+    action: sibling_shift
+    target: pipeline:Inquiry/hypothesis_generation
+  underlying_problem_statement_untrustworthy:
+    action: reroute
+    target: family:Forensics
+
+exit_conditions:
+  - definition_set_present
+  - object_relation_map_present
+  - assumption_ledger_present
+  - gap_note_present
+  - notation_sheet_present
+
+artifacts:
+  primary:
+    - definition_set.yaml
+    - object_relation_map.yaml
+    - assumption_ledger.yaml
+    - route_recommendation.yaml
+  supporting:
+    - concept_packet.yaml
+    - consistency_note.yaml
+    - gap_note.yaml
+    - notation_sheet.yaml

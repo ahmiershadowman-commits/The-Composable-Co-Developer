@@ -1,0 +1,66 @@
+id: forensics.entry
+kind: entrypoint_skill
+family: Forensics
+frame_alias: Survey
+purpose: >
+  Ground-truth establishment under ambiguity, drift, contradiction, suspect documentation,
+  or other situations where the visible surface cannot yet be trusted enough for ordinary pipeline work.
+
+selector: entrypoints/Forensics/selector.route.yaml
+shared_rubric: shared/Trace/rubric.yaml
+shared_checklist: shared/Trace/checklist.yaml
+shared_trigger_glossary: shared/Trace/trigger_glossary.yaml
+shared_escalation_rules: shared/Lever/escalation_rules.yaml
+
+motif_bias:
+  primary: unfinished-proof
+  secondary: watershed
+
+core_phases:
+  - scope
+  - inventory
+  - provenance
+  - dependency_graph
+  - discrepancy_map
+  - trust_classification
+  - route_recommendation
+
+required_artifacts:
+  - inventory_ledger
+  - provenance_ledger
+  - physical_dependency_graph
+  - discrepancy_ledger
+  - trust_map
+  - canonical_sources
+  - route_recommendation
+
+entry_triggers:
+  - trust_collapse
+  - suspect_documentation
+  - environment_mismatch
+  - project_drift_or_fragmentation
+  - anomaly_source_ambiguity
+  - high_consequence_state_mapping
+
+exit_conditions:
+  - scope_is_bounded
+  - observed_state_is_inventoried_sufficiently
+  - trust_classification_is_explicit
+  - downstream_route_is_justified
+  - carry_forward_artifacts_are_written
+
+route_targets:
+  defragmentation:
+    when:
+      - entropy_is_primary_problem
+      - canonical_structure_is_unclear
+      - project_state_is_fragmented_or_drifted
+  forge:
+    when:
+      - state_is_grounded_and_build_work_can_proceed
+  inquiry:
+    when:
+      - state_is_grounded_but_interpretation_or_explanation_is_missing
+  conduit:
+    when:
+      - communication_or_handoff_work_is_now_safe_and_primary

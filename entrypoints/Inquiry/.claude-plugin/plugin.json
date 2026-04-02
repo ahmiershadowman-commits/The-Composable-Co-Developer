@@ -1,0 +1,10 @@
+{
+  "name": "inquiry",
+  "version": "1.1.0",
+  "description": "Investigation family - research, hypothesis generation, data analysis, formalization, mathematics",
+  "author": {
+    "name": "Ashton Brown",
+    "url": "https://github.com/ahmiershadowman-commits"
+  },
+  "license": "MIT"
+}

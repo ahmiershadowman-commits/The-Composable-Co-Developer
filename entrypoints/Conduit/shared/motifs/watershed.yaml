@@ -1,0 +1,22 @@
+id: watershed
+kind: motif
+category: decision-point
+description: >
+  Marks a juncture where the chosen direction significantly affects
+  downstream outcomes and reversal becomes costly.
+detection_signals:
+  - irreversible_commitment_imminent
+  - multiple_incompatible_paths_visible
+  - decision_criteria_not_yet_explicit
+  - asymmetric_downstream_consequences
+conditioning_effect: >
+  Increases scrutiny on decision criteria and prompts explicit
+  articulation of selection rationale before proceeding.
+related_interventions:
+  primitives:
+    - hold
+    - separate
+  operators:
+    - distill
+  evaluators:
+    - discriminator_evaluator
