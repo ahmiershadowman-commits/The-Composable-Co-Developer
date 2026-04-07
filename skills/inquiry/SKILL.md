@@ -38,7 +38,7 @@ Select the smallest sufficient pipeline:
 | `formalization` | Bind | Concepts or relations need explicit structure |
 | `mathematics` | Resolve | Proof, derivation, counterexample, or rigor is primary |
 
-Experimental (not available): `prompt_order_optimization`, `human_hint_integration`.
+Experimental (approval required): `prompt_order_optimization`, `human_hint_integration`. Supply an `experimental_approval` payload with ticket, rationale, rollback plan, and empirical evidence.
 
 Default entry: `research`.
 

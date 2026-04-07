@@ -332,6 +332,8 @@ class ConduitExecutor:
 
         draft = self._draft(outline, sources)
         state.add_artifact("draft_document", draft)
+        # spec-canonical primary artifact name
+        state.add_artifact("structured_document", draft)
 
         support = self._verify_support(draft, sources)
         state.add_artifact("support_note", support)
@@ -381,6 +383,9 @@ class ConduitExecutor:
 
         next_steps = self._recommend_next_steps(handoff, unresolveds)
         state.add_artifact("next_safe_steps", next_steps)
+
+        route = self._handoff_recommend_route(handoff, unresolveds)
+        state.add_artifact("route_recommendation", route)
 
         return state
 
@@ -1367,4 +1372,57 @@ class ConduitExecutor:
             "citation_count": total_cites,
             "central_claim": draft.get("central_claim", ""),
             "finalized_at": datetime.now().isoformat(),
+        }
+
+    # ------------------------------------------------------------------
+    # handoff_synthesis helpers
+    # ------------------------------------------------------------------
+
+    def _handoff_recommend_route(
+        self,
+        handoff: Dict[str, Any],
+        unresolveds: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Recommend the next pipeline route based on handoff state and open items."""
+        open_count = len(unresolveds.get("open_items", []))
+        risk_level = unresolveds.get("risk_level", "low")
+        completeness = handoff.get("completeness", "unknown")
+
+        # Decision logic: high open items or high risk → Forge/development
+        # completeness unknown or partial → Inquiry/research
+        # otherwise → done or Conduit/documentation for polish
+        if risk_level == "high" or open_count > 5:
+            target = "Forge/development"
+            reason = (
+                f"Risk level '{risk_level}' with {open_count} open items — "
+                "active development work required before handoff can be trusted"
+            )
+            confidence = "high"
+        elif completeness in ("partial", "unknown") or open_count > 2:
+            target = "Inquiry/research"
+            reason = (
+                f"Handoff completeness is '{completeness}' with {open_count} open items — "
+                "investigation needed to resolve gaps before next transition"
+            )
+            confidence = "medium"
+        elif open_count > 0:
+            target = "Conduit/documentation"
+            reason = (
+                f"{open_count} minor open items remain — "
+                "a documentation pass can close these before release"
+            )
+            confidence = "medium"
+        else:
+            target = "complete"
+            reason = "Handoff appears complete with no high-risk open items"
+            confidence = "high"
+
+        return {
+            "recommended_next": target,
+            "reason": reason,
+            "confidence": confidence,
+            "open_item_count": open_count,
+            "risk_level": risk_level,
+            "handoff_completeness": completeness,
+            "decided_at": datetime.now().isoformat(),
         }

@@ -26,6 +26,16 @@ motifs:
     description: Surfaces conspicuously missing information
     file: absence_signal.yaml
 
+  - id: odd-one-out
+    category: anomaly-detection
+    description: Detects a single element inconsistent with the rest of a set — outlier source, deviating artifact, anomalous data point
+    file: odd_one_out.yaml
+
+  - id: tuning-fork
+    category: calibration-check
+    description: Detects two paths with near-identical surface outputs but meaningful structural divergence — forces comparison before commitment
+    file: tuning_fork.yaml
+
 usage_guidelines:
   - reference_by_id: Use motif IDs in pipeline specs
   - combine_sparingly: 1-3 motifs per pipeline is typical

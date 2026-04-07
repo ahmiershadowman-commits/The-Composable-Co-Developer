@@ -9,11 +9,13 @@ from hooks.context import HookContext, HookResult
 from hooks.registry import HookRegistry
 from hooks.pre_pipeline import validate_entry_hook
 from hooks.post_pipeline import review_output_hook
+from hooks.trigger_ownership import trigger_ownership_hook
 
 __all__ = [
     "HookContext",
-    "HookResult", 
+    "HookResult",
     "HookRegistry",
     "validate_entry_hook",
     "review_output_hook",
+    "trigger_ownership_hook",
 ]

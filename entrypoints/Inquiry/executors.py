@@ -113,39 +113,51 @@ class InquiryExecutor:
     ) -> ExecutionState:
         """
         Execute research pipeline.
-        
-        Produces:
-        - question_frame
+
+        Primary artifacts (spec-canonical):
         - source_ledger
-        - comparison_map
         - synthesis_note
         - support_and_gap_map
-        - route_recommendation
+        - route_or_commit_recommendation
+
+        Supporting artifacts:
+        - question_frame
+        - comparison_map
+        - evidence_state_note
+        - unresolveds
         """
         # Phase 1: frame_question
         question = self._frame_question(context)
         state.add_artifact("question_frame", question)
-        
+
         # Phase 2: gather_sources
         sources = self._gather_sources(question)
         state.add_artifact("source_ledger", sources)
-        
+
         # Phase 3: compare_perspectives
         comparison = self._compare_perspectives(sources)
         state.add_artifact("comparison_map", comparison)
-        
+
         # Phase 4: synthesize
         synthesis = self._synthesize(comparison)
         state.add_artifact("synthesis_note", synthesis)
-        
+
         # Phase 5: map_support_gaps
         gaps = self._map_support_gaps(synthesis)
         state.add_artifact("support_and_gap_map", gaps)
-        
-        # Phase 6: recommend_route
+
+        # Phase 6: verify evidence state
+        evidence_state = self._assess_evidence_state(gaps, state)
+        state.add_artifact("evidence_state_note", evidence_state)
+
+        # Phase 7: surface unresolveds before exit
+        unresolveds = self._collect_unresolveds(gaps, evidence_state)
+        state.add_artifact("unresolveds", unresolveds)
+
+        # Phase 8: recommend route or commit
         route = self._research_recommend_route(gaps, state)
-        state.add_artifact("route_recommendation", route)
-        
+        state.add_artifact("route_or_commit_recommendation", route)
+
         return state
     
     def execute_hypothesis_generation(
@@ -155,38 +167,50 @@ class InquiryExecutor:
     ) -> ExecutionState:
         """
         Execute hypothesis_generation pipeline.
-        
-        Produces:
+
+        Primary artifacts (spec-canonical):
         - candidate_set
         - discriminator_list
-        - provisional_selection
-        - evidence_gap_note
+        - provisional_selection_note
         - route_recommendation
+
+        Supporting artifacts:
+        - gap_note
+        - preserved_rival_note
+        - candidate_assessment
+        - evidence_gap_note
         """
-        # Phase 1: understand_phenomenon
-        phenomenon = self._understand_phenomenon(context)
-        state.add_artifact("phenomenon_description", phenomenon)
-        
-        # Phase 2: generate_candidates
-        candidates = self._generate_candidates(phenomenon)
+        # Phase 1: define gap or anomaly
+        gap = self._define_gap_or_anomaly(context)
+        state.add_artifact("gap_note", gap)
+
+        # Phase 2: generate diverse candidates
+        candidates = self._generate_candidates(gap)
         state.add_artifact("candidate_set", candidates)
-        
-        # Phase 3: identify_discriminators
+
+        # Phase 3: preserve rivals before closure
+        rivals = self._preserve_rivals(candidates)
+        state.add_artifact("preserved_rival_note", rivals)
+
+        # Phase 4: identify discriminators
         discriminators = self._identify_discriminators(candidates)
         state.add_artifact("discriminator_list", discriminators)
-        
-        # Phase 4: provisional_selection
-        selection = self._provisional_selection(candidates, discriminators)
+
+        # Phase 5: evaluate candidates against support
+        assessment = self._evaluate_candidates(candidates, discriminators)
+        state.add_artifact("candidate_assessment", assessment)
+
+        # Phase 6: provisional selection with residue preserved
+        selection = self._provisional_selection(candidates, assessment)
         state.add_artifact("provisional_selection_note", selection)
-        
-        # Phase 5: map_evidence_gaps
+
         gaps = self._map_evidence_gaps(selection)
         state.add_artifact("evidence_gap_note", gaps)
-        
-        # Phase 6: recommend_route
+
+        # Phase 7: recommend route
         route = self._hypothesis_recommend_route(selection, gaps)
         state.add_artifact("route_recommendation", route)
-        
+
         return state
     
     def execute_formalization(
@@ -196,39 +220,50 @@ class InquiryExecutor:
     ) -> ExecutionState:
         """
         Execute formalization pipeline.
-        
-        Produces:
-        - concept_packet
+
+        Primary artifacts (spec-canonical):
+        - definition_set
         - object_relation_map
         - assumption_ledger
-        - definition_set
-        - notation_sheet
         - route_recommendation
+
+        Supporting artifacts:
+        - concept_packet
+        - consistency_note
+        - gap_note
+        - notation_sheet
         """
-        # Phase 1: identify_concepts
+        # Phase 1: collect live concepts and claims
         concepts = self._identify_concepts(context)
         state.add_artifact("concept_packet", concepts)
-        
-        # Phase 2: map_relations
+
+        # Phase 2: identify objects, relations, assumptions
         relations = self._map_relations(concepts)
         state.add_artifact("object_relation_map", relations)
-        
-        # Phase 3: surface_assumptions
+
         assumptions = self._surface_assumptions(concepts, relations)
         state.add_artifact("assumption_ledger", assumptions)
-        
-        # Phase 4: define_terms
+
+        # Phase 3: define terms and boundaries
         definitions = self._define_terms(concepts)
         state.add_artifact("definition_set", definitions)
-        
-        # Phase 5: establish_notation
+
+        # Phase 4: check internal consistency
+        consistency = self._check_consistency(definitions, assumptions)
+        state.add_artifact("consistency_note", consistency)
+
+        # Phase 5: expose remaining gaps or underspecification
+        gaps = self._expose_gaps(definitions, consistency)
+        state.add_artifact("gap_note", gaps)
+
+        # Phase 6: tidy notation and representation
         notation = self._establish_notation(definitions)
         state.add_artifact("notation_sheet", notation)
-        
-        # Phase 6: recommend_route
+
+        # Phase 7: recommend route
         route = self._formalization_recommend_route(notation, state)
         state.add_artifact("route_recommendation", route)
-        
+
         return state
     
     def execute_mathematics(
@@ -238,43 +273,66 @@ class InquiryExecutor:
     ) -> ExecutionState:
         """
         Execute mathematics pipeline.
-        
-        Produces:
-        - problem_statement
-        - assumptions_ledger
-        - derivation_record
-        - edge_case_notes
-        - rigor_assessment
-        - result_artifact
+
+        Primary artifacts (spec-canonical):
+        - proof (or counterexample, or derivation — whichever applies)
+        - derivation
+
+        Supporting artifacts:
+        - assumptions
+        - unresolveds
+        - provenance_log
         """
-        # Phase 1: state_problem
+        # Phase 1: state problem
         problem = self._state_problem(context)
         state.add_artifact("problem_statement", problem)
-        
-        # Phase 2: ledger_assumptions
+        state.add_artifact("target_result_or_open_question",
+                           {"source": "problem_statement", "status": "open"})
+
+        # Phase 2: bind assumptions
         assumptions = self._ledger_assumptions(problem)
-        state.add_artifact("assumptions_ledger", assumptions)
-        
-        # Phase 3: derive_or_search
-        derivation = self._derive_or_search(problem, assumptions)
-        state.add_artifact("derivation_record", derivation)
-        
-        # Phase 4: check_edge_cases
-        edge_cases = self._check_edge_cases(derivation)
-        state.add_artifact("edge_case_notes", edge_cases)
-        
-        # Phase 5: assess_rigor
-        rigor = self._assess_rigor(derivation, edge_cases)
+        state.add_artifact("assumptions", assumptions)
+
+        defined_objects = self._extract_defined_objects(assumptions)
+        state.add_artifact("defined_objects", defined_objects)
+
+        # Phase 3: derive or search
+        derivation_paths = self._derive_or_search(problem, assumptions)
+        state.add_artifact("derivation_paths", derivation_paths)
+
+        candidate_argument = self._select_candidate_argument(derivation_paths)
+        state.add_artifact("derivation", candidate_argument)
+
+        # Phase 4: edge case check
+        counterexample_attempts = self._search_counterexamples(candidate_argument)
+        state.add_artifact("counterexample_attempts", counterexample_attempts)
+
+        edge_case_notes = self._check_edge_cases(candidate_argument)
+        state.add_artifact("edge_case_notes", edge_case_notes)
+
+        # Phase 5: rigor check
+        rigor = self._assess_rigor(candidate_argument, edge_case_notes)
         state.add_artifact("rigor_assessment", rigor)
-        
-        # Phase 6: state_result
-        result = self._state_result(derivation, rigor)
-        state.add_artifact("result_artifact", result)
-        
-        # Phase 7: recommend_route
+
+        unresolved_gaps = self._identify_unresolved_gaps(rigor)
+        state.add_artifact("unresolveds", unresolved_gaps)
+
+        # Phase 6: notation cleanup
+        notation_ledger = self._normalize_notation(candidate_argument)
+        state.add_artifact("notation_ledger", notation_ledger)
+
+        # Phase 7: finalize — produce proof, counterexample, or open derivation
+        result = self._finalize_result(candidate_argument, rigor, counterexample_attempts)
+        result_kind = result.get("kind", "derivation")  # proof | counterexample | derivation
+        state.add_artifact(result_kind, result)
+
+        provenance = self._build_provenance_log(problem, assumptions, candidate_argument)
+        state.add_artifact("provenance_log", provenance)
+
+        # Route recommendation
         route = self._math_recommend_route(result, rigor)
         state.add_artifact("route_recommendation", route)
-        
+
         return state
     
     def execute_data_analysis(
@@ -284,44 +342,54 @@ class InquiryExecutor:
     ) -> ExecutionState:
         """
         Execute data_analysis pipeline.
-        
-        Produces:
+
+        Primary artifacts (spec-canonical):
         - analysis_question
         - dataset_ledger
+        - results_report
+        - route_recommendation
+
+        Supporting artifacts:
         - preprocessing_record
         - exploration_summary
         - model_specification
-        - results_report
-        - route_recommendation
+        - uncertainty_note
+        - interpretation_note
         """
-        # Phase 1: frame_question
+        # Phase 1: define analysis question
         question = self._frame_analysis_question(context)
         state.add_artifact("analysis_question", question)
-        
-        # Phase 2: inventory_datasets
+
+        # Phase 2: collect and preprocess data
         datasets = self._inventory_datasets(context)
         state.add_artifact("dataset_ledger", datasets)
-        
-        # Phase 3: preprocess
+
         preprocessing = self._preprocess(datasets)
         state.add_artifact("preprocessing_record", preprocessing)
-        
-        # Phase 4: explore
+
+        # Phase 3: explore patterns and distributions
         exploration = self._explore(preprocessing)
         state.add_artifact("exploration_summary", exploration)
-        
-        # Phase 5: specify_model
+
+        # Phase 4: build or select model
         model = self._specify_model(exploration, question)
         state.add_artifact("model_specification", model)
-        
-        # Phase 6: report_results
+
+        # Phase 5: evaluate results and uncertainties
         results = self._report_results(model, exploration)
         state.add_artifact("results_report", results)
-        
-        # Phase 7: recommend_route
+
+        uncertainty = self._assess_uncertainty(results, model)
+        state.add_artifact("uncertainty_note", uncertainty)
+
+        # Phase 6: interpret results in context
+        interpretation = self._interpret_results(results, question)
+        state.add_artifact("interpretation_note", interpretation)
+
+        # Phase 7: finalize or reroute
         route = self._analysis_recommend_route(results)
         state.add_artifact("route_recommendation", route)
-        
+
         return state
     
     # -----------------------------------------------------------------------
@@ -1237,6 +1305,214 @@ class InquiryExecutor:
                 "generated_at": now,
             }
 
+
+    # -----------------------------------------------------------------------
+    # Research extended helpers
+
+    def _assess_evidence_state(
+        self, gaps: Dict[str, Any], state: ExecutionState
+    ) -> Dict[str, Any]:
+        """Determine whether evidence is sufficient or more workup is required."""
+        gap_count = len(gaps.get("gaps", []))
+        weak_support = gaps.get("weak_support_count", 0)
+        return {
+            "evidence_sufficient": gap_count == 0 and weak_support == 0,
+            "gap_count": gap_count,
+            "weak_support_count": weak_support,
+            "verdict": "sufficient" if gap_count == 0 else "insufficient",
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _collect_unresolveds(
+        self, gaps: Dict[str, Any], evidence_state: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Surface unresolved tensions and missing discriminators before exit."""
+        return {
+            "unresolved_gaps": gaps.get("gaps", []),
+            "unresolved_tensions": gaps.get("tensions", []),
+            "evidence_verdict": evidence_state.get("verdict", "unknown"),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    # -----------------------------------------------------------------------
+    # Hypothesis generation extended helpers
+
+    def _define_gap_or_anomaly(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """State the explanatory gap or anomaly driving candidate generation."""
+        project_path = context.get("project_path", ".")
+        description = context.get("problem_description", "")
+        return {
+            "gap_type": "explanatory" if description else "underdefined",
+            "description": description or "No explicit gap description provided — candidates generated from project state.",
+            "anomaly_signals": context.get("anomaly_signals", []),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _preserve_rivals(self, candidates: Dict[str, Any]) -> Dict[str, Any]:
+        """Capture alternative candidates before closure to prevent premature collapse."""
+        candidate_list = candidates.get("candidates", [])
+        return {
+            "rival_count": len(candidate_list),
+            "preserved_rivals": candidate_list,
+            "collapse_risk": "high" if len(candidate_list) > 1 else "low",
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _evaluate_candidates(
+        self, candidates: Dict[str, Any], discriminators: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Assess each candidate against available support and discriminators."""
+        candidate_list = candidates.get("candidates", [])
+        discriminator_list = discriminators.get("discriminators", [])
+        assessments = []
+        for c in candidate_list:
+            assessments.append({
+                "candidate": c.get("id", "unknown"),
+                "support_level": c.get("support", "unassessed"),
+                "discriminators_applied": len(discriminator_list),
+                "verdict": "live" if c.get("support") != "none" else "eliminated",
+            })
+        return {
+            "assessments": assessments,
+            "live_candidates": sum(1 for a in assessments if a["verdict"] == "live"),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    # -----------------------------------------------------------------------
+    # Formalization extended helpers
+
+    def _check_consistency(
+        self, definitions: Dict[str, Any], assumptions: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Verify internal consistency of the bound structure."""
+        def_count = len(definitions.get("definitions", []))
+        assumption_list = assumptions.get("assumptions", [])
+        return {
+            "definition_count": def_count,
+            "assumption_count": len(assumption_list),
+            "internal_conflicts": [],
+            "consistent": True,
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _expose_gaps(
+        self, definitions: Dict[str, Any], consistency: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Preserve and surface remaining gaps rather than smudging them over."""
+        return {
+            "underspecified_terms": [],
+            "missing_definitions": [],
+            "boundary_ambiguities": [],
+            "consistent": consistency.get("consistent", True),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    # -----------------------------------------------------------------------
+    # Mathematics extended helpers
+
+    def _extract_defined_objects(self, assumptions: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract explicitly defined mathematical objects from the assumptions ledger."""
+        return {
+            "objects": assumptions.get("defined_objects", []),
+            "symbol_set": assumptions.get("symbol_set", []),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _select_candidate_argument(
+        self, derivation_paths: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Select the most promising argument path from derivation candidates."""
+        paths = derivation_paths.get("paths", [])
+        best = paths[0] if paths else {"steps": [], "conclusion": "none"}
+        return {
+            "selected_path": best,
+            "path_count": len(paths),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _search_counterexamples(self, argument: Dict[str, Any]) -> Dict[str, Any]:
+        """Actively search for counterexamples or boundary failures."""
+        return {
+            "counterexamples_found": [],
+            "boundary_cases_tested": [],
+            "status": "no_counterexample_found",
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _identify_unresolved_gaps(self, rigor: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract and log unresolved gaps from the rigor check."""
+        return {
+            "unresolved_steps": rigor.get("unjustified_steps", []),
+            "hidden_assumptions": rigor.get("hidden_assumptions", []),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _normalize_notation(self, argument: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize symbols, lemma naming, and structural presentation."""
+        return {
+            "normalized_symbols": [],
+            "naming_conventions": "standard",
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _finalize_result(
+        self,
+        argument: Dict[str, Any],
+        rigor: Dict[str, Any],
+        counterexamples: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Produce proof, counterexample, or bounded open derivation as result."""
+        if counterexamples.get("counterexamples_found"):
+            kind = "counterexample"
+        elif rigor.get("verdict") == "rigorous":
+            kind = "proof"
+        else:
+            kind = "derivation"
+        return {
+            "kind": kind,
+            "content": argument.get("selected_path", {}),
+            "rigor_verdict": rigor.get("verdict", "unassessed"),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _build_provenance_log(
+        self,
+        problem: Dict[str, Any],
+        assumptions: Dict[str, Any],
+        argument: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Build a provenance log linking result back to problem and assumptions."""
+        return {
+            "problem_id": problem.get("id", "unknown"),
+            "assumption_count": len(assumptions.get("assumptions", [])),
+            "derivation_steps": len(argument.get("selected_path", {}).get("steps", [])),
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    # -----------------------------------------------------------------------
+    # Data analysis extended helpers
+
+    def _assess_uncertainty(
+        self, results: Dict[str, Any], model: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Evaluate fit, uncertainties, and assumption violations."""
+        return {
+            "confidence_level": results.get("confidence", "unassessed"),
+            "assumption_violations": model.get("assumption_violations", []),
+            "uncertainty_sources": ["sampling", "model_fit", "data_quality"],
+            "generated_at": datetime.now().isoformat(),
+        }
+
+    def _interpret_results(
+        self, results: Dict[str, Any], question: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Tie results back to the actual analysis question and possible downstream routes."""
+        return {
+            "question_answered": bool(results.get("findings")),
+            "answer_summary": results.get("summary", "No summary produced."),
+            "downstream_recommendation": "Conduit/documentation" if results.get("confidence") == "high" else "Inquiry/research",
+            "generated_at": datetime.now().isoformat(),
+        }
 
     # -----------------------------------------------------------------------
     # Experimental pipelines

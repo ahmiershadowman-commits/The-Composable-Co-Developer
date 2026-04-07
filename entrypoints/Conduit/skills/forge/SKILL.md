@@ -2,11 +2,12 @@
 name: forge
 description: >
   This skill should be used when the user asks to "build this", "implement this feature",
-  "write the code for", "refactor this", "add tests", "fix this bug", "make this change",
+  "write the code for", "refactor this", "add tests", "make this change",
   or any task where the primary work is shaping, modifying, or validating artifacts and
   systems. Use Forge when trustworthy state exists and the task is a concrete build or
   change operation. Also triggers on "develop", "code this up", "write tests for",
-  "clean this up", "restructure without breaking behavior".
+  "clean this up", "restructure without breaking behavior". For "fix this bug" — use Forge
+  only when the bug cause is already known; if the cause is unknown, run Inquiry first.
 metadata:
   version: "0.2.0"
   family: Forge

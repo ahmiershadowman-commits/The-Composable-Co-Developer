@@ -12,6 +12,7 @@ from runtime.state.models import ExecutionState, FamilyType
 from hooks.context import HookContext
 from hooks.post_pipeline import review_output_hook
 from hooks.pre_pipeline import validate_entry_hook
+from hooks.trigger_ownership import trigger_ownership_hook
 from hooks.registry import HookEvent, HookRegistry
 from runtime.mcp.registry import ManagedMCPRegistry
 from runtime.mcp.session_host import ManagedMCPSessionHost
@@ -64,6 +65,8 @@ class RuntimeDispatcher:
         registry = HookRegistry()
         registry.register(HookEvent.PRE_PIPELINE, validate_entry_hook, priority=10)
         registry.register(HookEvent.POST_PIPELINE, review_output_hook, priority=10)
+        # Enforce Trace→Residue→Lever authority ordering before every transition
+        registry.register(HookEvent.PRE_TRANSITION, trigger_ownership_hook, priority=15)
         return registry
 
     def _load_managed_mcp(self) -> Optional[ManagedMCPRegistry]:

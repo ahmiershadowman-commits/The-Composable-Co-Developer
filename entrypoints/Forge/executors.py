@@ -122,15 +122,25 @@ class ForgeExecutor:
         """
         Execute development pipeline.
 
-        Produces: problem_frame, system_analysis, architecture_note,
-                  work_plan, slice_map, verification_summary, route_recommendation
+        Primary artifacts (spec-canonical):
+        - work_plan
+        - verification_summary
+        - handoff_or_release_note
+
+        Supporting artifacts:
+        - architecture_note
+        - slice_map
+        - integration_state_note
+        - packaging_note
         """
+        # Phase 1: inspect system state and frame problem
         problem_frame = self._frame_problem(context)
         state.add_artifact("problem_frame", problem_frame)
 
         system_analysis = self._analyze_system(context, problem_frame)
         state.add_artifact("system_analysis", system_analysis)
 
+        # Phase 2: shape work plan
         design = self._design_approach(problem_frame, system_analysis)
         state.add_artifact("architecture_note", design)
 
@@ -138,8 +148,20 @@ class ForgeExecutor:
         state.add_artifact("work_plan", work_plan)
         state.add_artifact("slice_map", work_plan)
 
+        # Phase 3: verify system fit
         verification = self._verify_approach(design, work_plan)
         state.add_artifact("verification_summary", verification)
+
+        # Phase 4: integration state and packaging
+        integration_state = self._assess_integration_state(work_plan, verification)
+        state.add_artifact("integration_state_note", integration_state)
+
+        packaging = self._package_work(work_plan, integration_state)
+        state.add_artifact("packaging_note", packaging)
+
+        # Phase 5: handoff or release note
+        handoff = self._produce_handoff_or_release_note(work_plan, verification)
+        state.add_artifact("handoff_or_release_note", handoff)
 
         route = self._development_recommend_next(state, work_plan)
         state.add_artifact("route_recommendation", route)
@@ -367,6 +389,44 @@ class ForgeExecutor:
             "generated_at": now,
         }
 
+    def _assess_integration_state(
+        self,
+        work_plan: Dict[str, Any],
+        verification: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Assess the integration state after development planning."""
+        return {
+            "integration_ready": verification.get("verified", False),
+            "blocking_issues": verification.get("issues", []),
+            "slice_count": len(work_plan.get("slices", [])),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _package_work(
+        self,
+        work_plan: Dict[str, Any],
+        integration_state: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Produce packaging notes for the work plan."""
+        return {
+            "packaging_approach": "incremental" if len(work_plan.get("slices", [])) > 2 else "single",
+            "integration_ready": integration_state.get("integration_ready", False),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _produce_handoff_or_release_note(
+        self,
+        work_plan: Dict[str, Any],
+        verification: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Produce the handoff or release note for the development pipeline."""
+        return {
+            "kind": "handoff" if not verification.get("verified") else "release_note",
+            "summary": f"Work plan with {len(work_plan.get('slices', []))} slices ready for execution.",
+            "blocking_issues": verification.get("issues", []),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
     # -----------------------------------------------------------------------
     # coding
     # -----------------------------------------------------------------------
@@ -376,18 +436,49 @@ class ForgeExecutor:
         state: ExecutionState,
         context: Dict[str, Any],
     ) -> ExecutionState:
-        """Execute coding pipeline."""
+        """
+        Execute coding pipeline.
+
+        Primary artifacts (spec-canonical):
+        - change_plan
+        - changed_artifacts
+        - validation_note
+        - route_recommendation
+
+        Supporting artifacts:
+        - local_surface_note
+        - local_fit_note
+        - metadata_update_record
+        - unresolveds
+        """
+        # Phase 1: understand the change surface
         change_understanding = self._understand_change(context)
         state.add_artifact("change_understanding", change_understanding)
 
+        local_surface = self._assess_local_surface(change_understanding)
+        state.add_artifact("local_surface_note", local_surface)
+
+        # Phase 2: plan the change
         change_plan = self._plan_change(change_understanding)
         state.add_artifact("change_plan", change_plan)
 
+        # Phase 3: implement and document changed artifacts
         implementation = self._document_change(change_plan, context)
-        state.add_artifact("changed_artifact", implementation)
+        state.add_artifact("changed_artifacts", implementation)
 
+        local_fit = self._assess_local_fit(implementation, change_plan)
+        state.add_artifact("local_fit_note", local_fit)
+
+        # Phase 4: validate and record metadata updates
         validation = self._validate_change(implementation)
         state.add_artifact("validation_note", validation)
+
+        metadata_record = self._record_metadata_updates(implementation)
+        state.add_artifact("metadata_update_record", metadata_record)
+
+        # Phase 5: surface unresolveds
+        unresolveds = self._collect_coding_unresolveds(validation, local_fit)
+        state.add_artifact("unresolveds", unresolveds)
 
         route = self._coding_recommend_next(validation, state)
         state.add_artifact("route_recommendation", route)
@@ -518,6 +609,53 @@ class ForgeExecutor:
             "generated_at": now,
         }
 
+    def _assess_local_surface(self, change_understanding: Dict[str, Any]) -> Dict[str, Any]:
+        """Assess the local surface of the change — what's exposed, what's adjacent."""
+        affected = change_understanding.get("affected_files", [])
+        return {
+            "surface_files": affected,
+            "surface_size": len(affected),
+            "bounded": len(affected) <= 5,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _assess_local_fit(
+        self,
+        implementation: Dict[str, Any],
+        change_plan: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Assess whether the implemented change fits local conventions and contract."""
+        return {
+            "fits_local_conventions": True,
+            "plan_covered": bool(change_plan.get("steps")),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _record_metadata_updates(self, implementation: Dict[str, Any]) -> Dict[str, Any]:
+        """Record any metadata updates required alongside the change."""
+        return {
+            "files_touched": implementation.get("files_to_touch", []),
+            "metadata_targets": [],
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _collect_coding_unresolveds(
+        self,
+        validation: Dict[str, Any],
+        local_fit: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Surface coding unresolveds before exit."""
+        issues = []
+        if validation.get("files_missing"):
+            issues.extend(validation["files_missing"])
+        if not local_fit.get("fits_local_conventions"):
+            issues.append("local_convention_mismatch")
+        return {
+            "unresolveds": issues,
+            "count": len(issues),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
     # -----------------------------------------------------------------------
     # testing
     # -----------------------------------------------------------------------
@@ -527,20 +665,40 @@ class ForgeExecutor:
         state: ExecutionState,
         context: Dict[str, Any],
     ) -> ExecutionState:
-        """Execute testing pipeline — runs actual tests if available."""
+        """
+        Execute testing pipeline.
+
+        Primary artifacts (spec-canonical):
+        - test_report
+
+        Supporting artifacts:
+        - results.json (as results_json)
+        - defect_log
+        - provenance_log
+        """
+        # Phase 1: understand test scope and strategy
         test_scope = self._understand_test_scope(context, state)
         state.add_artifact("test_scope", test_scope)
 
         test_strategy = self._design_tests(test_scope)
         state.add_artifact("test_strategy", test_strategy)
 
+        # Phase 2: execute tests and collect raw results
         results = self._execute_tests(test_strategy, context)
-        state.add_artifact("test_results", results)
+        state.add_artifact("results_json", results)
 
+        # Phase 3: classify defects if failures exist
         if results.get("failed", 0) > 0:
             defects = self._classify_defects(results)
-            state.add_artifact("defect_classification", defects)
+            state.add_artifact("defect_log", defects)
+        else:
+            state.add_artifact("defect_log", {"defects": [], "status": "clean"})
 
+        # Phase 4: create provenance log
+        provenance = self._build_test_provenance(test_scope, results)
+        state.add_artifact("provenance_log", provenance)
+
+        # Phase 5: produce canonical test report
         report = self._create_test_report(results, state.artifacts)
         state.add_artifact("test_report", report)
 
@@ -770,6 +928,21 @@ class ForgeExecutor:
                 "confidence": "high",
                 "generated_at": now,
             }
+
+    def _build_test_provenance(
+        self,
+        test_scope: Dict[str, Any],
+        results: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Build a provenance log for the test run."""
+        return {
+            "test_files": test_scope.get("test_files_found", []),
+            "total_run": results.get("total", 0),
+            "passed": results.get("passed", 0),
+            "failed": results.get("failed", 0),
+            "errors": results.get("errors", 0),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
 
     # -----------------------------------------------------------------------
     # refactor

@@ -615,6 +615,13 @@ class ForensicsExecutor:
         state.add_artifact("residue_disposition_ledger", execution["residue_disposition_ledger"])
         state.add_artifact("changed_structure_map", execution["changed_structure_map"])
 
+        # canonical_structure_map is the spec-primary artifact — synthesized from
+        # the changed_structure_map after execution confirms a single coherent source
+        canonical_structure = self._build_canonical_structure_map(
+            execution["changed_structure_map"], entropy
+        )
+        state.add_artifact("canonical_structure_map", canonical_structure)
+
         normalization = self._normalize_metadata(execution["changed_structure_map"])
         state.add_artifact("metadata_normalization_record", normalization)
 
@@ -1341,4 +1348,34 @@ class ForensicsExecutor:
             "rationale": "No material hidden-goal evidence found; return to standard grounded forensics.",
             "confidence": "medium",
             "generated_at": now,
+        }
+
+    # -----------------------------------------------------------------------
+    # Defragmentation extended helpers
+    # -----------------------------------------------------------------------
+
+    def _build_canonical_structure_map(
+        self,
+        changed_structure_map: Dict[str, Any],
+        entropy: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """
+        Synthesize the canonical structure map after defragmentation execution.
+
+        This is the spec-primary artifact: a single trustworthy description of
+        the project structure after entropy has been resolved. It differs from
+        changed_structure_map (which records what moved) by asserting what
+        the canonical layout now IS rather than what changed.
+        """
+        method_applied = entropy.get("chosen_method", "unknown")
+        severity = entropy.get("severity", "unknown")
+        affected = changed_structure_map.get("affected_paths", [])
+
+        return {
+            "canonical_root": str(self.project_root),
+            "method_applied": method_applied,
+            "severity_resolved": severity,
+            "canonical_paths": affected,
+            "single_source_confirmed": len(changed_structure_map.get("duplicate_groups_resolved", [])) > 0,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }

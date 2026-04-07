@@ -53,13 +53,41 @@ class LeverEscalation:
         esc_path = lever_dir / "escalation_rules.yaml"
         if esc_path.exists():
             with open(esc_path, 'r') as f:
-                self.escalation_rules = yaml.safe_load(f)
-        
+                loaded = yaml.safe_load(f)
+                if isinstance(loaded, dict):
+                    self.escalation_rules = loaded
+                else:
+                    import warnings
+                    warnings.warn(
+                        f"escalation_rules.yaml at {esc_path} did not parse to a dict; "
+                        "escalation rules will be empty."
+                    )
+        else:
+            import warnings
+            warnings.warn(
+                f"Lever escalation_rules.yaml not found at {esc_path}; "
+                "escalate() will use default behaviour."
+            )
+
         # Load commitment rules
         commit_path = lever_dir / "commitment_rules.yaml"
         if commit_path.exists():
             with open(commit_path, 'r') as f:
-                self.commitment_rules = yaml.safe_load(f)
+                loaded = yaml.safe_load(f)
+                if isinstance(loaded, dict):
+                    self.commitment_rules = loaded
+                else:
+                    import warnings
+                    warnings.warn(
+                        f"commitment_rules.yaml at {commit_path} did not parse to a dict; "
+                        "commitment rules will be empty."
+                    )
+        else:
+            import warnings
+            warnings.warn(
+                f"Lever commitment_rules.yaml not found at {commit_path}; "
+                "commit() will use default behaviour."
+            )
     
     def evaluate(
         self,
@@ -81,16 +109,19 @@ class LeverEscalation:
         
         evaluator = self.evaluators[evaluator_id]
         findings = []
-        
-        # Apply evaluator logic
-        eval_type = evaluator.get("type", "generic")
-        
-        if eval_type == "trust_check":
-            findings = self._evaluate_trust(context)
-        elif eval_type == "contradiction_check":
-            findings = self._evaluate_contradiction(context)
-        elif eval_type == "support_check":
-            findings = self._evaluate_support(context)
+
+        # Dispatch by evaluator ID (specs use use_when/returns, not a type key)
+        _dispatch = {
+            "trust_evaluator": self._evaluate_trust,
+            "contradiction_evaluator": self._evaluate_contradiction,
+            "support_evaluator": self._evaluate_support,
+            "discriminator_evaluator": self._evaluate_discriminator,
+            "frame_evaluator": self._evaluate_frame,
+            "artifact_shape_evaluator": self._evaluate_artifact_shape,
+        }
+        handler = _dispatch.get(evaluator_id)
+        if handler is not None:
+            findings = handler(context)
         else:
             findings = self._evaluate_generic(evaluator, context)
         
@@ -153,20 +184,86 @@ class LeverEscalation:
         
         return findings
     
+    def _evaluate_discriminator(self, context: Dict[str, Any]) -> List[str]:
+        """Evaluate branch sprawl and candidate discrimination."""
+        findings = []
+        candidates = context.get("candidates", [])
+        discriminators = context.get("discriminators", [])
+
+        if len(candidates) > 3 and not discriminators:
+            findings.append(f"{len(candidates)} candidates present with no discriminator set")
+
+        if context.get("branch_sprawl"):
+            findings.append("Branch sprawl detected — candidates competing without evidence ranking")
+
+        if not context.get("candidate_ranking_basis"):
+            findings.append("No candidate ranking basis provided")
+
+        return findings
+
+    def _evaluate_frame(self, context: Dict[str, Any]) -> List[str]:
+        """Evaluate whether the problem framing is correct."""
+        findings = []
+
+        if context.get("wrong_question_risk"):
+            findings.append("Wrong-question risk flagged — frame may be misaligned")
+
+        failure_count = context.get("repeated_local_failure_count", 0)
+        if failure_count >= 2:
+            findings.append(
+                f"{failure_count} repeated local failures with stable surface — "
+                "frame error may be masking root cause"
+            )
+
+        if context.get("route_masking_frame_error"):
+            findings.append("Route choice may be masking a frame error — reframe recommended")
+
+        return findings
+
+    def _evaluate_artifact_shape(self, context: Dict[str, Any]) -> List[str]:
+        """Evaluate artifact structure and metadata coherence."""
+        findings = []
+
+        violations = context.get("shape_violations", [])
+        if violations:
+            findings.extend(f"Shape violation: {v}" for v in violations)
+
+        if context.get("metadata_incoherence"):
+            findings.append("Metadata incoherence detected across artifacts")
+
+        if context.get("artifact_sprawl"):
+            findings.append("Artifact sprawl detected — handoff risk present")
+
+        if not context.get("artifact_names_canonical"):
+            findings.append("Artifact names do not match spec-canonical names")
+
+        return findings
+
     def _evaluate_generic(
         self,
         evaluator: Dict[str, Any],
         context: Dict[str, Any],
     ) -> List[str]:
-        """Generic evaluation when no specific type matches."""
+        """Generic evaluation for unrecognised evaluator IDs.
+
+        Checks use_when conditions against context keys so that any future
+        evaluator added to the registry gets at least basic signal even before
+        it has a dedicated handler.
+        """
         findings = []
-        
-        criteria = evaluator.get("criteria", [])
-        for criterion in criteria:
-            if isinstance(criterion, str):
-                if criterion not in context:
-                    findings.append(f"Criterion not met: {criterion}")
-        
+
+        # use_when lists the context conditions that should trigger this evaluator
+        use_when = evaluator.get("use_when", [])
+        for condition in use_when:
+            if isinstance(condition, str) and context.get(condition):
+                findings.append(f"Condition active: {condition}")
+
+        # Fallback: surface expected returns that are missing from context
+        returns = evaluator.get("returns", [])
+        for expected_key in returns:
+            if isinstance(expected_key, str) and expected_key not in context:
+                findings.append(f"Expected return missing from context: {expected_key}")
+
         return findings
     
     def _get_recommendation(

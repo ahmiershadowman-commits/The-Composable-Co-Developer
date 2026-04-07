@@ -11,7 +11,9 @@ def test_pre_pipeline_hook_blocks_missing_forge_problem():
     result = dispatcher.execute_pipeline(FamilyType.FORGE, "development", state, {})
 
     assert result.errors
-    assert "Forge pipeline requires 'problem' in context" in result.errors[0]
+    # The pre_pipeline hook now loads entry_conditions from the pipeline YAML
+    # and reports which condition failed — verify the "problem" key is mentioned.
+    assert "'problem'" in result.errors[0]
 
 
 def test_dispatcher_loads_managed_mcp_registry():

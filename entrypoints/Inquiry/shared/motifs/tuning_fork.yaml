@@ -1,0 +1,28 @@
+id: tuning-fork
+kind: motif
+category: calibration-check
+description: >
+  Detects when two competing approaches, models, or interpretations produce
+  nearly identical surface outputs but diverge at a structurally meaningful
+  point — like a tuning fork that sounds close but resonates differently.
+  Used to force explicit comparison before committing to one path.
+detection_signals:
+  - two_approaches_yield_similar_but_not_identical_results
+  - competing_models_agree_on_output_but_differ_in_mechanism
+  - surface_equivalence_masking_structural_divergence
+  - near_duplicate_interpretations_that_have_different_implications
+  - multiple_solutions_that_need_discriminating_before_selection
+conditioning_effect: >
+  Forces comparison at the point of divergence rather than at the surface.
+  Prompts identification of which structural difference matters and why,
+  before committing to one path. Prevents false equivalence.
+related_interventions:
+  primitives:
+    - separate
+    - shift
+    - press
+  operators:
+    - distill
+  evaluators:
+    - discriminator_evaluator
+    - support_evaluator

@@ -1,0 +1,28 @@
+id: odd-one-out
+kind: motif
+category: anomaly-detection
+description: >
+  Detects when one element in a set is structurally or semantically inconsistent
+  with the others — a source that conflicts with consensus, an artifact that
+  doesn't follow the established pattern, a data point that breaks the distribution.
+detection_signals:
+  - single_source_contradicts_consensus
+  - one_artifact_deviates_from_established_pattern
+  - outlier_in_dataset_or_distribution
+  - one_assumption_that_does_not_belong_with_others
+  - asymmetric_evidence_where_one_case_is_treated_differently
+conditioning_effect: >
+  Increases attention on the anomalous element. Prompts explicit classification:
+  is this a genuine outlier (discard or flag), a signal of deeper truth (investigate),
+  or evidence that the consensus is wrong (revise the set)?
+related_interventions:
+  primitives:
+    - separate
+    - locate
+    - press
+  operators:
+    - clarify
+    - distill
+  evaluators:
+    - contradiction_evaluator
+    - trust_evaluator
